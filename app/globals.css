@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-terra: #B43F2B;
+    --color-ocra: #E6B17E;
+    --color-oliva: #5F6B3D;
+    --color-argilla: #C4A27A;
+    --color-miele: #F5D7B3;
+    --color-pietra: #F5F0E6;
+    --color-carbon: #2C2C2C;
+  }
+  
+  body {
+    background-color: var(--color-pietra);
+    color: var(--color-carbon);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Contenedor responsive */
+  .container-responsive {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+  
+  /* Grid responsive para tarjetas */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6;
+  }
+  
+  /* Tarjeta responsive */
+  .card-responsive {
+    @apply bg-white rounded-xl p-4 md:p-6 shadow-sm border border-[#E6B17E]/20 hover:shadow-md transition-all;
+  }
+  
+  /* Texto responsive */
+  .title-responsive {
+    @apply text-xl md:text-2xl lg:text-3xl font-bold;
+  }
+  
+  .subtitle-responsive {
+    @apply text-base md:text-lg text-gray-600;
+  }
+}
