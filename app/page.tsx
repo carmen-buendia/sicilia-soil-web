@@ -23,18 +23,6 @@ import { formatRelativeTime } from "@/lib/utils/helpers";
 
 import type { GardenZone } from "@/lib/types";
 
-// Sicilian Flag component
-const SicilianFlag = () => (
-  <div className="relative w-8 h-8">
-    <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-yellow-500 rounded-full"></div>
-  </div>
-);
-
-const SicilianFlagSimple = () => (
-  <span className="font-bold text-yellow-600 bg-red-600 px-2 py-1 rounded text-xs">
-    SICILIA SOIL
-  </span>
-);
 
 export default function HomePage() {
   const [serverStatus, setServerStatus] = useState<
@@ -317,9 +305,6 @@ export default function HomePage() {
       <header className="max-w-6xl mx-auto mb-12">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-r from-red-600 to-yellow-500 rounded-xl">
-              <SicilianFlag />
-            </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
                 Sicilia Soil <Sprout className="w-6 h-6 text-red-600" />
@@ -329,7 +314,6 @@ export default function HomePage() {
                 Permacultura, Micología y Esparto en Sicilia
               </p>
               <div className="mt-1">
-                <SicilianFlagSimple />
               </div>
             </div>
           </div>
@@ -360,7 +344,6 @@ export default function HomePage() {
         <div className="grid lg:grid-cols-2 gap-12 mb-16">
           <div>
             <div className="inline-flex items-center mb-4 px-4 py-2 bg-gradient-to-r from-red-100 to-yellow-100 text-red-800 rounded-full text-sm font-medium">
-              <SicilianFlag />
               <span className="ml-2">Monitoreo en tiempo real</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -399,7 +382,6 @@ export default function HomePage() {
           {/* Stats */}
           <div className="bg-white rounded-2xl p-8 shadow-xl border border-red-200">
             <div className="flex items-center gap-2 mb-6">
-              <SicilianFlag />
               <h3 className="text-2xl font-bold text-gray-900">
                 Estado general
               </h3>
@@ -441,7 +423,6 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex items-center gap-2 text-red-600">
-              <SicilianFlag />
               <span className="font-medium">Tradición siciliana</span>
             </div>
           </div>
@@ -662,7 +643,6 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex items-center gap-2 text-red-600">
-              <SicilianFlag />
               <span className="font-medium">Micología autóctona</span>
             </div>
           </div>
@@ -748,7 +728,6 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex items-center gap-2 text-red-600">
-              <SicilianFlag />
               <span className="font-medium">Permacultura siciliana</span>
             </div>
           </div>
@@ -829,7 +808,6 @@ export default function HomePage() {
         {/* Tech Stack */}
         <div className="bg-gradient-to-r from-red-600 to-yellow-500 rounded-2xl p-8 mb-12 text-white">
           <div className="flex items-center gap-3 mb-6">
-            <SicilianFlag />
             <h2 className="text-2xl font-bold">Stack tecnológico</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -873,7 +851,6 @@ export default function HomePage() {
         {/* Call to Action */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-6 px-6 py-3 bg-gradient-to-r from-red-600 to-yellow-500 text-white rounded-full">
-            <SicilianFlag />
             <span className="font-semibold">Proyecto open source</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">

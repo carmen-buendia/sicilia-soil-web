@@ -139,7 +139,7 @@ export default function Humedity() {
                       strokeWidth="10"
                       strokeDasharray={`${2 * Math.PI * 45}`}
                       strokeDashoffset={`${2 * Math.PI * 45 * (1 - zone.current / 100)}`}
-                      strokeLinecap="round"
+                      strokeLinecap="inherit"
                       transform="rotate(-90 50 50)"
                     />
                     <text

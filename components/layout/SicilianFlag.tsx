@@ -11,16 +11,15 @@ interface SicilianFlagProps {
   className?: string;
 }
 
-export const SicilianFlag = ({
-  size = "small",
-  className = "",
-}: SicilianFlagProps) => {
+export const SicilianFlag = ({ size = "small", className = "" }) => {
   const sizeClass = size === "small" ? "w-6 h-6" : "w-8 h-8";
   const triangleSize = size === "small" ? "w-3 h-3" : "w-4 h-4";
 
   return (
     <div className={`relative ${sizeClass} ${className}`}>
-      <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-yellow-500 rounded-full"></div>
+      {/* Fondo rojo/amarillo de la bandera siciliana */}
+      <div className="absolute inset-0 bg-gradient-to-r from-sicilia-red to-sicilia-yellow rounded-full"></div>
+      {/* Trinacria blanca */}
       <div
         className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${triangleSize}`}
       >

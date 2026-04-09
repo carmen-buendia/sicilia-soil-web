@@ -1,4 +1,4 @@
-## 🌱 Sicilia Soil
+## 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-WORK%20IN%20PROGRESS-orange?style=for-the-badge&logo=githubactions&logoColor=white" alt="Work in Progress" />
@@ -12,9 +12,14 @@
 
 ---
 
-## ✨ Live Demo
+## ✨ Live Demo (Work in Progress 🚧)
 
-🔗 **[https://sicilia-soil-web.vercel.app](https://sicilia-soil-web.vercel.app)**
+> **Note:** This project is under active development. Features and UI are continuously evolving.
+
+| Environment          | URL                                                                                  |
+| :------------------- | :----------------------------------------------------------------------------------- |
+| **Main Demo**        | [https://sicilia-soil-web.vercel.app](https://sicilia-soil-web.vercel.app)           |
+| **Alternative Demo** | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
 
 This is a public demo of **Sicilia Soil**, a real-time monitoring system for syntropic permaculture in Sicily.
 
@@ -163,3 +168,15 @@ This demo is a public version of **Sicilia Soil**. The complete codebase (includ
   <strong>Made with ❤️, 🌱, 🍄 and 🌾 in Sicily</strong><br />
   <sub>Where technology and nature design the future together</sub>
 </p>
+```
+
+---
+
+## 📝 Resumen de cambios realizados
+
+| Cambio                | Descripción                                                   |
+| :-------------------- | :------------------------------------------------------------ |
+| **Título**            | Añadido "(Public Demo - Work in Progress 🚧)"                 |
+| **Sección Live Demo** | Añadida nota de desarrollo activo                             |
+| **Enlaces**           | Añadidos ambos enlaces (principal y alternativo) en una tabla |
+| **Badge**             | Mantenido el badge "WORK IN PROGRESS"                         |
