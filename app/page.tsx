@@ -23,7 +23,6 @@ import { formatRelativeTime } from "@/lib/utils/helpers";
 
 import type { GardenZone } from "@/lib/types";
 
-
 export default function HomePage() {
   const [serverStatus, setServerStatus] = useState<
     "checking" | "online" | "offline"
@@ -313,8 +312,7 @@ export default function HomePage() {
                 <Leaf className="w-4 h-4 text-red-500" />
                 Permacultura, Micología y Esparto en Sicilia
               </p>
-              <div className="mt-1">
-              </div>
+              <div className="mt-1"></div>
             </div>
           </div>
 
@@ -360,7 +358,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://github.com/carmen-buendia/sicilia-soil"
+                href="https://github.com/carmen-buendia/sicilia-soil-web"
                 target="_blank"
                 className="px-8 py-4 bg-gradient-to-r from-red-600 to-yellow-500 text-white rounded-xl font-semibold flex items-center gap-3 hover:shadow-lg transition-all hover:scale-[1.02]"
               >
