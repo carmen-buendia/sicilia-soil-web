@@ -169,14 +169,3 @@ This demo is a public version of **Sicilia Soil**. The complete codebase (includ
   <sub>Where technology and nature design the future together</sub>
 </p>
 ```
-
----
-
-## 📝 Resumen de cambios realizados
-
-| Cambio                | Descripción                                                   |
-| :-------------------- | :------------------------------------------------------------ |
-| **Título**            | Añadido "(Public Demo - Work in Progress 🚧)"                 |
-| **Sección Live Demo** | Añadida nota de desarrollo activo                             |
-| **Enlaces**           | Añadidos ambos enlaces (principal y alternativo) en una tabla |
-| **Badge**             | Mantenido el badge "WORK IN PROGRESS"                         |
