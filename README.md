@@ -18,7 +18,6 @@
 
 | Environment          | URL                                                                                  |
 | :------------------- | :----------------------------------------------------------------------------------- |
-| **Main Demo**        | [https://sicilia-soil-web.vercel.app](https://sicilia-soil-web.vercel.app)           |
 | **Alternative Demo** | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
 
 This is a public demo of **Sicilia Soil**, a real-time monitoring system for syntropic permaculture in Sicily.
