@@ -66,7 +66,6 @@ interface ZoneData {
   light: DataPoint[];
 }
 
-// Datos base (sin generar, solo estructura)
 const baseZones: Omit<ZoneData, "moisture" | "temperature" | "light">[] = [
   { id: "esparto", name: "Zona de Esparto", icon: "🌾" },
   { id: "tomates", name: "Huerta de Tomates", icon: "🍅" },
@@ -76,20 +75,24 @@ const baseZones: Omit<ZoneData, "moisture" | "temperature" | "light">[] = [
   { id: "agua", name: "Depósito de Agua", icon: "💧" },
 ];
 
-// Métricas disponibles
 const metrics = [
-  { id: "moisture", name: "Humedad", icon: Droplets, color: "blue", unit: "%" },
+  {
+    id: "moisture",
+    name: "Humedad",
+    icon: Droplets,
+    color: "oliveGreen",
+    unit: "%",
+  },
   {
     id: "temperature",
     name: "Temperatura",
     icon: Thermometer,
-    color: "orange",
+    color: "sicilian-red",
     unit: "°C",
   },
-  { id: "light", name: "Luz Solar", icon: Sun, color: "yellow", unit: "%" },
+  { id: "light", name: "Luz Solar", icon: Sun, color: "wheatGold", unit: "%" },
 ];
 
-// Periodos de tiempo
 const periods = [
   { id: "7", name: "7 días" },
   { id: "15", name: "15 días" },
@@ -110,13 +113,12 @@ export default function Analysis() {
   const [showComparison, setShowComparison] = useState(true);
   const [showPredictions, setShowPredictions] = useState(true);
 
-  // Generar datos SOLO en el cliente
   useEffect(() => {
     const generateAllData = () => {
       return baseZones.map((zone) => ({
         ...zone,
         moisture: generateHistoricalData(
-          30,
+          90,
           zone.id === "esparto"
             ? 78
             : zone.id === "tomates"
@@ -131,7 +133,7 @@ export default function Analysis() {
           8,
         ),
         temperature: generateHistoricalData(
-          30,
+          90,
           zone.id === "esparto"
             ? 22
             : zone.id === "tomates"
@@ -146,7 +148,7 @@ export default function Analysis() {
           3,
         ),
         light: generateHistoricalData(
-          30,
+          90,
           zone.id === "esparto"
             ? 65
             : zone.id === "tomates"
@@ -167,7 +169,6 @@ export default function Analysis() {
     setIsMounted(true);
   }, []);
 
-  // Calcular estadísticas
   const getStatistics = () => {
     const stats: any = {};
 
@@ -202,10 +203,8 @@ export default function Analysis() {
 
   const statistics = getStatistics();
 
-  // Función para exportar datos
   const exportData = () => {
     setIsExporting(true);
-
     setTimeout(() => {
       const dataToExport = {
         generatedAt: new Date().toISOString(),
@@ -227,16 +226,12 @@ export default function Analysis() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `sicilia-soil-export-${new Date().toISOString().split("T")[0]}.json`;
+      a.download = `sintropico-monitor-export-${new Date().toISOString().split("T")[0]}.json`;
       a.click();
-
-      setTimeout(() => {
-        setIsExporting(false);
-      }, 1000);
+      setTimeout(() => setIsExporting(false), 1000);
     }, 1500);
   };
 
-  // Toggle selección de zonas
   const toggleZone = (zoneId: string) => {
     setSelectedZones((prev) =>
       prev.includes(zoneId)
@@ -246,8 +241,6 @@ export default function Analysis() {
   };
 
   const currentMetric = metrics.find((m) => m.id === selectedMetric);
-
-  // Obtener datos filtrados por período para los gráficos
   const getFilteredDataForZone = (zoneId: string, metricType: string) => {
     const zone = zonesData.find((z) => z.id === zoneId);
     if (!zone) return [];
@@ -256,48 +249,74 @@ export default function Analysis() {
     return data.slice(-periodDays);
   };
 
-  // Mostrar loading mientras se generan los datos en el cliente
+  const getMetricColor = (metricId: string) => {
+    switch (metricId) {
+      case "moisture":
+        return "text-oliveGreen";
+      case "temperature":
+        return "text-sicilian-red";
+      case "light":
+        return "text-wheatGold";
+      default:
+        return "text-charcoalGray";
+    }
+  };
+
+  const getMetricBgColor = (metricId: string) => {
+    switch (metricId) {
+      case "moisture":
+        return "bg-oliveGreen/10 border-oliveGreen/20";
+      case "temperature":
+        return "bg-sicilian-red/10 border-sicilian-red/20";
+      case "light":
+        return "bg-wheatGold/10 border-wheatGold/20";
+      default:
+        return "bg-offWhite border-oliveGreen/15";
+    }
+  };
+
   if (!isMounted || zonesData.length === 0) {
     return (
-      <div className="min-h-screen p-4 md:p-8 bg-gradient-to-b from-purple-50/30 to-indigo-50/30 flex items-center justify-center">
+      <div className="min-h-screen p-4 md:p-8 bg-offWhite flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Cargando datos de análisis...</p>
+          <div className="w-12 h-12 border-4 border-oliveGreen/20 border-t-oliveGreen rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-oliveGreen/70">Cargando datos de análisis...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-gradient-to-b from-purple-50/30 to-indigo-50/30">
+    <div className="min-h-screen p-4 md:p-8 pt-24 bg-offWhite">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="p-2 hover:bg-purple-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-oliveGreen/10 rounded-lg transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 text-oliveGreen" />
             </Link>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
-                <LineChart className="w-8 h-8 text-purple-600" />
+              <h1 className="text-3xl md:text-4xl font-bold text-charcoalGray flex items-center gap-3">
+                <LineChart className="w-8 h-8 text-oliveGreen" />
                 Análisis de Datos
               </h1>
-              <p className="text-gray-600">
+              <p className="text-oliveGreen/70">
                 Estadísticas avanzadas y comparativas entre zonas
               </p>
             </div>
           </div>
 
-          {/* Acciones rápidas */}
           <div className="flex items-center gap-3">
             <button
               onClick={exportData}
               disabled={isExporting}
-              className={`px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center gap-2 hover:bg-purple-700 transition-colors ${
-                isExporting ? "opacity-50 cursor-not-allowed" : ""
+              className={`px-4 py-2 bg-oliveGreen text-offWhite rounded-lg flex items-center gap-2 hover:bg-oliveGreen/90 transition-all ${
+                isExporting
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:scale-[1.02]"
               }`}
             >
               {isExporting ? (
@@ -311,11 +330,11 @@ export default function Analysis() {
         </div>
 
         {/* Filtros principales */}
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-8">
+        <div className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15 mb-8">
           <div className="grid md:grid-cols-3 gap-6">
             {/* Selección de zonas */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-oliveGreen mb-3">
                 Zonas a comparar
               </label>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
@@ -325,8 +344,8 @@ export default function Analysis() {
                     onClick={() => toggleZone(zone.id)}
                     className={`flex items-center justify-between w-full px-3 py-2 rounded-lg transition-colors ${
                       selectedZones.includes(zone.id)
-                        ? "bg-purple-100 text-purple-800 border border-purple-300"
-                        : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200"
+                        ? "bg-oliveGreen/10 text-oliveGreen border border-oliveGreen/30"
+                        : "bg-offWhite text-charcoalGray/70 hover:bg-oliveGreen/5 border border-oliveGreen/10"
                     }`}
                   >
                     <span className="flex items-center gap-2">
@@ -334,7 +353,7 @@ export default function Analysis() {
                       <span className="font-medium">{zone.name}</span>
                     </span>
                     {selectedZones.includes(zone.id) && (
-                      <span className="text-xs bg-purple-200 px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-oliveGreen/20 text-oliveGreen px-2 py-0.5 rounded-full">
                         seleccionada
                       </span>
                     )}
@@ -345,7 +364,7 @@ export default function Analysis() {
 
             {/* Selección de métrica */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-oliveGreen mb-3">
                 Métrica a analizar
               </label>
               <div className="space-y-2">
@@ -357,15 +376,17 @@ export default function Analysis() {
                       onClick={() => setSelectedMetric(metric.id)}
                       className={`flex items-center justify-between w-full px-3 py-2 rounded-lg transition-colors ${
                         selectedMetric === metric.id
-                          ? `bg-${metric.color}-100 text-${metric.color}-800 border border-${metric.color}-300`
-                          : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200"
+                          ? `${getMetricBgColor(metric.id)} border`
+                          : "bg-offWhite text-charcoalGray/70 hover:bg-oliveGreen/5 border border-oliveGreen/10"
                       }`}
                     >
                       <span className="flex items-center gap-2">
-                        <Icon className={`w-4 h-4 text-${metric.color}-500`} />
+                        <Icon
+                          className={`w-4 h-4 ${getMetricColor(metric.id)}`}
+                        />
                         <span className="font-medium">{metric.name}</span>
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-oliveGreen/50">
                         {metric.unit}
                       </span>
                     </button>
@@ -376,7 +397,7 @@ export default function Analysis() {
 
             {/* Selección de período */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-oliveGreen mb-3">
                 Período de tiempo
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -386,30 +407,30 @@ export default function Analysis() {
                     onClick={() => setSelectedPeriod(period.id)}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       selectedPeriod === period.id
-                        ? "bg-purple-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        ? "bg-oliveGreen text-offWhite"
+                        : "bg-offWhite text-charcoalGray/70 hover:bg-oliveGreen/5 border border-oliveGreen/10"
                     }`}
                   >
                     {period.name}
                   </button>
                 ))}
               </div>
-              <div className="mt-4">
-                <label className="flex items-center gap-2 text-sm text-gray-700">
+              <div className="mt-4 space-y-2">
+                <label className="flex items-center gap-2 text-sm text-oliveGreen">
                   <input
                     type="checkbox"
                     checked={showComparison}
                     onChange={() => setShowComparison(!showComparison)}
-                    className="rounded text-purple-600"
+                    className="rounded text-oliveGreen"
                   />
                   Mostrar comparativa
                 </label>
-                <label className="flex items-center gap-2 text-sm text-gray-700 mt-2">
+                <label className="flex items-center gap-2 text-sm text-oliveGreen">
                   <input
                     type="checkbox"
                     checked={showPredictions}
                     onChange={() => setShowPredictions(!showPredictions)}
-                    className="rounded text-purple-600"
+                    className="rounded text-oliveGreen"
                   />
                   Mostrar predicciones
                 </label>
@@ -419,13 +440,12 @@ export default function Analysis() {
         </div>
 
         {selectedZones.length === 0 ? (
-          // Mensaje si no hay zonas seleccionadas
-          <div className="bg-white rounded-xl p-12 shadow-lg border border-gray-200 text-center">
-            <Filter className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-700 mb-2">
+          <div className="bg-offWhite rounded-xl p-12 shadow-lg border border-oliveGreen/15 text-center">
+            <Filter className="w-16 h-16 text-oliveGreen/30 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-charcoalGray mb-2">
               Selecciona zonas para analizar
             </h2>
-            <p className="text-gray-500 mb-6">
+            <p className="text-oliveGreen/60 mb-6">
               Elige al menos una zona del panel izquierdo para ver los datos
             </p>
           </div>
@@ -438,23 +458,22 @@ export default function Analysis() {
                 const stats = statistics[zoneId];
                 if (!zone || !stats) return null;
 
-                const MetricIcon = currentMetric?.icon || Droplets;
                 const trendColor =
                   stats.trend > 0
-                    ? "text-green-600"
+                    ? "text-oliveGreen"
                     : stats.trend < 0
-                      ? "text-red-600"
-                      : "text-gray-600";
+                      ? "text-sicilian-red"
+                      : "text-charcoalGray/50";
 
                 return (
                   <div
                     key={zoneId}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all"
+                    className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15 hover:shadow-xl transition-all"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">{zone.icon}</span>
-                        <h3 className="text-lg font-bold text-gray-900">
+                        <h3 className="text-lg font-bold text-charcoalGray">
                           {zone.name}
                         </h3>
                       </div>
@@ -471,23 +490,23 @@ export default function Analysis() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-500">Promedio</p>
-                        <p className="text-2xl font-bold text-gray-900">
+                      <div className="text-center p-3 bg-oliveGreen/5 rounded-lg">
+                        <p className="text-sm text-oliveGreen/60">Promedio</p>
+                        <p className="text-2xl font-bold text-charcoalGray">
                           {stats.avg}
                           {currentMetric?.unit}
                         </p>
                       </div>
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-500">Actual</p>
-                        <p className="text-2xl font-bold text-purple-600">
+                      <div className="text-center p-3 bg-oliveGreen/5 rounded-lg">
+                        <p className="text-sm text-oliveGreen/60">Actual</p>
+                        <p className="text-2xl font-bold text-oliveGreen">
                           {stats.last}
                           {currentMetric?.unit}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <div className="flex justify-between text-sm text-oliveGreen/60 mb-2">
                       <span>
                         Mín: {stats.min}
                         {currentMetric?.unit}
@@ -498,30 +517,26 @@ export default function Analysis() {
                       </span>
                     </div>
 
-                    {/* Mini gráfico de tendencia */}
                     <div className="h-16 flex items-end gap-0.5 mt-4">
-                      {zone[selectedMetric as keyof ZoneData] &&
-                        (zone[selectedMetric as keyof ZoneData] as DataPoint[])
-                          .slice(-14)
-                          .map((point, i) => (
-                            <div
-                              key={i}
-                              className="flex-1 bg-purple-500 rounded-t"
-                              style={{
-                                height: `${(point.value / 100) * 100}%`,
-                              }}
-                            />
-                          ))}
+                      {(zone[selectedMetric as keyof ZoneData] as DataPoint[])
+                        .slice(-14)
+                        .map((point, i) => (
+                          <div
+                            key={i}
+                            className={`flex-1 rounded-t ${selectedMetric === "moisture" ? "bg-oliveGreen" : selectedMetric === "temperature" ? "bg-sicilian-red" : "bg-wheatGold"}`}
+                            style={{ height: `${(point.value / 100) * 100}%` }}
+                          />
+                        ))}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* SECCIÓN DE GRÁFICOS CON HIGHCHARTS */}
+            {/* SECCIÓN DE GRÁFICOS */}
             <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <LineChart className="w-5 h-5 text-purple-600" />
+              <h2 className="text-xl font-bold text-charcoalGray mb-4 flex items-center gap-2">
+                <LineChart className="w-5 h-5 text-oliveGreen" />
                 Visualización detallada
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
@@ -542,7 +557,7 @@ export default function Analysis() {
                   return (
                     <div key={zoneId} className="space-y-6">
                       {selectedMetric === "moisture" && (
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                        <div className="bg-offWhite rounded-2xl p-6 shadow-sm border border-oliveGreen/15">
                           <HumidityChart
                             zoneName={zone.name}
                             data={moistureData}
@@ -550,7 +565,7 @@ export default function Analysis() {
                         </div>
                       )}
                       {selectedMetric === "temperature" && (
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                        <div className="bg-offWhite rounded-2xl p-6 shadow-sm border border-oliveGreen/15">
                           <TemperatureChart
                             zoneName={zone.name}
                             data={temperatureData}
@@ -558,7 +573,7 @@ export default function Analysis() {
                         </div>
                       )}
                       {selectedMetric === "light" && (
-                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                        <div className="bg-offWhite rounded-2xl p-6 shadow-sm border border-oliveGreen/15">
                           <LightChart
                             zoneName={zone.name}
                             data={lightData}
@@ -574,13 +589,13 @@ export default function Analysis() {
 
             {/* Gráfico principal de comparativa */}
             {showComparison && (
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-8">
+              <div className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15 mb-8">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-purple-600" />
+                  <h2 className="text-xl font-bold text-charcoalGray flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-oliveGreen" />
                     Comparativa entre zonas
                   </h2>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-oliveGreen/60">
                     Últimos {selectedPeriod} días
                   </span>
                 </div>
@@ -597,6 +612,12 @@ export default function Analysis() {
 
                     const avg =
                       data.reduce((a, b) => a + b.value, 0) / data.length;
+                    const barColor =
+                      selectedMetric === "moisture"
+                        ? "bg-oliveGreen"
+                        : selectedMetric === "temperature"
+                          ? "bg-sicilian-red"
+                          : "bg-wheatGold";
 
                     return (
                       <div
@@ -607,15 +628,15 @@ export default function Analysis() {
                           <span className="text-2xl mb-2">{zone.icon}</span>
                           <div className="relative w-full flex justify-center">
                             <div
-                              className="w-16 bg-purple-500 rounded-t"
+                              className={`w-16 ${barColor} rounded-t`}
                               style={{ height: `${(avg / 100) * 200}px` }}
                             />
                           </div>
-                          <span className="mt-2 font-bold">
+                          <span className="mt-2 font-bold text-charcoalGray">
                             {avg.toFixed(1)}
                             {currentMetric?.unit}
                           </span>
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-oliveGreen/60">
                             {zone.name}
                           </span>
                         </div>
@@ -628,7 +649,7 @@ export default function Analysis() {
 
             {/* Predicciones */}
             {showPredictions && (
-              <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 shadow-lg text-white mb-8">
+              <div className="bg-gradient-to-r from-oliveGreen to-oliveGreen/90 rounded-xl p-6 shadow-lg text-offWhite mb-8">
                 <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5" />
                   Predicciones para los próximos 7 días
@@ -651,7 +672,7 @@ export default function Analysis() {
                     return (
                       <div
                         key={zoneId}
-                        className="bg-white/10 rounded-lg p-4 backdrop-blur-sm"
+                        className="bg-offWhite/10 rounded-lg p-4 backdrop-blur-sm border border-offWhite/20"
                       >
                         <div className="flex items-center gap-2 mb-3">
                           <span className="text-2xl">{zone.icon}</span>
@@ -667,7 +688,7 @@ export default function Analysis() {
                           </div>
                           <div className="flex justify-between">
                             <span>Predicción:</span>
-                            <span className="font-bold text-yellow-300">
+                            <span className="font-bold text-wheatGold">
                               {prediction.toFixed(1)}
                               {currentMetric?.unit}
                             </span>
@@ -687,13 +708,13 @@ export default function Analysis() {
             )}
 
             {/* Tabla de datos históricos */}
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+            <div className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-purple-600" />
+                <h2 className="text-xl font-bold text-charcoalGray flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-oliveGreen" />
                   Datos históricos detallados
                 </h2>
-                <button className="text-sm text-purple-600 hover:text-purple-800 flex items-center gap-1">
+                <button className="text-sm text-oliveGreen hover:text-oliveGreen/80 flex items-center gap-1">
                   <Download className="w-4 h-4" />
                   Descargar CSV
                 </button>
@@ -702,12 +723,17 @@ export default function Analysis() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4">Fecha</th>
+                    <tr className="border-b border-oliveGreen/15">
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Fecha
+                      </th>
                       {selectedZones.map((zoneId) => {
                         const zone = zonesData.find((z) => z.id === zoneId);
                         return (
-                          <th key={zoneId} className="text-left py-3 px-4">
+                          <th
+                            key={zoneId}
+                            className="text-left py-3 px-4 text-oliveGreen"
+                          >
                             {zone?.icon} {zone?.name}
                           </th>
                         );
@@ -715,45 +741,42 @@ export default function Analysis() {
                     </tr>
                   </thead>
                   <tbody>
-                    {zonesData[0]?.[selectedMetric as keyof ZoneData] &&
-                      (
-                        zonesData[0][
-                          selectedMetric as keyof ZoneData
-                        ] as DataPoint[]
-                      )
-                        .slice(-10)
-                        .reverse()
-                        .map((point, index) => (
-                          <tr
-                            key={index}
-                            className="border-b border-gray-100 hover:bg-gray-50"
-                          >
-                            <td className="py-2 px-4">{point.timestamp}</td>
-                            {selectedZones.map((zoneId) => {
-                              const zone = zonesData.find(
-                                (z) => z.id === zoneId,
-                              );
-                              if (!zone) return null;
-
-                              const data = zone[
-                                selectedMetric as keyof ZoneData
-                              ] as DataPoint[];
-                              const dataPoint = data.find(
-                                (d) => d.timestamp === point.timestamp,
-                              );
-
-                              return (
-                                <td
-                                  key={zoneId}
-                                  className="py-2 px-4 font-medium"
-                                >
-                                  {dataPoint?.value.toFixed(1)}
-                                  {currentMetric?.unit}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))}
+                    {(
+                      zonesData[0]?.[
+                        selectedMetric as keyof ZoneData
+                      ] as DataPoint[]
+                    )
+                      .slice(-10)
+                      .reverse()
+                      .map((point, index) => (
+                        <tr
+                          key={index}
+                          className="border-b border-oliveGreen/10 hover:bg-oliveGreen/5"
+                        >
+                          <td className="py-2 px-4 text-charcoalGray/70">
+                            {point.timestamp}
+                          </td>
+                          {selectedZones.map((zoneId) => {
+                            const zone = zonesData.find((z) => z.id === zoneId);
+                            if (!zone) return null;
+                            const data = zone[
+                              selectedMetric as keyof ZoneData
+                            ] as DataPoint[];
+                            const dataPoint = data.find(
+                              (d) => d.timestamp === point.timestamp,
+                            );
+                            return (
+                              <td
+                                key={zoneId}
+                                className="py-2 px-4 font-medium text-charcoalGray"
+                              >
+                                {dataPoint?.value.toFixed(1)}
+                                {currentMetric?.unit}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -762,33 +785,35 @@ export default function Analysis() {
         )}
 
         {/* Footer con insights */}
-        <footer className="mt-12 pt-8 border-t border-purple-200">
+        <footer className="mt-12 pt-8 border-t border-oliveGreen/10">
           <div className="grid md:grid-cols-4 gap-4 text-sm">
-            <div className="bg-purple-50 rounded-lg p-4">
-              <h4 className="font-bold text-purple-900 mb-2">
+            <div className="bg-oliveGreen/5 rounded-lg p-4 border border-oliveGreen/10">
+              <h4 className="font-bold text-oliveGreen mb-2">
                 Insights destacados
               </h4>
-              <p className="text-purple-700">
+              <p className="text-charcoalGray/70">
                 La humedad en el olivar ha bajado un 12% esta semana
               </p>
             </div>
-            <div className="bg-blue-50 rounded-lg p-4">
-              <h4 className="font-bold text-blue-900 mb-2">Recomendación</h4>
-              <p className="text-blue-700">
+            <div className="bg-oliveGreen/5 rounded-lg p-4 border border-oliveGreen/10">
+              <h4 className="font-bold text-oliveGreen mb-2">Recomendación</h4>
+              <p className="text-charcoalGray/70">
                 Aumentar riego en zonas con tendencia negativa
               </p>
             </div>
-            <div className="bg-green-50 rounded-lg p-4">
-              <h4 className="font-bold text-green-900 mb-2">
+            <div className="bg-oliveGreen/5 rounded-lg p-4 border border-oliveGreen/10">
+              <h4 className="font-bold text-oliveGreen mb-2">
                 Mejor rendimiento
               </h4>
-              <p className="text-green-700">
+              <p className="text-charcoalGray/70">
                 Huerta de Tomates: +5% vs promedio
               </p>
             </div>
-            <div className="bg-yellow-50 rounded-lg p-4">
-              <h4 className="font-bold text-yellow-900 mb-2">Alerta</h4>
-              <p className="text-yellow-700">Revisar sensor en zona Compost</p>
+            <div className="bg-wheatGold/5 rounded-lg p-4 border border-wheatGold/10">
+              <h4 className="font-bold text-wheatGold mb-2">Alerta</h4>
+              <p className="text-charcoalGray/70">
+                Revisar sensor en zona Compost
+              </p>
             </div>
           </div>
         </footer>

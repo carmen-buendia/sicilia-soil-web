@@ -1,41 +1,29 @@
-import { ReactNode } from "react";
-
-/**
- * Badge component for displaying status indicators
- *
- * @example
- * <Badge variant="success">Active</Badge>
- * <Badge variant="warning" size="md">Pending</Badge>
- */
 interface BadgeProps {
-  children: ReactNode;
-  variant?: "success" | "warning" | "error" | "info" | "default";
+  children: React.ReactNode;
+  variant?: "success" | "warning" | "info" | "default";
   size?: "sm" | "md";
-  className?: string;
 }
 
 const variants = {
-  success: "bg-green-100 text-green-800 border-green-200",
-  warning: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  error: "bg-red-100 text-red-800 border-red-200",
-  info: "bg-blue-100 text-blue-800 border-blue-200",
-  default: "bg-gray-100 text-gray-800 border-gray-200",
+  success: "bg-oliveGreen/10 text-oliveGreen border-oliveGreen/20",
+  warning: "bg-wheatGold/10 text-wheatGold border-wheatGold/20",
+  info: "bg-sicilian-red/10 text-sicilian-red border-sicilian-red/20",
+  default: "bg-oliveGreen/5 text-charcoalGray border-oliveGreen/10",
 };
 
 const sizes = {
   sm: "px-2 py-0.5 text-xs",
-  md: "px-3 py-1 text-sm",
+  md: "px-2.5 py-0.5 text-xs",
 };
 
 export const Badge = ({
   children,
   variant = "default",
-  size = "sm",
-  className = "",
+  size = "md",
 }: BadgeProps) => {
   return (
     <span
-      className={`inline-flex items-center rounded-full border ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`inline-flex items-center rounded-full font-medium border ${variants[variant]} ${sizes[size]}`}
     >
       {children}
     </span>
