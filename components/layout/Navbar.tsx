@@ -23,11 +23,12 @@ import { SicilianFlag } from "./SicilianFlag";
 
 const navItems = [
   { id: "/", label: "Dashboard", icon: Home },
-  { id: "/humedity", label: "Humedad", icon: Droplets },
+  { id: "/humidity", label: "Humedad", icon: Droplets },
   { id: "/temperature", label: "Temperatura", icon: Thermometer },
   { id: "/light", label: "Luz", icon: Sun },
   { id: "/analysis", label: "Análisis", icon: LineChart },
   { id: "/mycology", label: "Micología", icon: Leaf },
+  { id: "/esparto", label: "Esparto", icon: Sprout }, // ← Añadir esta línea
   { id: "/design", label: "Diseño", icon: Layers },
   { id: "/configuration", label: "Configuración", icon: Settings },
 ];

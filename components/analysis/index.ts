@@ -1,0 +1,9 @@
+// Barrel export para analysis feature
+export { MetricsSelector } from "@/components/analysis/components/MetricsSelector";
+export { ZoneSelector } from "@/components/analysis/components/ZonesSelector";
+export { PeriodSelector } from "@/components/analysis/components/PeriodSelector";
+export { StatsGrid } from "@/components/analysis/components/StatsGrid";
+export { PredictionCard } from "@/components/analysis/components/PredictionCard";
+export { DataTable } from "@/components/analysis/components/DataTable";
+export { InsightsFooter } from "@/components/analysis/components/InsightsFooter";
+export { useAnalysisData } from "@/components/analysis/hooks/useAnalysisData";
