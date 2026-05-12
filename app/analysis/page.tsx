@@ -1,281 +1,85 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  LineChart,
-  ArrowLeft,
-  DownloadCloud,
-  Filter,
-  RefreshCw,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  FileText,
-  Download,
-  Droplets,
-  Thermometer,
-  Sun,
-} from "lucide-react";
+import { useState } from "react";
 import Link from "next/link";
-import { HumidityChart } from "@/components/charts/HumidityChart";
-import { TemperatureChart } from "@/components/charts/TemperatureChart";
-import { LightChart } from "@/components/charts/LightChart";
+import { ArrowLeft, LineChart, DownloadCloud, Filter } from "lucide-react";
 
-// ============================================
-// FUNCIÓN PARA GENERAR DATOS HISTÓRICOS
-// ============================================
-interface DataPoint {
-  timestamp: string;
-  value: number;
-}
+import { monitoringZones, metrics } from "@/lib/config/site.config";
+import { getMetricColor, getMetricUnit } from "@/components/analysis/utils";
+import {
+  useAnalysisData,
+  ZoneSelector,
+  MetricsSelector,
+  PeriodSelector,
+  StatsGrid,
+  PredictionCard,
+  InsightsFooter,
+} from "@/components/analysis";
+import { DataTable } from "@/components/analysis/components/DataTable";
 
-const generateHistoricalData = (
-  days: number,
-  baseValue: number,
-  variance: number,
-): DataPoint[] => {
-  const data: DataPoint[] = [];
-  const now = new Date();
-
-  for (let i = days; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(date.getDate() - i);
-
-    const randomVar = Math.random() * variance * 2 - variance;
-    const trend = Math.sin((i / 7) * Math.PI) * 5;
-    const value = Math.max(0, Math.min(100, baseValue + randomVar + trend));
-
-    data.push({
-      timestamp: date.toISOString().split("T")[0],
-      value: Math.round(value * 10) / 10,
-    });
-  }
-
-  return data;
-};
-
-// ============================================
-// DATOS DE LAS ZONAS - SE INICIALIZAN VACÍOS
-// ============================================
-interface ZoneData {
-  id: string;
-  name: string;
-  icon: string;
-  moisture: DataPoint[];
-  temperature: DataPoint[];
-  light: DataPoint[];
-}
-
-const baseZones: Omit<ZoneData, "moisture" | "temperature" | "light">[] = [
-  { id: "esparto", name: "Zona de Esparto", icon: "🌾" },
-  { id: "tomates", name: "Huerta de Tomates", icon: "🍅" },
-  { id: "olivar", name: "Olivar", icon: "🫒" },
-  { id: "compost", name: "Zona Compost", icon: "♻️" },
-  { id: "hierbas", name: "Jardín de Hierbas", icon: "🌿" },
-  { id: "agua", name: "Depósito de Agua", icon: "💧" },
-];
-
-const metrics = [
-  {
-    id: "moisture",
-    name: "Humedad",
-    icon: Droplets,
-    color: "oliveGreen",
-    unit: "%",
-  },
-  {
-    id: "temperature",
-    name: "Temperatura",
-    icon: Thermometer,
-    color: "sicilian-red",
-    unit: "°C",
-  },
-  { id: "light", name: "Luz Solar", icon: Sun, color: "wheatGold", unit: "%" },
-];
-
-const periods = [
-  { id: "7", name: "7 días" },
-  { id: "15", name: "15 días" },
-  { id: "30", name: "30 días" },
-  { id: "90", name: "3 meses" },
-];
-
-export default function Analysis() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [zonesData, setZonesData] = useState<ZoneData[]>([]);
+export default function AnalysisPage() {
   const [selectedZones, setSelectedZones] = useState<string[]>([
     "tomates",
     "olivar",
   ]);
   const [selectedMetric, setSelectedMetric] = useState("moisture");
   const [selectedPeriod, setSelectedPeriod] = useState("30");
-  const [isExporting, setIsExporting] = useState(false);
-  const [showComparison, setShowComparison] = useState(true);
   const [showPredictions, setShowPredictions] = useState(true);
 
-  useEffect(() => {
-    const generateAllData = () => {
-      return baseZones.map((zone) => ({
-        ...zone,
-        moisture: generateHistoricalData(
-          90,
-          zone.id === "esparto"
-            ? 78
-            : zone.id === "tomates"
-              ? 82
-              : zone.id === "olivar"
-                ? 45
-                : zone.id === "compost"
-                  ? 55
-                  : zone.id === "hierbas"
-                    ? 68
-                    : 90,
-          8,
-        ),
-        temperature: generateHistoricalData(
-          90,
-          zone.id === "esparto"
-            ? 22
-            : zone.id === "tomates"
-              ? 24
-              : zone.id === "olivar"
-                ? 21
-                : zone.id === "compost"
-                  ? 28
-                  : zone.id === "hierbas"
-                    ? 23
-                    : 18,
-          3,
-        ),
-        light: generateHistoricalData(
-          90,
-          zone.id === "esparto"
-            ? 65
-            : zone.id === "tomates"
-              ? 78
-              : zone.id === "olivar"
-                ? 45
-                : zone.id === "compost"
-                  ? 30
-                  : zone.id === "hierbas"
-                    ? 70
-                    : 40,
-          zone.id === "tomates" ? 12 : 8,
-        ),
-      }));
-    };
-
-    setZonesData(generateAllData());
-    setIsMounted(true);
-  }, []);
-
-  const getStatistics = () => {
-    const stats: any = {};
-
-    selectedZones.forEach((zoneId) => {
-      const zone = zonesData.find((z) => z.id === zoneId);
-      if (!zone) return;
-
-      const metric = selectedMetric as keyof typeof zone;
-      const data = zone[metric] as DataPoint[];
-
-      if (data && data.length > 0) {
-        const values = data.map((d) => d.value);
-        const avg = values.reduce((a, b) => a + b, 0) / values.length;
-        const max = Math.max(...values);
-        const min = Math.min(...values);
-        const last = values[values.length - 1];
-        const first = values[0];
-        const trend = (((last - first) / first) * 100).toFixed(1);
-
-        stats[zoneId] = {
-          avg: avg.toFixed(1),
-          max: max.toFixed(1),
-          min: min.toFixed(1),
-          trend: parseFloat(trend),
-          last: last.toFixed(1),
-        };
-      }
-    });
-
-    return stats;
-  };
-
-  const statistics = getStatistics();
-
-  const exportData = () => {
-    setIsExporting(true);
-    setTimeout(() => {
-      const dataToExport = {
-        generatedAt: new Date().toISOString(),
-        period: `${selectedPeriod} días`,
-        metric: metrics.find((m) => m.id === selectedMetric)?.name,
-        zones: selectedZones.map((zoneId) => {
-          const zone = zonesData.find((z) => z.id === zoneId);
-          return {
-            name: zone?.name,
-            icon: zone?.icon,
-            data: zone?.[selectedMetric as keyof ZoneData],
-          };
-        }),
-      };
-
-      const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `sintropico-monitor-export-${new Date().toISOString().split("T")[0]}.json`;
-      a.click();
-      setTimeout(() => setIsExporting(false), 1000);
-    }, 1500);
-  };
-
-  const toggleZone = (zoneId: string) => {
-    setSelectedZones((prev) =>
-      prev.includes(zoneId)
-        ? prev.filter((id) => id !== zoneId)
-        : [...prev, zoneId],
-    );
-  };
+  const { zonesData, statistics, isLoading } = useAnalysisData();
 
   const currentMetric = metrics.find((m) => m.id === selectedMetric);
-  const getFilteredDataForZone = (zoneId: string, metricType: string) => {
-    const zone = zonesData.find((z) => z.id === zoneId);
-    if (!zone) return [];
-    const data = zone[metricType as keyof ZoneData] as DataPoint[];
-    const periodDays = parseInt(selectedPeriod);
-    return data.slice(-periodDays);
+  const unit = getMetricUnit(selectedMetric);
+  const metricColor = getMetricColor(selectedMetric);
+
+  const filteredZones = zonesData
+    .filter((z) => selectedZones.includes(z.id))
+    .map((zone) => ({
+      id: zone.id,
+      name: zone.name,
+      icon: zone.icon,
+      stats: statistics[zone.id] || {
+        avg: 0,
+        max: 0,
+        min: 0,
+        trend: 0,
+        last: 0,
+      },
+      metricColor,
+      unit,
+    }));
+
+  const predictionZones = zonesData
+    .filter((z) => selectedZones.includes(z.id))
+    .map((zone) => ({
+      id: zone.id,
+      name: zone.name,
+      icon: zone.icon,
+      data: zone[selectedMetric as keyof typeof zone] as any[],
+    }));
+
+  const handleExport = () => {
+    const exportData = {
+      generatedAt: new Date().toISOString(),
+      period: `${selectedPeriod} días`,
+      metric: currentMetric?.name,
+      zones: filteredZones.map((z) => ({
+        name: z.name,
+        stats: z.stats,
+      })),
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `analisis-${new Date().toISOString().split("T")[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
-  const getMetricColor = (metricId: string) => {
-    switch (metricId) {
-      case "moisture":
-        return "text-oliveGreen";
-      case "temperature":
-        return "text-sicilian-red";
-      case "light":
-        return "text-wheatGold";
-      default:
-        return "text-charcoalGray";
-    }
-  };
-
-  const getMetricBgColor = (metricId: string) => {
-    switch (metricId) {
-      case "moisture":
-        return "bg-oliveGreen/10 border-oliveGreen/20";
-      case "temperature":
-        return "bg-sicilian-red/10 border-sicilian-red/20";
-      case "light":
-        return "bg-wheatGold/10 border-wheatGold/20";
-      default:
-        return "bg-offWhite border-oliveGreen/15";
-    }
-  };
-
-  if (!isMounted || zonesData.length === 0) {
+  if (isLoading) {
     return (
       <div className="min-h-screen p-4 md:p-8 bg-offWhite flex items-center justify-center">
         <div className="text-center">
@@ -309,133 +113,38 @@ export default function Analysis() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={exportData}
-              disabled={isExporting}
-              className={`px-4 py-2 bg-oliveGreen text-offWhite rounded-lg flex items-center gap-2 hover:bg-oliveGreen/90 transition-all ${
-                isExporting
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:scale-[1.02]"
-              }`}
-            >
-              {isExporting ? (
-                <RefreshCw className="w-4 h-4 animate-spin" />
-              ) : (
-                <DownloadCloud className="w-4 h-4" />
-              )}
-              {isExporting ? "Exportando..." : "Exportar datos"}
-            </button>
-          </div>
+          <button
+            onClick={handleExport}
+            className="px-4 py-2 bg-oliveGreen text-offWhite rounded-lg flex items-center gap-2 hover:bg-oliveGreen/90 transition-all hover:scale-[1.02]"
+          >
+            <DownloadCloud className="w-4 h-4" />
+            Exportar datos
+          </button>
         </div>
 
-        {/* Filtros principales */}
+        {/* Filters */}
         <div className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15 mb-8">
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Selección de zonas */}
-            <div>
-              <label className="block text-sm font-medium text-oliveGreen mb-3">
-                Zonas a comparar
-              </label>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                {zonesData.map((zone) => (
-                  <button
-                    key={zone.id}
-                    onClick={() => toggleZone(zone.id)}
-                    className={`flex items-center justify-between w-full px-3 py-2 rounded-lg transition-colors ${
-                      selectedZones.includes(zone.id)
-                        ? "bg-oliveGreen/10 text-oliveGreen border border-oliveGreen/30"
-                        : "bg-offWhite text-charcoalGray/70 hover:bg-oliveGreen/5 border border-oliveGreen/10"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span>{zone.icon}</span>
-                      <span className="font-medium">{zone.name}</span>
-                    </span>
-                    {selectedZones.includes(zone.id) && (
-                      <span className="text-xs bg-oliveGreen/20 text-oliveGreen px-2 py-0.5 rounded-full">
-                        seleccionada
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Selección de métrica */}
-            <div>
-              <label className="block text-sm font-medium text-oliveGreen mb-3">
-                Métrica a analizar
-              </label>
-              <div className="space-y-2">
-                {metrics.map((metric) => {
-                  const Icon = metric.icon;
-                  return (
-                    <button
-                      key={metric.id}
-                      onClick={() => setSelectedMetric(metric.id)}
-                      className={`flex items-center justify-between w-full px-3 py-2 rounded-lg transition-colors ${
-                        selectedMetric === metric.id
-                          ? `${getMetricBgColor(metric.id)} border`
-                          : "bg-offWhite text-charcoalGray/70 hover:bg-oliveGreen/5 border border-oliveGreen/10"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <Icon
-                          className={`w-4 h-4 ${getMetricColor(metric.id)}`}
-                        />
-                        <span className="font-medium">{metric.name}</span>
-                      </span>
-                      <span className="text-xs text-oliveGreen/50">
-                        {metric.unit}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Selección de período */}
-            <div>
-              <label className="block text-sm font-medium text-oliveGreen mb-3">
-                Período de tiempo
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {periods.map((period) => (
-                  <button
-                    key={period.id}
-                    onClick={() => setSelectedPeriod(period.id)}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      selectedPeriod === period.id
-                        ? "bg-oliveGreen text-offWhite"
-                        : "bg-offWhite text-charcoalGray/70 hover:bg-oliveGreen/5 border border-oliveGreen/10"
-                    }`}
-                  >
-                    {period.name}
-                  </button>
-                ))}
-              </div>
-              <div className="mt-4 space-y-2">
-                <label className="flex items-center gap-2 text-sm text-oliveGreen">
-                  <input
-                    type="checkbox"
-                    checked={showComparison}
-                    onChange={() => setShowComparison(!showComparison)}
-                    className="rounded text-oliveGreen"
-                  />
-                  Mostrar comparativa
-                </label>
-                <label className="flex items-center gap-2 text-sm text-oliveGreen">
-                  <input
-                    type="checkbox"
-                    checked={showPredictions}
-                    onChange={() => setShowPredictions(!showPredictions)}
-                    className="rounded text-oliveGreen"
-                  />
-                  Mostrar predicciones
-                </label>
-              </div>
-            </div>
+            <ZoneSelector
+              selectedZones={selectedZones}
+              onZoneToggle={(zoneId) => {
+                setSelectedZones((prev) =>
+                  prev.includes(zoneId)
+                    ? prev.filter((id) => id !== zoneId)
+                    : [...prev, zoneId],
+                );
+              }}
+            />
+            <MetricsSelector
+              selectedMetric={selectedMetric}
+              onMetricChange={setSelectedMetric}
+            />
+            <PeriodSelector
+              selectedPeriod={selectedPeriod}
+              onPeriodChange={setSelectedPeriod}
+              showPredictions={showPredictions}
+              onTogglePredictions={() => setShowPredictions(!showPredictions)}
+            />
           </div>
         </div>
 
@@ -445,378 +154,30 @@ export default function Analysis() {
             <h2 className="text-2xl font-bold text-charcoalGray mb-2">
               Selecciona zonas para analizar
             </h2>
-            <p className="text-oliveGreen/60 mb-6">
+            <p className="text-oliveGreen/60">
               Elige al menos una zona del panel izquierdo para ver los datos
             </p>
           </div>
         ) : (
           <>
-            {/* Grid de estadísticas */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {selectedZones.map((zoneId) => {
-                const zone = zonesData.find((z) => z.id === zoneId);
-                const stats = statistics[zoneId];
-                if (!zone || !stats) return null;
+            <StatsGrid zones={filteredZones} />
 
-                const trendColor =
-                  stats.trend > 0
-                    ? "text-oliveGreen"
-                    : stats.trend < 0
-                      ? "text-sicilian-red"
-                      : "text-charcoalGray/50";
-
-                return (
-                  <div
-                    key={zoneId}
-                    className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15 hover:shadow-xl transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{zone.icon}</span>
-                        <h3 className="text-lg font-bold text-charcoalGray">
-                          {zone.name}
-                        </h3>
-                      </div>
-                      <span
-                        className={`flex items-center gap-1 text-sm ${trendColor}`}
-                      >
-                        {stats.trend > 0 ? (
-                          <TrendingUp className="w-4 h-4" />
-                        ) : (
-                          <TrendingDown className="w-4 h-4" />
-                        )}
-                        {Math.abs(stats.trend)}%
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="text-center p-3 bg-oliveGreen/5 rounded-lg">
-                        <p className="text-sm text-oliveGreen/60">Promedio</p>
-                        <p className="text-2xl font-bold text-charcoalGray">
-                          {stats.avg}
-                          {currentMetric?.unit}
-                        </p>
-                      </div>
-                      <div className="text-center p-3 bg-oliveGreen/5 rounded-lg">
-                        <p className="text-sm text-oliveGreen/60">Actual</p>
-                        <p className="text-2xl font-bold text-oliveGreen">
-                          {stats.last}
-                          {currentMetric?.unit}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between text-sm text-oliveGreen/60 mb-2">
-                      <span>
-                        Mín: {stats.min}
-                        {currentMetric?.unit}
-                      </span>
-                      <span>
-                        Máx: {stats.max}
-                        {currentMetric?.unit}
-                      </span>
-                    </div>
-
-                    <div className="h-16 flex items-end gap-0.5 mt-4">
-                      {(zone[selectedMetric as keyof ZoneData] as DataPoint[])
-                        .slice(-14)
-                        .map((point, i) => (
-                          <div
-                            key={i}
-                            className={`flex-1 rounded-t ${selectedMetric === "moisture" ? "bg-oliveGreen" : selectedMetric === "temperature" ? "bg-sicilian-red" : "bg-wheatGold"}`}
-                            style={{ height: `${(point.value / 100) * 100}%` }}
-                          />
-                        ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* SECCIÓN DE GRÁFICOS */}
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-charcoalGray mb-4 flex items-center gap-2">
-                <LineChart className="w-5 h-5 text-oliveGreen" />
-                Visualización detallada
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {selectedZones.map((zoneId) => {
-                  const zone = zonesData.find((z) => z.id === zoneId);
-                  if (!zone) return null;
-
-                  const moistureData = getFilteredDataForZone(
-                    zoneId,
-                    "moisture",
-                  );
-                  const temperatureData = getFilteredDataForZone(
-                    zoneId,
-                    "temperature",
-                  );
-                  const lightData = getFilteredDataForZone(zoneId, "light");
-
-                  return (
-                    <div key={zoneId} className="space-y-6">
-                      {selectedMetric === "moisture" && (
-                        <div className="bg-offWhite rounded-2xl p-6 shadow-sm border border-oliveGreen/15">
-                          <HumidityChart
-                            zoneName={zone.name}
-                            data={moistureData}
-                          />
-                        </div>
-                      )}
-                      {selectedMetric === "temperature" && (
-                        <div className="bg-offWhite rounded-2xl p-6 shadow-sm border border-oliveGreen/15">
-                          <TemperatureChart
-                            zoneName={zone.name}
-                            data={temperatureData}
-                          />
-                        </div>
-                      )}
-                      {selectedMetric === "light" && (
-                        <div className="bg-offWhite rounded-2xl p-6 shadow-sm border border-oliveGreen/15">
-                          <LightChart
-                            zoneName={zone.name}
-                            data={lightData}
-                            height={350}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Gráfico principal de comparativa */}
-            {showComparison && (
-              <div className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15 mb-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-charcoalGray flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-oliveGreen" />
-                    Comparativa entre zonas
-                  </h2>
-                  <span className="text-sm text-oliveGreen/60">
-                    Últimos {selectedPeriod} días
-                  </span>
-                </div>
-
-                <div className="h-80 flex items-end gap-4">
-                  {selectedZones.map((zoneId) => {
-                    const zone = zonesData.find((z) => z.id === zoneId);
-                    if (!zone) return null;
-
-                    const data = zone[
-                      selectedMetric as keyof ZoneData
-                    ] as DataPoint[];
-                    if (!data) return null;
-
-                    const avg =
-                      data.reduce((a, b) => a + b.value, 0) / data.length;
-                    const barColor =
-                      selectedMetric === "moisture"
-                        ? "bg-oliveGreen"
-                        : selectedMetric === "temperature"
-                          ? "bg-sicilian-red"
-                          : "bg-wheatGold";
-
-                    return (
-                      <div
-                        key={zoneId}
-                        className="flex-1 flex flex-col items-center"
-                      >
-                        <div className="w-full flex flex-col items-center">
-                          <span className="text-2xl mb-2">{zone.icon}</span>
-                          <div className="relative w-full flex justify-center">
-                            <div
-                              className={`w-16 ${barColor} rounded-t`}
-                              style={{ height: `${(avg / 100) * 200}px` }}
-                            />
-                          </div>
-                          <span className="mt-2 font-bold text-charcoalGray">
-                            {avg.toFixed(1)}
-                            {currentMetric?.unit}
-                          </span>
-                          <span className="text-sm text-oliveGreen/60">
-                            {zone.name}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            {showPredictions && predictionZones.length > 0 && (
+              <PredictionCard
+                zones={predictionZones}
+                metricName={currentMetric?.name || ""}
+                unit={unit}
+                onClose={() => setShowPredictions(false)}
+              />
             )}
 
-            {/* Predicciones */}
-            {showPredictions && (
-              <div className="bg-gradient-to-r from-oliveGreen to-oliveGreen/90 rounded-xl p-6 shadow-lg text-offWhite mb-8">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Predicciones para los próximos 7 días
-                </h2>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  {selectedZones.slice(0, 3).map((zoneId) => {
-                    const zone = zonesData.find((z) => z.id === zoneId);
-                    if (!zone) return null;
-
-                    const data = zone[
-                      selectedMetric as keyof ZoneData
-                    ] as DataPoint[];
-                    if (!data) return null;
-
-                    const lastValue = data[data.length - 1].value;
-                    const prediction = lastValue + (Math.random() * 6 - 3);
-                    const confidence = 70 + Math.random() * 20;
-
-                    return (
-                      <div
-                        key={zoneId}
-                        className="bg-offWhite/10 rounded-lg p-4 backdrop-blur-sm border border-offWhite/20"
-                      >
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="text-2xl">{zone.icon}</span>
-                          <span className="font-bold">{zone.name}</span>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span>Actual:</span>
-                            <span className="font-bold">
-                              {lastValue.toFixed(1)}
-                              {currentMetric?.unit}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Predicción:</span>
-                            <span className="font-bold text-wheatGold">
-                              {prediction.toFixed(1)}
-                              {currentMetric?.unit}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Confianza:</span>
-                            <span className="font-bold">
-                              {confidence.toFixed(0)}%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            {predictionZones.length > 0 && (
+              <DataTable zones={predictionZones} unit={unit} />
             )}
 
-            {/* Tabla de datos históricos */}
-            <div className="bg-offWhite rounded-xl p-6 shadow-lg border border-oliveGreen/15">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-charcoalGray flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-oliveGreen" />
-                  Datos históricos detallados
-                </h2>
-                <button className="text-sm text-oliveGreen hover:text-oliveGreen/80 flex items-center gap-1">
-                  <Download className="w-4 h-4" />
-                  Descargar CSV
-                </button>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-oliveGreen/15">
-                      <th className="text-left py-3 px-4 text-oliveGreen">
-                        Fecha
-                      </th>
-                      {selectedZones.map((zoneId) => {
-                        const zone = zonesData.find((z) => z.id === zoneId);
-                        return (
-                          <th
-                            key={zoneId}
-                            className="text-left py-3 px-4 text-oliveGreen"
-                          >
-                            {zone?.icon} {zone?.name}
-                          </th>
-                        );
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(
-                      zonesData[0]?.[
-                        selectedMetric as keyof ZoneData
-                      ] as DataPoint[]
-                    )
-                      .slice(-10)
-                      .reverse()
-                      .map((point, index) => (
-                        <tr
-                          key={index}
-                          className="border-b border-oliveGreen/10 hover:bg-oliveGreen/5"
-                        >
-                          <td className="py-2 px-4 text-charcoalGray/70">
-                            {point.timestamp}
-                          </td>
-                          {selectedZones.map((zoneId) => {
-                            const zone = zonesData.find((z) => z.id === zoneId);
-                            if (!zone) return null;
-                            const data = zone[
-                              selectedMetric as keyof ZoneData
-                            ] as DataPoint[];
-                            const dataPoint = data.find(
-                              (d) => d.timestamp === point.timestamp,
-                            );
-                            return (
-                              <td
-                                key={zoneId}
-                                className="py-2 px-4 font-medium text-charcoalGray"
-                              >
-                                {dataPoint?.value.toFixed(1)}
-                                {currentMetric?.unit}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <InsightsFooter />
           </>
         )}
-
-        {/* Footer con insights */}
-        <footer className="mt-12 pt-8 border-t border-oliveGreen/10">
-          <div className="grid md:grid-cols-4 gap-4 text-sm">
-            <div className="bg-oliveGreen/5 rounded-lg p-4 border border-oliveGreen/10">
-              <h4 className="font-bold text-oliveGreen mb-2">
-                Insights destacados
-              </h4>
-              <p className="text-charcoalGray/70">
-                La humedad en el olivar ha bajado un 12% esta semana
-              </p>
-            </div>
-            <div className="bg-oliveGreen/5 rounded-lg p-4 border border-oliveGreen/10">
-              <h4 className="font-bold text-oliveGreen mb-2">Recomendación</h4>
-              <p className="text-charcoalGray/70">
-                Aumentar riego en zonas con tendencia negativa
-              </p>
-            </div>
-            <div className="bg-oliveGreen/5 rounded-lg p-4 border border-oliveGreen/10">
-              <h4 className="font-bold text-oliveGreen mb-2">
-                Mejor rendimiento
-              </h4>
-              <p className="text-charcoalGray/70">
-                Huerta de Tomates: +5% vs promedio
-              </p>
-            </div>
-            <div className="bg-wheatGold/5 rounded-lg p-4 border border-wheatGold/10">
-              <h4 className="font-bold text-wheatGold mb-2">Alerta</h4>
-              <p className="text-charcoalGray/70">
-                Revisar sensor en zona Compost
-              </p>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );
