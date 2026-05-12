@@ -1,0 +1,186 @@
+import React from "react";
+import { TreeDeciduous, Flower2, Leaf, Sprout } from "lucide-react";
+import type {
+  LayerType,
+  SymbiosisType,
+  SuccessionType,
+  ElementType,
+} from "@/lib/types/design.types";
+
+export const layers: LayerType[] = [
+  {
+    id: "canopy",
+    name: "Canopy (Estrato alto)",
+    height: "8-15 m",
+    description: "El techo del bosque, donde la luz se filtra y la vida abunda",
+    symbiosis: [
+      "Sombrea el sotobosque",
+      "Protege del viento",
+      "Ciclo de nutrientes",
+    ],
+    species: [
+      {
+        name: "Olivo",
+        icon: "🫒",
+        function: "Sombra, aceite, estructura",
+        color: "#5A6B47",
+        benefits: ["Aceite de calidad", "Longevidad", "Resistente a sequía"],
+        companionPlants: ["Romero", "Lavanda", "Esparto"],
+      },
+      {
+        name: "Algarrobo",
+        icon: "🌳",
+        function: "Nitrógeno, sombra, alimento",
+        color: "#4A5B37",
+        benefits: ["Fija nitrógeno", "Alimento para ganado", "Madera noble"],
+        companionPlants: ["Trébol", "Alfalfa", "Esparto"],
+      },
+      {
+        name: "Almendro",
+        icon: "🌰",
+        function: "Frutos secos, floración temprana",
+        color: "#6B7B57",
+        benefits: [
+          "Floración ornamental",
+          "Frutos secos",
+          "Abejas polinizadoras",
+        ],
+        companionPlants: ["Lavanda", "Romero", "Tomillo"],
+      },
+    ],
+    icon: React.createElement(TreeDeciduous, { className: "w-6 h-6" }),
+    color: "from-oliveGreen to-oliveGreen/80",
+    bg: "bg-oliveGreen/5",
+  },
+  {
+    id: "understory",
+    name: "Sotobosque (Estrato medio)",
+    height: "2-6 m",
+    description:
+      "El corazón del ecosistema, donde ocurre la magia de la biodiversidad",
+    symbiosis: [
+      "Protege el suelo",
+      "Hábitat para fauna",
+      "Ciclo de nutrientes",
+    ],
+    species: [
+      {
+        name: "Esparto",
+        icon: "🌾",
+        function: "Fibra textil, biomasa",
+        color: "#E6B422",
+        benefits: ["Fibra natural", "Control de erosión", "Biomasa"],
+        companionPlants: ["Olivo", "Almendro", "Romero"],
+      },
+      {
+        name: "Romero",
+        icon: "🌿",
+        function: "Aromática, protección",
+        color: "#7A8B67",
+        benefits: ["Aceites esenciales", "Repelente natural", "Culinario"],
+        companionPlants: ["Olivo", "Lavanda", "Tomillo"],
+      },
+      {
+        name: "Tomillo",
+        icon: "🌱",
+        function: "Aromática, cobertura",
+        color: "#8B9B77",
+        benefits: [
+          "Antiséptico natural",
+          "Cobertura suelo",
+          "Atrae polinizadores",
+        ],
+        companionPlants: ["Romero", "Lavanda", "Albahaca"],
+      },
+    ],
+    icon: React.createElement(Flower2, { className: "w-6 h-6" }),
+    color: "from-wheatGold to-wheatGold/80",
+    bg: "bg-wheatGold/5",
+  },
+  {
+    id: "fungal",
+    name: "Capa fúngica (Micología)",
+    height: "0.1-0.3 m",
+    description: "El internet de la naturaleza, conectando todo bajo tierra",
+    symbiosis: [
+      "Conexión subterránea",
+      "Descomposición",
+      "Nutrientes compartidos",
+    ],
+    species: [
+      {
+        name: "Cardonchello",
+        icon: "🍄",
+        function: "Descomposición, alimento",
+        color: "#CD212A",
+        benefits: ["Gourmet", "Descompone materia", "Micorrizas"],
+        companionPlants: ["Olivo", "Algarrobo", "Encina"],
+      },
+      {
+        name: "Cardoncello di Nebrodi",
+        icon: "🍄",
+        function: "Endémica, gourmet",
+        color: "#B81820",
+        benefits: ["Endémica Sicilia", "Alto valor", "Turismo micológico"],
+        companionPlants: ["Esparto", "Olivo", "Algarrobo"],
+      },
+      {
+        name: "Prataiolo siciliano",
+        icon: "🍄",
+        function: "Humus, regeneración",
+        color: "#D42A32",
+        benefits: ["Mejora suelo", "Ciclo rápido", "Fácil cultivo"],
+        companionPlants: ["Todas las plantas"],
+      },
+      {
+        name: "Níccolo",
+        icon: "🍄",
+        function: "Micorriza con encinas",
+        color: "#A91018",
+        benefits: ["Gastronómico", "Conservación", "Micorrizas"],
+        companionPlants: ["Encina", "Pino", "Algarrobo"],
+      },
+    ],
+    icon: React.createElement(Leaf, { className: "w-6 h-6" }),
+    color: "from-sicilian-red to-sicilian-red/80",
+    bg: "bg-sicilian-red/5",
+  },
+  {
+    id: "ground",
+    name: "Cobertura vegetal",
+    height: "0-0.5 m",
+    description: "La alfombra viva que protege y nutre el suelo",
+    symbiosis: ["Fija nitrógeno", "Protege erosión", "Retiene humedad"],
+    species: [
+      {
+        name: "Trébol",
+        icon: "🍀",
+        function: "Fijador de nitrógeno",
+        color: "#5A6B47",
+        benefits: ["Fija N2", "Cobertura rápida", "Forraje"],
+        companionPlants: ["Olivo", "Algarrobo", "Almendro"],
+      },
+      {
+        name: "Habas",
+        icon: "🌱",
+        function: "Nitrógeno, biomasa",
+        color: "#4A5B37",
+        benefits: ["Abono verde", "Alimento", "Rotación"],
+        companionPlants: ["Olivo", "Tomate", "Maíz"],
+      },
+      {
+        name: "Alfalfa",
+        icon: "🌿",
+        function: "Cobertura, alimento",
+        color: "#6B7B57",
+        benefits: ["Protección suelo", "Forraje", "Raíces profundas"],
+        companionPlants: ["Olivo", "Almendro", "Higuera"],
+      },
+    ],
+    icon: React.createElement(Sprout, { className: "w-6 h-6" }),
+    color: "from-oliveGreen to-oliveGreen/70",
+    bg: "bg-oliveGreen/5",
+  },
+];
+
+// ... resto del código (symbiosis, succession, drawingElements, categories) igual
