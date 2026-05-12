@@ -1,4 +1,4 @@
-// apps/web/lib/sicilia-soil-client.ts
+// apps/web/lib/client/sicilia-soil-client.ts
 import { io, Socket } from "socket.io-client";
 
 // Tipos de datos para sensores
