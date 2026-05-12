@@ -2,34 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Capa base - estilos globales */
 @layer base {
   body {
-    @apply bg-background text-text-primary;
+    background-color: #fdfbf7;
+    color: #1a1a1a;
   }
 }
 
+/* Capa de componentes - utilidades personalizadas */
 @layer components {
-  /* Contenedor responsive */
-  .container-responsive {
-    @apply px-4 mx-auto max-w-7xl;
+  .btn-primary {
+    @apply bg-oliveGreen text-white px-4 py-2 rounded-lg hover:bg-oliveGreen/90 transition-all;
   }
 
-  /* Grid responsive para tarjetas */
-  .grid-responsive {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6;
+  .card {
+    @apply bg-white rounded-xl p-6 shadow-sm border border-oliveGreen/15 hover:shadow-md transition-all;
   }
+}
 
-  /* Tarjeta responsive */
-  .card-responsive {
-    @apply bg-white rounded-xl p-4 md:p-6 shadow-sm border border-[#E6B17E]/20 hover:shadow-md transition-all;
-  }
-
-  /* Texto responsive */
-  .title-responsive {
-    @apply text-xl md:text-2xl lg:text-3xl font-bold;
-  }
-
-  .subtitle-responsive {
-    @apply text-base md:text-lg text-gray-600;
+/* Capa de utilidades */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }

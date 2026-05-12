@@ -1,12 +1,5 @@
 import { ReactNode, ButtonHTMLAttributes } from "react";
 
-/**
- * Button component with multiple variants
- *
- * @example
- * <Button variant="primary">Click me</Button>
- * <Button variant="outline" size="lg" isLoading>Loading</Button>
- */
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: "primary" | "secondary" | "outline" | "ghost";
@@ -16,16 +9,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants = {
   primary:
-    "bg-gradient-to-r from-red-600 to-yellow-500 text-white hover:shadow-lg",
-  secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200",
-  outline: "border-2 border-red-200 text-gray-700 hover:bg-red-50",
-  ghost: "text-gray-600 hover:bg-gray-100",
+    "bg-oliveGreen text-offWhite hover:bg-oliveGreen/90 shadow-sm shadow-oliveGreen/20",
+  secondary:
+    "bg-wheatGold text-charcoalGray hover:bg-wheatGold/90 shadow-sm shadow-wheatGold/20",
+  outline: "border-2 border-oliveGreen text-oliveGreen hover:bg-oliveGreen/5",
+  ghost: "text-oliveGreen hover:bg-oliveGreen/5",
 };
 
 const sizes = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
+  sm: "px-3 py-1.5 text-sm rounded-lg",
+  md: "px-4 py-2 text-base rounded-xl",
+  lg: "px-6 py-3 text-lg rounded-xl",
 };
 
 export const Button = ({
@@ -39,18 +33,18 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`rounded-xl font-semibold transition-all duration-200 ${variants[variant]} ${sizes[size]} ${
+      className={`font-semibold transition-all duration-200 ${variants[variant]} ${sizes[size]} ${
         disabled || isLoading
           ? "opacity-50 cursor-not-allowed"
-          : "hover:scale-[1.02]"
+          : "hover:scale-[1.02] active:scale-[0.98]"
       } ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >
       {isLoading ? (
         <div className="flex items-center justify-center gap-2">
-          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          <span>Loading...</span>
+          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          <span>Cargando...</span>
         </div>
       ) : (
         children

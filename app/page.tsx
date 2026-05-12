@@ -1,49 +1,104 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
+  Home,
   Droplets,
   Thermometer,
   Sun,
-  Wind,
-  CheckCircle,
+  LineChart,
+  Settings,
+  Menu,
+  X,
+  Bell,
+  User,
   Sprout,
   Leaf,
+  Layers,
+  Flower2,
+  Wind,
+  CheckCircle,
+  Trees,
+  Droplet,
+  ThermometerSun,
+  Map,
   Calendar,
-  Clock,
-  Scissors,
-  Package,
-  Factory,
+  Eye,
+  Trash2,
 } from "lucide-react";
 
-// Import from packages
 import { Badge } from "@/components/common/Badge";
 import { Button } from "@/components/common/Button";
-import { formatRelativeTime } from "@/lib/utils/helpers";
+import { StatsCard } from "@/components/dashboard/StatsCards";
+import { ZoneCard } from "@/components/dashboard/ZoneCards";
+import { SicilianFlag } from "@/components/layout/SicilianFlag";
 
 import type { GardenZone } from "@/lib/types";
 
-export default function HomePage() {
+// Tipos para los diseños guardados
+interface SavedDesign {
+  name: string;
+  elements: any[];
+  date: string;
+  canvasSize: { width: number; height: number };
+}
+
+const navItems = [
+  { id: "/", label: "Dashboard", icon: Home },
+  { id: "/humedity", label: "Humedad", icon: Droplets },
+  { id: "/temperature", label: "Temperatura", icon: Thermometer },
+  { id: "/light", label: "Luz Solar", icon: Sun },
+  { id: "/analysis", label: "Análisis", icon: LineChart },
+  { id: "/mycology", label: "Micología", icon: Leaf },
+  { id: "/design", label: "Diseño", icon: Layers },
+  { id: "/configuration", label: "Configuración", icon: Settings },
+];
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [serverStatus, setServerStatus] = useState<
     "checking" | "online" | "offline"
   >("checking");
+  const [savedDesigns, setSavedDesigns] = useState<SavedDesign[]>([]);
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
+  const isDashboard = pathname === "/";
 
   useEffect(() => {
-    const checkServer = async () => {
-      try {
-        setTimeout(() => {
-          setServerStatus("online");
-        }, 1000);
-      } catch (error) {
-        setServerStatus("offline");
-      }
-    };
-    checkServer();
-    const interval = setInterval(checkServer, 10000);
-    return () => clearInterval(interval);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Garden zones data
+  useEffect(() => {
+    setTimeout(() => setServerStatus("online"), 1000);
+  }, []);
+
+  // Cargar diseños guardados desde localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("sintropico-designs-v3");
+    if (saved) {
+      setSavedDesigns(JSON.parse(saved));
+    }
+  }, []);
+
+  // Función para eliminar un diseño
+  const handleDeleteDesign = (designName: string) => {
+    if (confirm(`¿Eliminar el diseño "${designName}"?`)) {
+      const updated = savedDesigns.filter((d) => d.name !== designName);
+      setSavedDesigns(updated);
+      localStorage.setItem("sintropico-designs-v3", JSON.stringify(updated));
+    }
+  };
+
   const gardenZones: GardenZone[] = [
     {
       id: "esparto",
@@ -125,752 +180,414 @@ export default function HomePage() {
     },
   ];
 
-  // Esparto data
-  const espartoData = {
-    general: {
-      scientificName: "Stipa tenacissima / Macrochloa tenacissima",
-      health: 92,
-      nextHarvest: "15 días",
-    },
-    growth: {
-      phase: "Crecimiento activo",
-      height: "85 cm",
-      density: "78%",
-      newShoots: 23,
-    },
-    soil: {
-      type: "Arcillo-calcáreo",
-      ph: 7.2,
-      moisture: 68,
-      nutrients: "buenos",
-    },
-    harvest: {
-      nextDate: "15 de mayo",
-      estimatedYield: "12 kg",
-      currentStock: "45 kg",
-      quality: "excelente",
-    },
-  };
-
-  // Esparto calendar
-  const espartoCalendar = [
-    {
-      month: "Enero",
-      tasks: ["Poda de limpieza", "Preparación de suelo"],
-      intensity: "baja",
-    },
-    {
-      month: "Febrero",
-      tasks: ["Abonado orgánico", "Riego de apoyo"],
-      intensity: "media",
-    },
-    {
-      month: "Marzo",
-      tasks: ["Inicio de crecimiento", "Control de malas hierbas"],
-      intensity: "media",
-    },
-    {
-      month: "Abril",
-      tasks: ["Riego regular", "Observación de brotes"],
-      intensity: "media",
-    },
-    {
-      month: "Mayo",
-      tasks: ["PREPARACIÓN PARA RECOLECCIÓN", "Selección de tallos"],
-      intensity: "alta",
-      highlight: true,
-    },
-    {
-      month: "Junio",
-      tasks: ["RECOLECCIÓN PRINCIPAL", "Secado al sol"],
-      intensity: "muy alta",
-      highlight: true,
-    },
-    {
-      month: "Julio",
-      tasks: ["Recolección tardía", "Clasificación"],
-      intensity: "alta",
-    },
-    {
-      month: "Agosto",
-      tasks: ["Secado continuado", "Almacenamiento"],
-      intensity: "media",
-    },
-    {
-      month: "Septiembre",
-      tasks: ["Limpieza de parcelas", "Preparación para otoño"],
-      intensity: "baja",
-    },
-    {
-      month: "Octubre",
-      tasks: ["Riego de mantenimiento", "Abonado de fondo"],
-      intensity: "baja",
-    },
-    {
-      month: "Noviembre",
-      tasks: ["Reposo vegetativo", "Planificación"],
-      intensity: "baja",
-    },
-    {
-      month: "Diciembre",
-      tasks: ["Mantenimiento de herramientas", "Formación"],
-      intensity: "baja",
-    },
-  ];
-
-  // Mushroom data (native Sicilian)
-  const mushroomZones = [
-    {
-      id: "cardonchello",
-      name: "Cardonchello",
-      scientificName: "Pleurotus eryngii",
-      location: "Raíces de Ferula communis - Zona Sombreada",
-      humidity: 85,
-      temperature: 18,
-      co2: 450,
-      stage: "crecimiento",
-      harvestIn: "5 días",
-      status: "óptimo",
-      icon: "🍄",
-    },
-    {
-      id: "cardoncello-nebrodi",
-      name: "Cardoncello di Nebrodi",
-      scientificName: "Pleurotus nebrodensis",
-      location: "Sustrato de restos de esparto - Cámara Controlada",
-      humidity: 80,
-      temperature: 20,
-      co2: 500,
-      stage: "fructificación",
-      harvestIn: "2 días",
-      status: "excelente",
-      icon: "🍄",
-    },
-    {
-      id: "prataiolo",
-      name: "Prataiolo Siciliano",
-      scientificName: "Agaricus bitorquis",
-      location: "Compost de esparto - Zona de Sombra",
-      humidity: 75,
-      temperature: 16,
-      co2: 600,
-      stage: "cosecha",
-      harvestIn: "hoy",
-      status: "listo",
-      icon: "🍄",
-    },
-    {
-      id: "niccolo",
-      name: "Níccolo",
-      scientificName: "Lactarius sanguifluus",
-      location: "Sotobosque de pinos y encinas",
-      humidity: 82,
-      temperature: 19,
-      co2: 480,
-      stage: "micorriza",
-      harvestIn: "12 días",
-      status: "bueno",
-      icon: "🍄",
-    },
-  ];
-
-  const gardenStats = [
+  const statsData = [
     {
       value: "71%",
       label: "Humedad media",
-      icon: <Droplets className="w-5 h-5" />,
+      icon: <Droplet className="w-5 h-5" />,
+      subtext: "+3% vs ayer",
     },
     {
       value: "22°C",
       label: "Temperatura media",
-      icon: <Thermometer className="w-5 h-5" />,
+      icon: <ThermometerSun className="w-5 h-5" />,
+      subtext: "Óptimo para cultivos",
     },
-    { value: "56%", label: "Luz solar", icon: <Sun className="w-5 h-5" /> },
+    {
+      value: "56%",
+      label: "Luz solar",
+      icon: <Sun className="w-5 h-5" />,
+      subtext: "Buena exposición",
+    },
     {
       value: "4",
       label: "Setas autóctonas",
       icon: <span className="text-xl">🍄</span>,
+      subtext: "En producción",
     },
     {
       value: "92%",
       label: "Salud del Esparto",
       icon: <Sprout className="w-5 h-5" />,
+      subtext: "Excelente estado",
     },
   ];
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-gradient-to-b from-amber-50 to-red-50">
-      {/* Header */}
-      <header className="max-w-6xl mx-auto mb-12">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                Sicilia Soil <Sprout className="w-6 h-6 text-red-600" />
-              </h1>
-              <p className="text-gray-600 flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-red-500" />
-                Permacultura, Micología y Esparto en Sicilia
-              </p>
-              <div className="mt-1"></div>
-            </div>
-          </div>
-
-          <div
-            className={`px-4 py-2 rounded-full flex items-center gap-2 ${
-              serverStatus === "online"
-                ? "bg-green-100 text-green-800"
-                : serverStatus === "offline"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-yellow-100 text-yellow-800"
-            }`}
-          >
-            {serverStatus === "online" && <CheckCircle className="w-4 h-4" />}
-            <span className="font-medium">
-              {serverStatus === "online"
-                ? "Sensores activos"
-                : serverStatus === "offline"
-                  ? "Sensores desconectados"
-                  : "Conectando sensores..."}
-            </span>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto">
-        {/* Hero Section */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
-          <div>
-            <div className="inline-flex items-center mb-4 px-4 py-2 bg-gradient-to-r from-red-100 to-yellow-100 text-red-800 rounded-full text-sm font-medium">
-              <span className="ml-2">Monitoreo en tiempo real</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Permacultura, Micología y Esparto
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">
-                tradición siciliana con tecnología
-              </span>
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Este proyecto monitoriza la humedad, temperatura y luz de mi
-              huerto en <strong>Sicilia</strong>, incluyendo cultivos de setas
-              autóctonas sicilianas y la planta de esparto, con su calendario de
-              recolección y procesamiento tradicional.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="https://github.com/carmen-buendia/sicilia-soil-web"
-                target="_blank"
-                className="px-8 py-4 bg-gradient-to-r from-red-600 to-yellow-500 text-white rounded-xl font-semibold flex items-center gap-3 hover:shadow-lg transition-all hover:scale-[1.02]"
+    <html lang="es">
+      <head>
+        <title>
+          Sintrópico Monitor - Permacultura Sintrópica en el Mediterráneo
+        </title>
+        <meta
+          name="description"
+          content="Monitoreo de huerto de permacultura sintrópica en la región del Mediterráneo"
+        />
+        <meta
+          name="keywords"
+          content="permacultura, sintrópica, mediterráneo, agricultura regenerativa"
+        />
+        <meta name="author" content="Carmen Buendía" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="min-h-screen bg-offWhite text-charcoalGray">
+        {/* Navbar */}
+        <nav
+          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+            scrolled
+              ? "bg-offWhite/98 backdrop-blur-xl shadow-xl border-b border-oliveGreen/15"
+              : "bg-offWhite/85 backdrop-blur-md border-b border-oliveGreen/10"
+          }`}
+        >
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
+              <Link
+                href="/"
+                className="flex items-center gap-2 sm:gap-3 group transition-all duration-300 hover:scale-[1.02]"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.26.82-.58 0-.287-.01-1.05-.015-2.06-3.338.726-4.042-1.61-4.042-1.61-.546-1.39-1.335-1.76-1.335-1.76-1.09-.746.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.306.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.123-.3-.535-1.52.117-3.16 0 0 1.008-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.29-1.552 3.297-1.23 3.297-1.23.653 1.64.24 2.86.118 3.16.768.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.62-5.476 5.92.43.37.824 1.102.824 2.22 0 1.602-.015 2.894-.015 3.287 0 .322.216.698.83.58C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
-                </svg>
-                Ver en GitHub
-              </a>
-              <button className="px-8 py-4 bg-white text-gray-700 rounded-xl font-semibold border-2 border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors">
-                Ver datos en tiempo real
-              </button>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="bg-white rounded-2xl p-8 shadow-xl border border-red-200">
-            <div className="flex items-center gap-2 mb-6">
-              <h3 className="text-2xl font-bold text-gray-900">
-                Estado general
-              </h3>
-            </div>
-            <div className="space-y-6">
-              {gardenStats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-yellow-50 rounded-xl border border-red-100"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-r from-red-500 to-yellow-400 rounded-lg text-white">
-                      {stat.icon}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{stat.label}</p>
-                      <p className="text-sm text-gray-600">Promedio hoy</p>
-                    </div>
+                <div className="relative">
+                  <div className="p-1.5 sm:p-2 bg-gradient-to-br from-oliveGreen via-sicilian-red to-wheatGold rounded-xl shadow-md">
+                    <Sprout className="w-5 h-5 sm:w-6 sm:h-6 text-offWhite" />
                   </div>
-                  <span className="text-2xl font-bold text-gray-900">
-                    {stat.value}
-                  </span>
+                  <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-wheatGold rounded-full ring-2 ring-offWhite animate-pulse" />
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Esparto Section */}
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                <Sprout className="w-8 h-8 text-amber-700" />
-                Cultivo de Esparto (Stipa tenacissima)
-              </h2>
-              <p className="text-gray-600">
-                Planta textil tradicional siciliana
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-red-600">
-              <span className="font-medium">Tradición siciliana</span>
-            </div>
-          </div>
-
-          {/* Esparto summary cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-amber-100 rounded-lg">
-                  <Sprout className="w-5 h-5 text-amber-700" />
-                </div>
-                <h3 className="font-bold text-gray-900">Estado general</h3>
-              </div>
-              <p className="text-2xl font-bold text-amber-700 mb-2">
-                {espartoData.general.health}% salud
-              </p>
-              <p className="text-sm text-gray-600">
-                {espartoData.general.scientificName}
-              </p>
-              <p className="text-xs text-gray-500 mt-2">
-                Próxima recolección: {espartoData.general.nextHarvest}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-amber-100 rounded-lg">
-                  <Leaf className="w-5 h-5 text-amber-700" />
-                </div>
-                <h3 className="font-bold text-gray-900">Crecimiento</h3>
-              </div>
-              <p className="text-lg font-bold text-gray-900">
-                {espartoData.growth.phase}
-              </p>
-              <p className="text-sm text-gray-600">
-                Altura: {espartoData.growth.height}
-              </p>
-              <p className="text-sm text-gray-600">
-                Densidad: {espartoData.growth.density}
-              </p>
-              <p className="text-sm text-amber-600 mt-2">
-                {espartoData.growth.newShoots} nuevos brotes
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-amber-100 rounded-lg">
-                  <Droplets className="w-5 h-5 text-amber-700" />
-                </div>
-                <h3 className="font-bold text-gray-900">Suelo</h3>
-              </div>
-              <p className="text-lg font-bold text-gray-900">
-                {espartoData.soil.type}
-              </p>
-              <p className="text-sm text-gray-600">
-                pH: {espartoData.soil.ph} • Humedad: {espartoData.soil.moisture}
-                %
-              </p>
-              <p className="text-sm text-green-600 mt-2">
-                Nutrientes: {espartoData.soil.nutrients}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-amber-100 rounded-lg">
-                  <Calendar className="w-5 h-5 text-amber-700" />
-                </div>
-                <h3 className="font-bold text-gray-900">Cosecha</h3>
-              </div>
-              <p className="text-lg font-bold text-amber-700">
-                {espartoData.harvest.nextDate}
-              </p>
-              <p className="text-sm text-gray-600">
-                Rendimiento: {espartoData.harvest.estimatedYield}
-              </p>
-              <p className="text-sm text-gray-600">
-                Stock: {espartoData.harvest.currentStock}
-              </p>
-              <p className="text-xs text-green-600 mt-2">
-                Calidad: {espartoData.harvest.quality}
-              </p>
-            </div>
-          </div>
-
-          {/* Esparto processes */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200 mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Factory className="w-5 h-5 text-amber-700" />
-              Procesos de transformación del esparto
-            </h3>
-            <div className="grid md:grid-cols-5 gap-4">
-              <div className="relative p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1 bg-amber-200 rounded-full">
-                    <Scissors className="w-5 h-5" />
+                <div className="flex flex-col">
+                  <h1 className="text-base sm:text-xl font-bold">
+                    <span className="text-charcoalGray">Sintrópico</span>
+                    <span className="text-sicilian-red ml-1">Monitor</span>
+                  </h1>
+                  <div className="flex items-center gap-1 text-xs text-oliveGreen/70">
+                    <SicilianFlag size="small" />
+                    <span>Permacultura Sintrópica</span>
+                    <Flower2 className="w-3 h-3" />
                   </div>
-                  <span className="font-medium text-sm">Recolección</span>
                 </div>
-                <p className="text-xs text-gray-600 mt-1">15 junio</p>
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              </div>
-              <div className="relative p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1 bg-amber-200 rounded-full">
-                    <Sun className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium text-sm">Secado</span>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">junio-julio</p>
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-400"></span>
-              </div>
-              <div className="relative p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1 bg-amber-200 rounded-full">
-                    <Droplets className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium text-sm">
-                    Majado (maceración)
-                  </span>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">julio</p>
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-yellow-500"></span>
-              </div>
-              <div className="relative p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1 bg-amber-200 rounded-full">
-                    <Factory className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium text-sm">Espadillado</span>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">agosto</p>
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-400"></span>
-              </div>
-              <div className="relative p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1 bg-amber-200 rounded-full">
-                    <Package className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium text-sm">
-                    Tejido/elaboración
-                  </span>
-                </div>
-                <p className="text-xs text-gray-600 mt-1">septiembre</p>
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-400"></span>
-              </div>
-            </div>
-          </div>
+              </Link>
 
-          {/* Esparto calendar */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-amber-700" />
-              Calendario anual de trabajo del esparto
-            </h3>
-            <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {espartoCalendar.map((month, index) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-lg border ${
-                    month.highlight
-                      ? "bg-gradient-to-r from-red-100 to-yellow-100 border-red-300"
-                      : "bg-gray-50 border-gray-200"
-                  }`}
-                >
-                  <h4 className="font-bold text-gray-900 mb-2 flex items-center justify-between">
-                    {month.month}
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full ${
-                        month.intensity === "baja"
-                          ? "bg-gray-200 text-gray-600"
-                          : month.intensity === "media"
-                            ? "bg-blue-100 text-blue-800"
-                            : month.intensity === "alta"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
+              <div className="hidden md:flex items-center gap-1 bg-oliveGreen/5 backdrop-blur-sm rounded-full p-1 border border-oliveGreen/15">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.id);
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.id}
+                      className={`flex items-center gap-1 lg:gap-2 px-3 lg:px-4 py-2 rounded-full transition-all duration-300 text-sm lg:text-base ${
+                        active
+                          ? "bg-oliveGreen text-offWhite shadow-md shadow-oliveGreen/30"
+                          : "text-charcoalGray/60 hover:bg-oliveGreen/10 hover:text-oliveGreen"
                       }`}
                     >
-                      {month.intensity}
-                    </span>
-                  </h4>
-                  <ul className="space-y-1">
-                    {month.tasks.map((task, i) => (
-                      <li
-                        key={i}
-                        className="text-xs text-gray-600 flex items-start gap-1"
-                      >
-                        <span className="text-amber-600 mt-0.5">•</span>
-                        {task}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 p-4 bg-amber-100 rounded-lg border border-amber-300">
-              <p className="text-sm text-amber-800 flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <strong>Nota:</strong> La recolección tradicional del esparto se
-                realiza en junio-julio, cuando la planta alcanza su máximo
-                desarrollo y antes de que pierda flexibilidad.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Mushroom Section */}
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                <span className="text-3xl">🍄</span>
-                Setas Autóctonas Sicilianas
-              </h2>
-              <p className="text-gray-600">
-                Hongos endémicos que regeneran el suelo
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-red-600">
-              <span className="font-medium">Micología autóctona</span>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {mushroomZones.map((mushroom) => (
-              <div
-                key={mushroom.id}
-                className="bg-white rounded-xl p-6 shadow-lg border border-amber-200 hover:border-red-300 transition-all hover:shadow-xl group"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-3xl">{mushroom.icon}</span>
-                  <Badge
-                    variant={
-                      mushroom.status === "óptimo"
-                        ? "success"
-                        : mushroom.status === "excelente"
-                          ? "success"
-                          : mushroom.status === "listo"
-                            ? "warning"
-                            : "info"
-                    }
-                  >
-                    {mushroom.status}
-                  </Badge>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-red-700">
-                  {mushroom.name}
-                </h3>
-                <p className="text-xs text-gray-500 italic mb-1">
-                  {mushroom.scientificName}
-                </p>
-                <p className="text-sm text-gray-600 mb-3 flex items-center gap-1">
-                  <span>📍</span> {mushroom.location}
-                </p>
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Humedad</span>
-                    <span className="font-bold">{mushroom.humidity}%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-gray-200 rounded-full">
-                    <div
-                      className="h-full bg-blue-500 rounded-full"
-                      style={{ width: `${mushroom.humidity}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Temperatura</span>
-                    <span className="font-bold">{mushroom.temperature}°C</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">CO₂</span>
-                    <span className="font-bold">{mushroom.co2} ppm</span>
-                  </div>
-                </div>
-                <div className="border-t border-gray-100 pt-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">Cosecha</span>
-                    <span className="font-medium text-red-600">
-                      {mushroom.harvestIn}
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    Etapa: {mushroom.stage}
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full mt-4">
-                  Ver detalles
-                </Button>
+                      <Icon className="w-4 h-4" />
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Garden Zones Section */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">
-                Zonas del huerto
-              </h2>
-              <p className="text-gray-600">
-                Datos actualizados de cada área de cultivo
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-red-600">
-              <span className="font-medium">Permacultura siciliana</span>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gardenZones.map((zone) => (
-              <div
-                key={zone.id}
-                className="bg-white rounded-xl p-6 shadow-lg border border-red-100 hover:border-red-300 transition-all hover:shadow-xl group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{zone.icon}</span>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-red-700">
-                        {zone.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm">{zone.type}</p>
-                    </div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <button className="relative p-1.5 sm:p-2 rounded-full text-oliveGreen/60 hover:text-sicilian-red transition-all duration-300 hover:bg-oliveGreen/10">
+                  <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-wheatGold rounded-full ring-2 ring-offWhite animate-pulse" />
+                </button>
+
+                <div className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-oliveGreen/10 to-wheatGold/10 rounded-full pl-2 pr-4 py-1 border border-oliveGreen/20">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-oliveGreen to-wheatGold rounded-full flex items-center justify-center">
+                    <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-offWhite" />
                   </div>
-                  <Badge
-                    variant={
-                      zone.status === "saludable"
-                        ? "success"
-                        : zone.status === "óptimo"
-                          ? "info"
-                          : zone.status === "necesita riego"
-                            ? "warning"
-                            : "default"
-                    }
-                  >
-                    {zone.status}
-                  </Badge>
+                  <p className="text-xs sm:text-sm font-semibold text-charcoalGray">
+                    Carmen Buendía
+                  </p>
                 </div>
-                <div className="text-sm text-gray-500 mb-4 flex items-center gap-1">
-                  <span>📍 {zone.location}</span>
-                  <span className="mx-2">•</span>
-                  <span>🕒 {formatRelativeTime(zone.lastUpdate)}</span>
+
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="md:hidden p-1.5 sm:p-2 rounded-xl text-oliveGreen hover:text-wheatGold transition-all duration-300 hover:bg-oliveGreen/10"
+                >
+                  {isMenuOpen ? (
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                  ) : (
+                    <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {isMenuOpen && (
+              <div className="md:hidden py-4 border-t border-oliveGreen/15">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.id);
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.id}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-all duration-300 ${
+                        active
+                          ? "bg-oliveGreen text-offWhite shadow-md"
+                          : "text-charcoalGray/60 hover:bg-oliveGreen/10 hover:text-oliveGreen"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{item.label}</span>
+                      {active && (
+                        <div className="ml-auto w-1.5 h-1.5 bg-wheatGold rounded-full animate-pulse" />
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </nav>
+
+        <div className="h-14 sm:h-16 lg:h-20" />
+
+        {/* Contenido principal */}
+        {isDashboard ? (
+          <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                  <h1 className="text-3xl font-bold text-charcoalGray">
+                    Bienvenida a tu Huerto Sintrópico
+                  </h1>
+                  <p className="text-oliveGreen flex items-center gap-2">
+                    <Trees className="w-4 h-4" /> Monitoreo en tiempo real ·
+                    Permacultura Sintrópica
+                  </p>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="flex items-center gap-1">
-                        <Droplets className="w-4 h-4 text-blue-500" />
-                        Humedad
-                      </span>
-                      <span className="font-bold">{zone.moisture}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-500 rounded-full transition-all"
-                        style={{ width: `${zone.moisture}%` }}
+                <div
+                  className={`px-4 py-2 rounded-full flex items-center gap-2 ${
+                    serverStatus === "online"
+                      ? "bg-oliveGreen/10 text-oliveGreen"
+                      : serverStatus === "offline"
+                        ? "bg-sicilian-red/10 text-sicilian-red"
+                        : "bg-wheatGold/10 text-wheatGold"
+                  }`}
+                >
+                  {serverStatus === "online" && (
+                    <CheckCircle className="w-4 h-4" />
+                  )}
+                  <span className="font-medium">
+                    {serverStatus === "online"
+                      ? "Sensores activos"
+                      : serverStatus === "offline"
+                        ? "Sensores desconectados"
+                        : "Conectando..."}
+                  </span>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
+                {statsData.map((stat, index) => (
+                  <StatsCard
+                    key={index}
+                    value={stat.value}
+                    label={stat.label}
+                    icon={stat.icon}
+                    subtext={stat.subtext}
+                  />
+                ))}
+              </div>
+
+              {/* Two column layout: Zones + Saved Designs */}
+              <div className="grid lg:grid-cols-3 gap-8 mb-12">
+                {/* Zones Section - 2 columnas */}
+                <div className="lg:col-span-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-charcoalGray">
+                      Zonas del Huerto
+                    </h2>
+                    <Link
+                      href="/analysis"
+                      className="text-sm text-oliveGreen hover:text-sicilian-red transition-colors flex items-center gap-1"
+                    >
+                      Ver análisis completo <span>→</span>
+                    </Link>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {gardenZones.map((zone) => (
+                      <ZoneCard
+                        key={zone.id}
+                        zone={zone}
+                        onViewHistory={(id) =>
+                          console.log(`Ver historial de ${id}`)
+                        }
                       />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex items-center gap-2">
-                      <Thermometer className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm">{zone.temperature}°C</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Sun className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm">{zone.light}% luz</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Wind className="w-4 h-4 text-teal-500" />
-                      <span className="text-sm">{zone.wind} km/h</span>
-                    </div>
+                    ))}
                   </div>
                 </div>
-                <Button variant="outline" className="w-full mt-4">
-                  Ver histórico
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Tech Stack */}
-        <div className="bg-gradient-to-r from-red-600 to-yellow-500 rounded-2xl p-8 mb-12 text-white">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-2xl font-bold">Stack tecnológico</h2>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                ⚛️
-              </div>
-              <h3 className="font-bold text-lg mb-2">React + TypeScript</h3>
-              <p className="text-white/80">
-                Componentes reutilizables y tipado seguro
-              </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                📊
-              </div>
-              <h3 className="font-bold text-lg mb-2">Visualización</h3>
-              <p className="text-white/80">
-                HighCharts y gráficos personalizados
-              </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                🎨
-              </div>
-              <h3 className="font-bold text-lg mb-2">Tailwind CSS</h3>
-              <p className="text-white/80">
-                Diseño responsive con colores sicilianos
-              </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                🌾
-              </div>
-              <h3 className="font-bold text-lg mb-2">Esparto y Micología</h3>
-              <p className="text-white/80">Cultivos tradicionales sicilianos</p>
-            </div>
-          </div>
-        </div>
+                {/* Saved Designs Section - 1 columna */}
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-charcoalGray flex items-center gap-2">
+                      <Map className="w-5 h-5 text-oliveGreen" />
+                      Mis Diseños
+                    </h2>
+                    <Link
+                      href="/design"
+                      className="text-sm text-oliveGreen hover:text-sicilian-red transition-colors flex items-center gap-1"
+                    >
+                      Nuevo diseño <span>+</span>
+                    </Link>
+                  </div>
 
-        {/* Call to Action */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 mb-6 px-6 py-3 bg-gradient-to-r from-red-600 to-yellow-500 text-white rounded-full">
-            <span className="font-semibold">Proyecto open source</span>
+                  {savedDesigns.length === 0 ? (
+                    <div className="bg-offWhite rounded-xl p-8 text-center border border-oliveGreen/15">
+                      <div className="w-16 h-16 bg-oliveGreen/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Map className="w-8 h-8 text-oliveGreen/40" />
+                      </div>
+                      <h3 className="text-lg font-medium text-charcoalGray mb-2">
+                        No tienes diseños guardados
+                      </h3>
+                      <p className="text-oliveGreen/60 text-sm mb-4">
+                        Crea tu primer diseño sintrópico en la página de Diseño
+                      </p>
+                      <Link
+                        href="/design"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-oliveGreen text-offWhite rounded-lg hover:bg-oliveGreen/90 transition-all"
+                      >
+                        <Layers className="w-4 h-4" />
+                        Ir a Diseño Sintrópico
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {savedDesigns
+                        .slice()
+                        .reverse()
+                        .map((design, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-offWhite rounded-xl p-4 border border-oliveGreen/15 hover:shadow-md transition-all hover:border-oliveGreen/30"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Map className="w-4 h-4 text-oliveGreen" />
+                                  <h3 className="font-bold text-charcoalGray">
+                                    {design.name}
+                                  </h3>
+                                </div>
+                                <div className="flex flex-wrap gap-3 text-xs text-oliveGreen/60 mb-3">
+                                  <span className="flex items-center gap-1">
+                                    <Calendar className="w-3 h-3" />
+                                    {design.date}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Map className="w-3 h-3" />
+                                    {design.canvasSize.width} ×{" "}
+                                    {design.canvasSize.height} m
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Sprout className="w-3 h-3" />
+                                    {design.elements.length} elementos
+                                  </span>
+                                </div>
+
+                                {/* Mini preview de elementos */}
+                                <div className="flex gap-1 flex-wrap">
+                                  {design.elements
+                                    .slice(0, 6)
+                                    .map((el: any, i: number) => (
+                                      <span
+                                        key={i}
+                                        className="text-lg"
+                                        title={el.species.name}
+                                      >
+                                        {el.species.icon}
+                                      </span>
+                                    ))}
+                                  {design.elements.length > 6 && (
+                                    <span className="text-xs text-oliveGreen/50 self-center">
+                                      +{design.elements.length - 6}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="flex gap-2">
+                                <Link
+                                  href={`/design?load=${encodeURIComponent(design.name)}`}
+                                  className="p-2 rounded-lg hover:bg-oliveGreen/10 transition-colors"
+                                  title="Abrir diseño"
+                                >
+                                  <Eye className="w-4 h-4 text-oliveGreen" />
+                                </Link>
+                                <button
+                                  onClick={() =>
+                                    handleDeleteDesign(design.name)
+                                  }
+                                  className="p-2 rounded-lg hover:bg-sicilian-red/10 transition-colors"
+                                  title="Eliminar diseño"
+                                >
+                                  <Trash2 className="w-4 h-4 text-sicilian-red/70" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Esparto Section Preview */}
+              <div className="bg-gradient-to-r from-oliveGreen/5 to-wheatGold/5 rounded-2xl p-6 border border-oliveGreen/15">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-oliveGreen/10 rounded-xl">
+                    <Sprout className="w-6 h-6 text-oliveGreen" />
+                  </div>
+                  <h2 className="text-xl font-bold text-charcoalGray">
+                    Cultivo de Esparto
+                  </h2>
+                </div>
+                <p className="text-oliveGreen/70 mb-4">
+                  La planta de esparto (Stipa tenacissima) es una fibra natural
+                  tradicional siciliana. Actualmente en fase de crecimiento
+                  activo con un 92% de salud.
+                </p>
+                <Link
+                  href="/analysis"
+                  className="inline-flex items-center gap-2 text-oliveGreen hover:text-sicilian-red transition-colors"
+                >
+                  Ver detalles del cultivo <span>→</span>
+                </Link>
+              </div>
+            </div>
+          </main>
+        ) : (
+          <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+            {children}
+          </main>
+        )}
+
+        {/* Footer */}
+        <footer className="bg-gradient-to-b from-oliveGreen/5 to-offWhite border-t border-oliveGreen/15 py-8 mt-12">
+          <div className="container mx-auto px-4 text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-2 bg-gradient-to-br from-oliveGreen to-wheatGold rounded-xl">
+                <Sprout className="w-5 h-5 text-offWhite" />
+              </div>
+              <h3 className="text-xl font-bold text-charcoalGray">
+                Sintrópico Monitor
+              </h3>
+            </div>
+            <p className="text-oliveGreen/70">
+              © {new Date().getFullYear()} - Permacultura Sintrópica en el
+              Mediterráneo
+            </p>
+            <p className="text-oliveGreen/50 text-sm mt-2">
+              Monitoreo inteligente para una agricultura regenerativa
+            </p>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            ¿Te gusta este proyecto?
-          </h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            El código está disponible en GitHub. Puedes usarlo, modificarlo o
-            inspirarte para tu propio huerto, cultivo de setas autóctonas o
-            trabajo con esparto.
-          </p>
-          <a
-            href="https://github.com/carmen-buendia/sicilia-soil"
-            target="_blank"
-            className="px-8 py-4 bg-gradient-to-r from-red-600 to-yellow-500 text-white rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-red-500/30 transition-all inline-flex items-center gap-3"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.26.82-.58 0-.287-.01-1.05-.015-2.06-3.338.726-4.042-1.61-4.042-1.61-.546-1.39-1.335-1.76-1.335-1.76-1.09-.746.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.306.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.123-.3-.535-1.52.117-3.16 0 0 1.008-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.29-1.552 3.297-1.23 3.297-1.23.653 1.64.24 2.86.118 3.16.768.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.62-5.476 5.92.43.37.824 1.102.824 2.22 0 1.602-.015 2.894-.015 3.287 0 .322.216.698.83.58C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            Ver en GitHub
-          </a>
-        </div>
-      </main>
-    </div>
+        </footer>
+      </body>
+    </html>
   );
 }

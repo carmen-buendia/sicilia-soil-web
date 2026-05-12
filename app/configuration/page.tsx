@@ -57,7 +57,7 @@ interface ZoneConfig {
     frequency: "daily" | "custom" | "smart";
     time?: string;
     days?: string[];
-    duration: number; // minutos
+    duration: number;
   };
 }
 
@@ -70,14 +70,11 @@ interface NotificationChannel {
 }
 
 export default function Configuration() {
-  // Estado general
   const [activeTab, setActiveTab] = useState("general");
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState("es");
 
-  // Configuración de zonas
   const [zones, setZones] = useState<ZoneConfig[]>([
     {
       id: "esparto",
@@ -89,11 +86,7 @@ export default function Configuration() {
         temperature: { enabled: true, min: 15, max: 30, unit: "°C" },
         light: { enabled: false, min: 40, max: 90, unit: "%" },
       },
-      wateringSchedule: {
-        enabled: true,
-        frequency: "smart",
-        duration: 15,
-      },
+      wateringSchedule: { enabled: true, frequency: "smart", duration: 15 },
     },
     {
       id: "tomates",
@@ -139,11 +132,7 @@ export default function Configuration() {
         temperature: { enabled: true, min: 15, max: 40, unit: "°C" },
         light: { enabled: false, min: 20, max: 60, unit: "%" },
       },
-      wateringSchedule: {
-        enabled: false,
-        frequency: "smart",
-        duration: 10,
-      },
+      wateringSchedule: { enabled: false, frequency: "smart", duration: 10 },
     },
     {
       id: "hierbas",
@@ -172,15 +161,10 @@ export default function Configuration() {
         temperature: { enabled: false, min: 5, max: 25, unit: "°C" },
         light: { enabled: false, min: 20, max: 80, unit: "%" },
       },
-      wateringSchedule: {
-        enabled: false,
-        frequency: "smart",
-        duration: 0,
-      },
+      wateringSchedule: { enabled: false, frequency: "smart", duration: 0 },
     },
   ]);
 
-  // Canales de notificación
   const [notificationChannels, setNotificationChannels] = useState<
     NotificationChannel[]
   >([
@@ -189,7 +173,7 @@ export default function Configuration() {
       name: "Email",
       icon: Mail,
       enabled: true,
-      value: "carmen@siciliasoil.it",
+      value: "carmen@sintropico-monitor.it",
     },
     {
       id: "push",
@@ -206,10 +190,9 @@ export default function Configuration() {
     },
   ]);
 
-  // Configuración general
   const [generalConfig, setGeneralConfig] = useState({
-    systemName: "Sicilia Soil",
-    updateInterval: 30, // segundos
+    systemName: "Sintrópico Monitor",
+    updateInterval: 30,
     autoBackup: true,
     backupFrequency: "weekly",
     dataRetention: "1 año",
@@ -218,7 +201,6 @@ export default function Configuration() {
     distanceUnit: "metric",
   });
 
-  // Estado de sensores
   const [sensorStatus, setSensorStatus] = useState([
     {
       id: "sensor-1",
@@ -262,111 +244,63 @@ export default function Configuration() {
     },
   ]);
 
-  // Función para guardar configuración
   const handleSave = () => {
     setIsSaving(true);
     setSaveSuccess(false);
-
-    // Simular guardado
     setTimeout(() => {
       setIsSaving(false);
       setSaveSuccess(true);
-
-      // Ocultar mensaje después de 3 segundos
-      setTimeout(() => {
-        setSaveSuccess(false);
-      }, 3000);
+      setTimeout(() => setSaveSuccess(false), 3000);
     }, 1500);
   };
 
-  // Función para resetear configuración
   const handleReset = () => {
     if (
       confirm(
         "¿Estás seguro de que quieres restaurar la configuración por defecto?",
       )
     ) {
-      // Aquí iría la lógica de reset
       alert("Configuración restaurada");
     }
   };
 
-  // Actualizar umbral de alerta
-  const updateAlertThreshold = (
-    zoneId: string,
-    alertType: keyof ZoneConfig["alerts"],
-    field: "min" | "max",
-    value: number,
-  ) => {
-    setZones((prev) =>
-      prev.map((zone) =>
-        zone.id === zoneId
-          ? {
-              ...zone,
-              alerts: {
-                ...zone.alerts,
-                [alertType]: {
-                  ...zone.alerts[alertType],
-                  [field]: value,
-                },
-              },
-            }
-          : zone,
-      ),
-    );
-  };
-
-  // Toggle alerta
-  const toggleAlert = (
-    zoneId: string,
-    alertType: keyof ZoneConfig["alerts"],
-  ) => {
-    setZones((prev) =>
-      prev.map((zone) =>
-        zone.id === zoneId
-          ? {
-              ...zone,
-              alerts: {
-                ...zone.alerts,
-                [alertType]: {
-                  ...zone.alerts[alertType],
-                  enabled: !zone.alerts[alertType].enabled,
-                },
-              },
-            }
-          : zone,
-      ),
-    );
-  };
+  const tabs = [
+    { id: "general", label: "General", icon: Settings },
+    { id: "zonas", label: "Zonas", icon: Droplets },
+    { id: "alertas", label: "Alertas", icon: Bell },
+    { id: "riego", label: "Riego", icon: Zap },
+    { id: "sensores", label: "Sensores", icon: Wifi },
+    { id: "notificaciones", label: "Notificaciones", icon: Mail },
+    { id: "cuenta", label: "Cuenta", icon: Users },
+  ];
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-gradient-to-b from-gray-50 to-slate-50">
+    <div className="min-h-screen p-4 md:p-8 pt-24 bg-offWhite">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+              className="p-2 hover:bg-oliveGreen/10 rounded-lg transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
+              <ArrowLeft className="w-5 h-5 text-oliveGreen" />
             </Link>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
-                <Settings className="w-8 h-8 text-gray-700" />
+              <h1 className="text-3xl md:text-4xl font-bold text-charcoalGray flex items-center gap-3">
+                <Settings className="w-8 h-8 text-oliveGreen" />
                 Configuración
               </h1>
-              <p className="text-gray-600">
+              <p className="text-oliveGreen/70">
                 Personaliza tu sistema de monitoreo
               </p>
             </div>
           </div>
 
-          {/* Botones de acción */}
           <div className="flex items-center gap-3">
             <button
               onClick={handleReset}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 bg-offWhite text-charcoalGray rounded-lg flex items-center gap-2 hover:bg-oliveGreen/5 transition-colors border border-oliveGreen/15"
             >
               <RefreshCw className="w-4 h-4" />
               Restaurar
@@ -374,8 +308,10 @@ export default function Configuration() {
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className={`px-6 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors ${
-                isSaving ? "opacity-50 cursor-not-allowed" : ""
+              className={`px-6 py-2 bg-oliveGreen text-offWhite rounded-lg flex items-center gap-2 hover:bg-oliveGreen/90 transition-all ${
+                isSaving
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:scale-[1.02]"
               }`}
             >
               {isSaving ? (
@@ -390,23 +326,15 @@ export default function Configuration() {
 
         {/* Mensaje de éxito */}
         {saveSuccess && (
-          <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 animate-slideIn">
+          <div className="fixed top-20 right-4 bg-oliveGreen text-offWhite px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 animate-in slide-in-from-top-2">
             <CheckCircle className="w-5 h-5" />
             <span>Configuración guardada correctamente</span>
           </div>
         )}
 
-        {/* Tabs de navegación */}
-        <div className="flex overflow-x-auto gap-2 mb-8 pb-2 border-b border-gray-200">
-          {[
-            { id: "general", label: "General", icon: Settings },
-            { id: "zonas", label: "Zonas", icon: Droplets },
-            { id: "alertas", label: "Alertas", icon: Bell },
-            { id: "riego", label: "Riego", icon: Zap },
-            { id: "sensores", label: "Sensores", icon: Wifi },
-            { id: "notificaciones", label: "Notificaciones", icon: Mail },
-            { id: "cuenta", label: "Cuenta", icon: Users },
-          ].map((tab) => {
+        {/* Tabs */}
+        <div className="flex overflow-x-auto gap-2 mb-8 pb-2 border-b border-oliveGreen/15">
+          {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
@@ -414,8 +342,8 @@ export default function Configuration() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
                   activeTab === tab.id
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:bg-gray-100"
+                    ? "bg-oliveGreen text-offWhite"
+                    : "text-charcoalGray/70 hover:bg-oliveGreen/5"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -425,18 +353,18 @@ export default function Configuration() {
           })}
         </div>
 
-        {/* Contenido según tab activo */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-8">
+        {/* Contenido */}
+        <div className="bg-offWhite rounded-2xl shadow-xl border border-oliveGreen/15 p-6 md:p-8">
           {/* TAB: GENERAL */}
           {activeTab === "general" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl font-bold text-charcoalGray mb-6">
                 Configuración general
               </h2>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-oliveGreen mb-2">
                     Nombre del sistema
                   </label>
                   <input
@@ -448,12 +376,11 @@ export default function Configuration() {
                         systemName: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-oliveGreen/20 rounded-lg focus:ring-2 focus:ring-oliveGreen focus:border-oliveGreen bg-offWhite text-charcoalGray"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-oliveGreen mb-2">
                     Intervalo de actualización
                   </label>
                   <select
@@ -464,7 +391,7 @@ export default function Configuration() {
                         updateInterval: parseInt(e.target.value),
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-oliveGreen/20 rounded-lg focus:ring-2 focus:ring-oliveGreen bg-offWhite text-charcoalGray"
                   >
                     <option value={10}>10 segundos</option>
                     <option value={30}>30 segundos</option>
@@ -472,9 +399,8 @@ export default function Configuration() {
                     <option value={300}>5 minutos</option>
                   </select>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-oliveGreen mb-2">
                     Zona horaria
                   </label>
                   <select
@@ -485,16 +411,15 @@ export default function Configuration() {
                         timezone: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-oliveGreen/20 rounded-lg focus:ring-2 focus:ring-oliveGreen bg-offWhite text-charcoalGray"
                   >
                     <option value="Europe/Rome">Roma (CET)</option>
                     <option value="Europe/Madrid">Madrid (CET)</option>
                     <option value="UTC">UTC</option>
                   </select>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-oliveGreen mb-2">
                     Unidad de temperatura
                   </label>
                   <select
@@ -505,7 +430,7 @@ export default function Configuration() {
                         temperatureUnit: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-oliveGreen/20 rounded-lg focus:ring-2 focus:ring-oliveGreen bg-offWhite text-charcoalGray"
                   >
                     <option value="celsius">Celsius (°C)</option>
                     <option value="fahrenheit">Fahrenheit (°F)</option>
@@ -513,14 +438,13 @@ export default function Configuration() {
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
+              <div className="border-t border-oliveGreen/15 pt-6">
+                <h3 className="text-lg font-bold text-charcoalGray mb-4">
                   Copia de seguridad
                 </h3>
-
                 <div className="space-y-4">
                   <label className="flex items-center justify-between">
-                    <span className="text-gray-700">
+                    <span className="text-oliveGreen">
                       Copias de seguridad automáticas
                     </span>
                     <button
@@ -530,23 +454,16 @@ export default function Configuration() {
                           autoBackup: !generalConfig.autoBackup,
                         })
                       }
-                      className={`relative w-12 h-6 rounded-full transition-colors ${
-                        generalConfig.autoBackup
-                          ? "bg-green-500"
-                          : "bg-gray-300"
-                      }`}
+                      className={`relative w-12 h-6 rounded-full transition-colors ${generalConfig.autoBackup ? "bg-oliveGreen" : "bg-oliveGreen/20"}`}
                     >
                       <span
-                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                          generalConfig.autoBackup ? "translate-x-6" : ""
-                        }`}
+                        className={`absolute top-1 left-1 w-4 h-4 bg-offWhite rounded-full transition-transform ${generalConfig.autoBackup ? "translate-x-6" : ""}`}
                       />
                     </button>
                   </label>
-
                   {generalConfig.autoBackup && (
                     <div>
-                      <label className="block text-sm text-gray-600 mb-2">
+                      <label className="block text-sm text-oliveGreen/60 mb-2">
                         Frecuencia
                       </label>
                       <select
@@ -557,7 +474,7 @@ export default function Configuration() {
                             backupFrequency: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                        className="w-full px-4 py-2 border border-oliveGreen/20 rounded-lg bg-offWhite text-charcoalGray"
                       >
                         <option value="daily">Diaria</option>
                         <option value="weekly">Semanal</option>
@@ -565,15 +482,12 @@ export default function Configuration() {
                       </select>
                     </div>
                   )}
-
                   <div className="flex gap-3">
-                    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-200">
-                      <Download className="w-4 h-4" />
-                      Descargar copia ahora
+                    <button className="px-4 py-2 bg-oliveGreen/5 text-oliveGreen rounded-lg flex items-center gap-2 hover:bg-oliveGreen/10 transition-colors border border-oliveGreen/15">
+                      <Download className="w-4 h-4" /> Descargar copia ahora
                     </button>
-                    <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg flex items-center gap-2 hover:bg-gray-200">
-                      <Upload className="w-4 h-4" />
-                      Restaurar copia
+                    <button className="px-4 py-2 bg-oliveGreen/5 text-oliveGreen rounded-lg flex items-center gap-2 hover:bg-oliveGreen/10 transition-colors border border-oliveGreen/15">
+                      <Upload className="w-4 h-4" /> Restaurar copia
                     </button>
                   </div>
                 </div>
@@ -581,31 +495,34 @@ export default function Configuration() {
             </div>
           )}
 
-          {/* TAB: ZONAS (resumen) */}
+          {/* TAB: ZONAS */}
           {activeTab === "zonas" && (
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl font-bold text-charcoalGray mb-6">
                 Configuración por zonas
               </h2>
-
               <div className="space-y-4">
                 {zones.map((zone) => (
                   <div
                     key={zone.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="border border-oliveGreen/15 rounded-lg p-4 hover:shadow-md transition-shadow bg-offWhite"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{zone.icon}</span>
                         <div>
-                          <h3 className="font-bold text-gray-900">
+                          <h3 className="font-bold text-charcoalGray">
                             {zone.name}
                           </h3>
-                          <p className="text-sm text-gray-500">ID: {zone.id}</p>
+                          <p className="text-sm text-oliveGreen/50">
+                            ID: {zone.id}
+                          </p>
                         </div>
                       </div>
                       <label className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">Activa</span>
+                        <span className="text-sm text-oliveGreen/60">
+                          Activa
+                        </span>
                         <button
                           onClick={() =>
                             setZones((prev) =>
@@ -616,36 +533,31 @@ export default function Configuration() {
                               ),
                             )
                           }
-                          className={`relative w-10 h-5 rounded-full transition-colors ${
-                            zone.enabled ? "bg-green-500" : "bg-gray-300"
-                          }`}
+                          className={`relative w-10 h-5 rounded-full transition-colors ${zone.enabled ? "bg-oliveGreen" : "bg-oliveGreen/20"}`}
                         >
                           <span
-                            className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                              zone.enabled ? "translate-x-5" : ""
-                            }`}
+                            className={`absolute top-0.5 left-0.5 w-4 h-4 bg-offWhite rounded-full transition-transform ${zone.enabled ? "translate-x-5" : ""}`}
                           />
                         </button>
                       </label>
                     </div>
-
                     <div className="grid grid-cols-3 gap-4 text-sm">
-                      <div className="text-center">
-                        <p className="text-gray-500">Humedad</p>
-                        <p className="font-bold">
+                      <div className="text-center p-2 bg-oliveGreen/5 rounded-lg">
+                        <p className="text-oliveGreen/60">Humedad</p>
+                        <p className="font-bold text-charcoalGray">
                           {zone.alerts.moisture.min}-{zone.alerts.moisture.max}%
                         </p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-gray-500">Temperatura</p>
-                        <p className="font-bold">
+                      <div className="text-center p-2 bg-oliveGreen/5 rounded-lg">
+                        <p className="text-oliveGreen/60">Temperatura</p>
+                        <p className="font-bold text-charcoalGray">
                           {zone.alerts.temperature.min}-
                           {zone.alerts.temperature.max}°C
                         </p>
                       </div>
-                      <div className="text-center">
-                        <p className="text-gray-500">Riego</p>
-                        <p className="font-bold">
+                      <div className="text-center p-2 bg-oliveGreen/5 rounded-lg">
+                        <p className="text-oliveGreen/60">Riego</p>
+                        <p className="font-bold text-charcoalGray">
                           {zone.wateringSchedule.enabled
                             ? zone.wateringSchedule.duration + "min"
                             : "Manual"}
@@ -661,65 +573,64 @@ export default function Configuration() {
           {/* TAB: SENSORES */}
           {activeTab === "sensores" && (
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl font-bold text-charcoalGray mb-6">
                 Estado de los sensores
               </h2>
-
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4">Sensor</th>
-                      <th className="text-left py-3 px-4">Zona</th>
-                      <th className="text-left py-3 px-4">Batería</th>
-                      <th className="text-left py-3 px-4">Estado</th>
-                      <th className="text-left py-3 px-4">Última conexión</th>
-                      <th className="text-left py-3 px-4">Acciones</th>
+                    <tr className="border-b border-oliveGreen/15">
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Sensor
+                      </th>
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Zona
+                      </th>
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Batería
+                      </th>
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Estado
+                      </th>
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Última conexión
+                      </th>
+                      <th className="text-left py-3 px-4 text-oliveGreen">
+                        Acciones
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {sensorStatus.map((sensor) => (
                       <tr
                         key={sensor.id}
-                        className="border-b border-gray-100 hover:bg-gray-50"
+                        className="border-b border-oliveGreen/10 hover:bg-oliveGreen/5"
                       >
-                        <td className="py-3 px-4 font-medium">{sensor.name}</td>
-                        <td className="py-3 px-4">{sensor.zone}</td>
+                        <td className="py-3 px-4 font-medium text-charcoalGray">
+                          {sensor.name}
+                        </td>
+                        <td className="py-3 px-4 text-oliveGreen/70">
+                          {sensor.zone}
+                        </td>
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-2">
-                            <div className="w-16 h-2 bg-gray-200 rounded-full">
+                            <div className="w-16 h-2 bg-oliveGreen/10 rounded-full">
                               <div
-                                className={`h-full rounded-full ${
-                                  sensor.battery > 70
-                                    ? "bg-green-500"
-                                    : sensor.battery > 30
-                                      ? "bg-yellow-500"
-                                      : "bg-red-500"
-                                }`}
+                                className={`h-full rounded-full ${sensor.battery > 70 ? "bg-oliveGreen" : sensor.battery > 30 ? "bg-wheatGold" : "bg-sicilian-red"}`}
                                 style={{ width: `${sensor.battery}%` }}
                               />
                             </div>
-                            <span className="text-sm">{sensor.battery}%</span>
+                            <span className="text-sm text-charcoalGray">
+                              {sensor.battery}%
+                            </span>
                           </div>
                         </td>
                         <td className="py-3 px-4">
                           <span
-                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                              sensor.status === "online"
-                                ? "bg-green-100 text-green-800"
-                                : sensor.status === "warning"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-red-100 text-red-800"
-                            }`}
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${sensor.status === "online" ? "bg-oliveGreen/10 text-oliveGreen" : sensor.status === "warning" ? "bg-wheatGold/10 text-wheatGold" : "bg-sicilian-red/10 text-sicilian-red"}`}
                           >
                             <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                sensor.status === "online"
-                                  ? "bg-green-500 animate-pulse"
-                                  : sensor.status === "warning"
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
-                              }`}
+                              className={`w-1.5 h-1.5 rounded-full ${sensor.status === "online" ? "bg-oliveGreen animate-pulse" : sensor.status === "warning" ? "bg-wheatGold" : "bg-sicilian-red"}`}
                             />
                             {sensor.status === "online"
                               ? "En línea"
@@ -728,11 +639,11 @@ export default function Configuration() {
                                 : "Crítico"}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
+                        <td className="py-3 px-4 text-sm text-oliveGreen/60">
                           {sensor.lastSeen}
                         </td>
                         <td className="py-3 px-4">
-                          <button className="text-blue-600 hover:text-blue-800 text-sm">
+                          <button className="text-oliveGreen hover:text-sicilian-red text-sm">
                             Configurar
                           </button>
                         </td>
@@ -741,12 +652,11 @@ export default function Configuration() {
                   </tbody>
                 </table>
               </div>
-
               <div className="mt-6 flex gap-3">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <button className="px-4 py-2 bg-oliveGreen text-offWhite rounded-lg hover:bg-oliveGreen/90 transition-all">
                   Añadir nuevo sensor
                 </button>
-                <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                <button className="px-4 py-2 bg-offWhite text-charcoalGray rounded-lg hover:bg-oliveGreen/5 transition-colors border border-oliveGreen/15">
                   Sincronizar todos
                 </button>
               </div>
@@ -756,59 +666,51 @@ export default function Configuration() {
           {/* TAB: NOTIFICACIONES */}
           {activeTab === "notificaciones" && (
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl font-bold text-charcoalGray mb-6">
                 Canales de notificación
               </h2>
-
               <div className="space-y-4">
                 {notificationChannels.map((channel) => {
                   const Icon = channel.icon;
                   return (
                     <div
                       key={channel.id}
-                      className="border border-gray-200 rounded-lg p-4"
+                      className="border border-oliveGreen/15 rounded-lg p-4 bg-offWhite"
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <Icon className="w-5 h-5 text-gray-600" />
+                          <Icon className="w-5 h-5 text-oliveGreen" />
                           <div>
-                            <h3 className="font-bold text-gray-900">
+                            <h3 className="font-bold text-charcoalGray">
                               {channel.name}
                             </h3>
                             {channel.value && (
-                              <p className="text-sm text-gray-500">
+                              <p className="text-sm text-oliveGreen/50">
                                 {channel.value}
                               </p>
                             )}
                           </div>
                         </div>
-                        <label className="flex items-center gap-2">
-                          <button
-                            onClick={() =>
-                              setNotificationChannels((prev) =>
-                                prev.map((c) =>
-                                  c.id === channel.id
-                                    ? { ...c, enabled: !c.enabled }
-                                    : c,
-                                ),
-                              )
-                            }
-                            className={`relative w-12 h-6 rounded-full transition-colors ${
-                              channel.enabled ? "bg-green-500" : "bg-gray-300"
-                            }`}
-                          >
-                            <span
-                              className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                                channel.enabled ? "translate-x-6" : ""
-                              }`}
-                            />
-                          </button>
-                        </label>
+                        <button
+                          onClick={() =>
+                            setNotificationChannels((prev) =>
+                              prev.map((c) =>
+                                c.id === channel.id
+                                  ? { ...c, enabled: !c.enabled }
+                                  : c,
+                              ),
+                            )
+                          }
+                          className={`relative w-12 h-6 rounded-full transition-colors ${channel.enabled ? "bg-oliveGreen" : "bg-oliveGreen/20"}`}
+                        >
+                          <span
+                            className={`absolute top-1 left-1 w-4 h-4 bg-offWhite rounded-full transition-transform ${channel.enabled ? "translate-x-6" : ""}`}
+                          />
+                        </button>
                       </div>
-
                       {channel.enabled && channel.id === "email" && (
-                        <div className="mt-4 pt-4 border-t border-gray-200">
-                          <label className="block text-sm text-gray-600 mb-2">
+                        <div className="mt-4 pt-4 border-t border-oliveGreen/15">
+                          <label className="block text-sm text-oliveGreen/60 mb-2">
                             Correo electrónico
                           </label>
                           <input
@@ -823,7 +725,7 @@ export default function Configuration() {
                                 ),
                               )
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                            className="w-full px-4 py-2 border border-oliveGreen/20 rounded-lg bg-offWhite text-charcoalGray"
                           />
                         </div>
                       )}
@@ -831,61 +733,42 @@ export default function Configuration() {
                   );
                 })}
               </div>
-
               <div className="mt-6">
-                <h3 className="font-bold text-gray-900 mb-4">
+                <h3 className="font-bold text-charcoalGray mb-4">
                   Tipos de alerta
                 </h3>
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="rounded text-blue-600"
-                      defaultChecked
-                    />
-                    <span>Humedad baja</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="rounded text-blue-600"
-                      defaultChecked
-                    />
-                    <span>Temperatura extrema</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="rounded text-blue-600"
-                      defaultChecked
-                    />
-                    <span>Luz insuficiente</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="rounded text-blue-600"
-                      defaultChecked
-                    />
-                    <span>Batería baja del sensor</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded text-blue-600" />
-                    <span>Sensor desconectado</span>
-                  </label>
+                  {[
+                    "Humedad baja",
+                    "Temperatura extrema",
+                    "Luz insuficiente",
+                    "Batería baja del sensor",
+                  ].map((alert, i) => (
+                    <label
+                      key={i}
+                      className="flex items-center gap-2 text-oliveGreen/70"
+                    >
+                      <input
+                        type="checkbox"
+                        className="rounded text-oliveGreen"
+                        defaultChecked={i < 3}
+                      />
+                      <span>{alert}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
           )}
 
-          {/* Placeholder para otros tabs */}
+          {/* Placeholders para tabs pendientes */}
           {activeTab === "riego" && (
             <div className="text-center py-12">
-              <Zap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
+              <Zap className="w-16 h-16 text-oliveGreen/30 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-charcoalGray mb-2">
                 Configuración de riego
               </h3>
-              <p className="text-gray-500">
+              <p className="text-oliveGreen/60">
                 Próximamente: Programación avanzada de riego automático
               </p>
             </div>
@@ -893,23 +776,23 @@ export default function Configuration() {
 
           {activeTab === "cuenta" && (
             <div className="text-center py-12">
-              <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
+              <Users className="w-16 h-16 text-oliveGreen/30 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-charcoalGray mb-2">
                 Configuración de cuenta
               </h3>
-              <p className="text-gray-500">
+              <p className="text-oliveGreen/60">
                 Próximamente: Gestión de perfil, facturación y usuarios
               </p>
             </div>
           )}
         </div>
 
-        {/* Footer con acciones adicionales */}
+        {/* Footer */}
         <div className="mt-8 flex justify-between items-center">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-oliveGreen/50">
             Última actualización: {new Date().toLocaleString()}
           </div>
-          <button className="text-red-600 hover:text-red-800 flex items-center gap-2">
+          <button className="text-sicilian-red hover:text-sicilian-red/80 flex items-center gap-2 transition-colors">
             <Trash2 className="w-4 h-4" />
             Eliminar todos los datos
           </button>
