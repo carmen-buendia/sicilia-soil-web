@@ -31,7 +31,7 @@ import {
 
 import { Badge } from "@/components/common/Badge";
 import { Button } from "@/components/common/Button";
-import { StatsCard } from "@/components/dashboard/StatsCards";
+import { StatsCard } from "@/components/dashboard/StatsCard";
 import { ZoneCard } from "@/components/dashboard/ZoneCards";
 import { SicilianFlag } from "@/components/layout/SicilianFlag";
 
@@ -93,7 +93,9 @@ export default function RootLayout({
   // Función para eliminar un diseño
   const handleDeleteDesign = (designName: string) => {
     if (confirm(`¿Eliminar el diseño "${designName}"?`)) {
-      const updated = savedDesigns.filter((d) => d.name !== designName);
+      const updated = savedDesigns.filter(
+        (d: { name: string }) => d.name !== designName,
+      );
       setSavedDesigns(updated);
       localStorage.setItem("sintropico-designs-v3", JSON.stringify(updated));
     }
@@ -414,7 +416,7 @@ export default function RootLayout({
                       <ZoneCard
                         key={zone.id}
                         zone={zone}
-                        onViewHistory={(id) =>
+                        onViewHistory={(id: any) =>
                           console.log(`Ver historial de ${id}`)
                         }
                       />
@@ -461,7 +463,7 @@ export default function RootLayout({
                       {savedDesigns
                         .slice()
                         .reverse()
-                        .map((design, idx) => (
+                        .map((design: any, idx: any) => (
                           <div
                             key={idx}
                             className="bg-offWhite rounded-xl p-4 border border-oliveGreen/15 hover:shadow-md transition-all hover:border-oliveGreen/30"
