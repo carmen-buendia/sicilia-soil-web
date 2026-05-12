@@ -1,46 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Sprout,
-  Eye,
-  Trash2,
-  Download,
-  Calendar,
-  Map,
-  Layers,
-} from "lucide-react";
+import { Map, Layers, Calendar, Eye, Trash2, Sprout } from "lucide-react";
 
 interface SavedDesign {
   name: string;
   elements: any[];
   date: string;
   canvasSize: { width: number; height: number };
-  preview?: string;
 }
 
-export function SavedDesigns() {
-  const [designs, setDesigns] = useState<SavedDesign[]>([]);
-  const [selectedDesign, setSelectedDesign] = useState<SavedDesign | null>(
-    null,
-  );
+interface SavedDesignsProps {
+  designs: SavedDesign[];
+  onDelete: (designName: string) => void;
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem("sintropico-designs-v3");
-    if (saved) {
-      setDesigns(JSON.parse(saved));
-    }
-  }, []);
-
-  const handleDelete = (index: number) => {
-    if (confirm("¿Eliminar este diseño?")) {
-      const newDesigns = designs.filter((_, i) => i !== index);
-      setDesigns(newDesigns);
-      localStorage.setItem("sintropico-designs-v3", JSON.stringify(newDesigns));
-    }
-  };
-
+export function SavedDesigns({ designs, onDelete }: SavedDesignsProps) {
   if (designs.length === 0) {
     return (
       <div className="bg-offWhite rounded-xl p-8 text-center border border-oliveGreen/15">
@@ -97,14 +72,18 @@ export function SavedDesigns() {
 
                 {/* Mini preview de elementos */}
                 <div className="flex gap-1 flex-wrap">
-                  {design.elements.slice(0, 8).map((el, i) => (
-                    <span key={i} className="text-lg" title={el.species.name}>
-                      {el.species.icon}
+                  {design.elements.slice(0, 6).map((el: any, i: number) => (
+                    <span
+                      key={i}
+                      className="text-lg"
+                      title={el.species?.name || el.element?.name || "Elemento"}
+                    >
+                      {el.species?.icon || el.element?.icon || "🌱"}
                     </span>
                   ))}
-                  {design.elements.length > 8 && (
+                  {design.elements.length > 6 && (
                     <span className="text-xs text-oliveGreen/50 self-center">
-                      +{design.elements.length - 8}
+                      +{design.elements.length - 6}
                     </span>
                   )}
                 </div>
@@ -119,7 +98,7 @@ export function SavedDesigns() {
                   <Eye className="w-4 h-4 text-oliveGreen" />
                 </Link>
                 <button
-                  onClick={() => handleDelete(designs.length - 1 - idx)}
+                  onClick={() => onDelete(design.name)}
                   className="p-2 rounded-lg hover:bg-sicilian-red/10 transition-colors"
                   title="Eliminar diseño"
                 >
