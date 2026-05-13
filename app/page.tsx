@@ -305,7 +305,7 @@ export default function HomePage() {
       <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold text-charcoalGray">
-            Bienvenida a tu Huerto Sintrópico
+            🌱 Sicilia Soil - Demo Online
           </h1>
           <p className="text-oliveGreen flex items-center gap-2">
             <Trees className="w-4 h-4" /> Monitoreo en tiempo real ·
