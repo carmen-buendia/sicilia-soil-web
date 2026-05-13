@@ -1,7 +1,7 @@
 
 ---
 
-```markdown
+```
 # 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
 
 <p align="center">
