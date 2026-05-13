@@ -1,9 +1,20 @@
+---
+
+```markdown
 ## 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-WORK%20IN%20PROGRESS-orange?style=for-the-badge&logo=githubactions&logoColor=white" alt="Work in Progress" />
   <img src="https://img.shields.io/github/last-commit/carmen-buendia/sicilia-soil-web?color=blue&logo=github" alt="Last Commit" />
   <img src="https://img.shields.io/badge/License-NC%20OSL-blue?style=flat-square" alt="License" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img src="https://img.shields.io/badge/HighCharts-0081CB?style=for-the-badge&logo=highcharts&logoColor=white" />
 </p>
 
 <p align="center">
@@ -33,6 +44,18 @@ This is a public demo of **Sicilia Soil**, a real-time monitoring system for syn
 - 🍄 **Mycology with native mushrooms** (Cardonchello, Cardoncello di Nebrodi)
 - 📈 **Interactive charts** with HighCharts
 - 🎨 **Responsive design** with Tailwind CSS
+
+---
+
+## 🎯 Why this project exists
+
+I built **Sicilia Soil** for three reasons:
+
+1. **To explore real-time architectures** (Next.js + WebSockets + IoT simulation)
+2. **To practice full-stack patterns** in a realistic, self-contained project
+3. **To showcase my frontend expertise** in a public, non-NDA context
+
+This demo is not just a gardening tool — it's a **portfolio piece** that reflects how I structure, test, and deploy modern web applications.
 
 ---
 
@@ -99,7 +122,7 @@ sicilia-soil-web/
 | `/humedad`       | Humidity         | Soil moisture by zone                    |
 | `/temperatura`   | Temperature      | Temperature by zone                      |
 | `/luz`           | Sunlight         | Light levels by zone                     |
-| `/configuration` | Settings         | System configuration                     |
+| `/configuration` | Configuration    | System configuration                     |
 
 ---
 
@@ -147,6 +170,18 @@ If you are a company, startup, or entrepreneur wanting to use **Sicilia Soil** i
 
 ---
 
+## 👩‍💻 Author
+
+**Carmen Buendía** – Senior Frontend Architect & Full Stack Engineer
+
+- [GitHub](https://github.com/carmen-buendia)
+- [LinkedIn](https://linkedin.com/in/carmen-buendia)
+- [Email](carmenbuendiafullstack@gmail.com)
+
+*This project represents my personal work and technical vision. It is not affiliated with any past or current employer.*
+
+---
+
 ## 📬 Contact
 
 | Via          | Link                                                     |
@@ -168,3 +203,5 @@ This demo is a public version of **Sicilia Soil**. The complete codebase (includ
   <sub>Where technology and nature design the future together</sub>
 </p>
 ```
+
+---
