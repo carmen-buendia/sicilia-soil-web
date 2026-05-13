@@ -44,4 +44,4 @@ next-env.d.ts
 .env*.local
 
 # backend
-backend/node_modules
+backend/node_modulesbackend/
