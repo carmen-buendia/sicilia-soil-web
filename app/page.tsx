@@ -7,6 +7,7 @@ import { StatsCard } from "@/components/dashboard/components/StatsCards";
 import { ZoneCard } from "@/components/dashboard/components/ZoneCards";
 import { SavedDesigns } from "@/components/dashboard/components/SavedDesigns";
 import { ServerStatus } from "@/components/dashboard/components/ServerStatus";
+import { fetchZones, healthCheck, ZoneData } from "@/lib/api";
 
 import type { GardenZone } from "@/lib/types";
 
@@ -17,8 +18,8 @@ interface SavedDesign {
   canvasSize: { width: number; height: number };
 }
 
-// Datos simulados
-const gardenZones: GardenZone[] = [
+// ========== DATOS SIMULADOS (FALLBACK) ==========
+const fallbackZones: GardenZone[] = [
   {
     id: "esparto",
     name: "Zona de Esparto",
@@ -99,7 +100,8 @@ const gardenZones: GardenZone[] = [
   },
 ];
 
-const statsData = [
+// Estadísticas simuladas (fallback)
+const fallbackStats = [
   {
     value: "71%",
     label: "Humedad media",
@@ -132,14 +134,145 @@ const statsData = [
   },
 ];
 
+// Función para convertir datos del backend a GardenZone
+function convertToGardenZone(data: ZoneData): GardenZone {
+  const zoneNameMap: Record<
+    string,
+    { name: string; icon: string; type: string }
+  > = {
+    norte: { name: "Zona de Esparto", icon: "🌾", type: "Planta textil" },
+    sur: { name: "Huerta de Tomates", icon: "🍅", type: "Hortalizas" },
+    este: { name: "Olivar", icon: "🫒", type: "Árboles" },
+    oeste: { name: "Jardín de Hierbas", icon: "🌿", type: "Aromáticas" },
+  };
+
+  const zoneInfo = zoneNameMap[data.zone] || {
+    name: data.zone,
+    icon: "🌱",
+    type: "Cultivo",
+  };
+
+  let status: GardenZone["status"] = "saludable";
+  if (data.humidity < 40) status = "necesita riego";
+  else if (data.humidity > 85) status = "exceso de agua";
+  else if (data.temperature > 35) status = "alerta térmica";
+  else status = "saludable";
+
+  return {
+    id: data.zone,
+    name: zoneInfo.name,
+    type: zoneInfo.type,
+    location: `Parcela ${data.zone}`,
+    moisture: data.humidity,
+    temperature: data.temperature,
+    light: data.light,
+    wind: 10,
+    status,
+    icon: zoneInfo.icon,
+    lastUpdate:
+      typeof data.timestamp === "string"
+        ? data.timestamp
+        : data.timestamp.toISOString(),
+  };
+}
+
+// Calcular estadísticas desde datos reales
+function calculateStatsFromZones(zones: GardenZone[]) {
+  if (zones.length === 0) return fallbackStats;
+
+  const avgMoisture = Math.round(
+    zones.reduce((acc, z) => acc + z.moisture, 0) / zones.length,
+  );
+  const avgTemp = Math.round(
+    zones.reduce((acc, z) => acc + z.temperature, 0) / zones.length,
+  );
+  const avgLight = Math.round(
+    zones.reduce((acc, z) => acc + z.light, 0) / zones.length,
+  );
+
+  return [
+    {
+      value: `${avgMoisture}%`,
+      label: "Humedad media",
+      icon: <Droplet className="w-5 h-5" />,
+      subtext: "Datos en tiempo real",
+    },
+    {
+      value: `${avgTemp}°C`,
+      label: "Temperatura media",
+      icon: <ThermometerSun className="w-5 h-5" />,
+      subtext: "Óptimo para cultivos",
+    },
+    {
+      value: `${avgLight}%`,
+      label: "Luz solar",
+      icon: <Sun className="w-5 h-5" />,
+      subtext: "Buena exposición",
+    },
+    {
+      value: "4",
+      label: "Setas autóctonas",
+      icon: <span className="text-xl">🍄</span>,
+      subtext: "En producción",
+    },
+    {
+      value: "92%",
+      label: "Salud del Esparto",
+      icon: <Sprout className="w-5 h-5" />,
+      subtext: "Excelente estado",
+    },
+  ];
+}
+
 export default function HomePage() {
   const [serverStatus, setServerStatus] = useState<
     "checking" | "online" | "offline"
   >("checking");
+  const [gardenZones, setGardenZones] = useState<GardenZone[]>(fallbackZones);
+  const [statsData, setStatsData] = useState(fallbackStats);
+  const [loading, setLoading] = useState(true);
   const [savedDesigns, setSavedDesigns] = useState<SavedDesign[]>([]);
 
   useEffect(() => {
-    setTimeout(() => setServerStatus("online"), 1000);
+    async function loadData() {
+      try {
+        setLoading(true);
+
+        // Intentar conectar al backend
+        const health = await healthCheck();
+        if (health.status === "ok") {
+          setServerStatus("online");
+
+          // Cargar datos reales
+          const zonesData = await fetchZones();
+          if (zonesData && zonesData.length > 0) {
+            const convertedZones = zonesData.map(convertToGardenZone);
+            setGardenZones(convertedZones);
+            setStatsData(calculateStatsFromZones(convertedZones));
+          } else {
+            // Backend responde pero sin datos, usar fallback
+            setServerStatus("offline");
+            setGardenZones(fallbackZones);
+            setStatsData(fallbackStats);
+          }
+        } else {
+          setServerStatus("offline");
+          setGardenZones(fallbackZones);
+          setStatsData(fallbackStats);
+        }
+      } catch (error) {
+        console.error("Error conectando al backend:", error);
+        setServerStatus("offline");
+        setGardenZones(fallbackZones);
+        setStatsData(fallbackStats);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+
+    // Cargar diseños guardados
     const saved = localStorage.getItem("sintropico-designs-v3");
     if (saved) setSavedDesigns(JSON.parse(saved));
   }, []);
@@ -155,6 +288,16 @@ export default function HomePage() {
   const handleViewHistory = (zoneId: string) => {
     console.log(`Ver historial de zona: ${zoneId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto p-8 text-center">
+        <div className="animate-pulse">
+          <p className="text-oliveGreen">🌱 Cargando datos del huerto...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto">
