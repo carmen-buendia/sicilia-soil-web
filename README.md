@@ -1,9 +1,16 @@
-## 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
+# 🌱 Sicilia Soil – Public Demo (Work in Progress 🚧)
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-WORK%20IN%20PROGRESS-orange?style=for-the-badge&logo=githubactions&logoColor=white" alt="Work in Progress" />
-  <img src="https://img.shields.io/github/last-commit/carmen-buendia/sicilia-soil-web?color=blue&logo=github" alt="Last Commit" />
   <img src="https://img.shields.io/badge/License-NC%20OSL-blue?style=flat-square" alt="License" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/HighCharts-0081CB?style=for-the-badge&logo=highcharts&logoColor=white" alt="HighCharts" />
 </p>
 
 <p align="center">
@@ -12,15 +19,15 @@
 
 ---
 
-## ✨ Live Demo (Work in Progress 🚧)
+## ✨ Live Demo
 
-> **Note:** This project is under active development. Features and UI are continuously evolving.
+> **Note:** This is a public demo of a larger private monorepo. Features are limited to frontend visualization.
 
-| Environment          | URL                                                                                  |
-| :------------------- | :----------------------------------------------------------------------------------- |
-| **Alternative Demo** | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
+| Environment | URL |
+| :--- | :--- |
+| **Demo** | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
 
-This is a public demo of **Sicilia Soil**, a real-time monitoring system for syntropic permaculture in Sicily.
+This is a public demonstration of **Sicilia Soil**, a real-time monitoring system for syntropic permaculture in Sicily.
 
 > "It's not just a garden, it's an ecosystem that designs itself with the help of fungi and technology"
 
@@ -36,27 +43,38 @@ This is a public demo of **Sicilia Soil**, a real-time monitoring system for syn
 
 ---
 
-## 🏗️ Technologies Used
+## 🎯 Why this project exists
 
-| Technology       | Purpose            |
-| :--------------- | :----------------- |
-| **Next.js 14**   | React framework    |
-| **React 18**     | UI components      |
-| **TypeScript**   | Type safety        |
-| **Tailwind CSS** | Responsive styling |
-| **HighCharts**   | Data visualization |
-| **Vercel**       | Deployment         |
+I built **Sicilia Soil** for three reasons:
+
+1. **To explore real-time architectures** (Next.js + WebSockets + IoT simulation)
+2. **To practice full-stack patterns** in a realistic, self-contained project
+3. **To showcase my frontend expertise** in a public, non-NDA context
+
+This demo is a **portfolio piece** that reflects how I structure, test, and deploy modern web applications.
 
 ---
 
-## 📁 Project Structure
+## 🏗️ Technologies Used
+
+| Technology | Purpose |
+| :--- | :--- |
+| **Next.js 14** | React framework |
+| **React 18** | UI components |
+| **TypeScript** | Type safety |
+| **Tailwind CSS** | Responsive styling |
+| **HighCharts** | Data visualization |
+| **Vercel** | Deployment |
+
+---
+
+## 📁 Project Structure (Demo)
 
 ```
 sicilia-soil-web/
 ├── app/                    # Next.js pages (App Router)
 │   ├── page.tsx            # Main dashboard
 │   ├── layout.tsx          # Root layout with navbar & footer
-│   ├── globals.css         # Global styles & Tailwind
 │   ├── design/             # Syntropic design page
 │   ├── analysis/           # Analysis page with charts
 │   ├── mycology/           # Mycology page
@@ -76,30 +94,29 @@ sicilia-soil-web/
 ├── lib/                    # Utilities, types & clients
 │   ├── types/              # TypeScript definitions (GardenZone, etc.)
 │   ├── utils/              # Helper functions (formatRelativeTime, etc.)
-│   └── client/             # WebSocket client (sicilia-soil-client.ts)
+│   └── client/             # WebSocket client (simulated data)
 │
-├── public/                 # Static assets (favicon, SVG images)
-├── package.json            # Dependencies and scripts
-├── next.config.js          # Next.js configuration
-├── tailwind.config.js      # Tailwind CSS configuration
-├── tsconfig.json           # TypeScript configuration
-└── README.md               # This file
+├── public/                 # Static assets
+├── package.json
+└── README.md
 ```
+
+> **Note:** The complete codebase (including backend, WebSockets, shared packages, and CI/CD) is maintained in a private monorepo.
 
 ---
 
 ## 🧭 Navigation
 
-| Route            | Page             | Description                              |
-| :--------------- | :--------------- | :--------------------------------------- |
-| `/`              | Dashboard        | Garden overview                          |
-| `/design`        | Syntropic Design | Layer strategy & symbiotic relationships |
-| `/analysis`      | Analysis         | Historical charts & statistics           |
-| `/mycology`      | Mycology         | Native Sicilian mushroom tracking        |
-| `/humedad`       | Humidity         | Soil moisture by zone                    |
-| `/temperatura`   | Temperature      | Temperature by zone                      |
-| `/luz`           | Sunlight         | Light levels by zone                     |
-| `/configuration` | Settings         | System configuration                     |
+| Route | Page | Description |
+| :--- | :--- | :--- |
+| `/` | Dashboard | Garden overview |
+| `/design` | Syntropic Design | Layer strategy & symbiotic relationships |
+| `/analysis` | Analysis | Historical charts & statistics |
+| `/mycology` | Mycology | Native Sicilian mushroom tracking |
+| `/humedad` | Humidity | Soil moisture by zone |
+| `/temperatura` | Temperature | Temperature by zone |
+| `/luz` | Sunlight | Light levels by zone |
+| `/configuration` | Configuration | System configuration |
 
 ---
 
@@ -123,14 +140,14 @@ npm run dev
 
 ## ⚖️ License
 
-This project is licensed under the **NC OSL (Non-Commercial Open Source License)**.
+This demo is licensed under the **NC OSL (Non-Commercial Open Source License)**.
 
-| ✅ Permitted                      | ❌ Not Permitted         |
-| :-------------------------------- | :----------------------- |
-| Educational and research purposes | Commercial products      |
-| Non-profit personal projects      | Commercial SaaS          |
-| Community initiatives             | Internal corporate tools |
-| Hackathons and workshops          | Any for-profit activity  |
+| ✅ Permitted | ❌ Not Permitted |
+| :--- | :--- |
+| Educational and research purposes | Commercial products |
+| Non-profit personal projects | Commercial SaaS |
+| Community initiatives | Internal corporate tools |
+| Hackathons and workshops | Any for-profit activity |
 
 **Conditions:**
 
@@ -141,25 +158,45 @@ This project is licensed under the **NC OSL (Non-Commercial Open Source License)
 
 ## 💼 Interested in Commercial Use?
 
-If you are a company, startup, or entrepreneur wanting to use **Sicilia Soil** in your product or service, please contact me to acquire a commercial license:
+If you are a company, startup, or entrepreneur wanting to use **Sicilia Soil** in your product or service, please contact me to acquire a commercial license.
 
 📧 **carmenbuendiafullstack@gmail.com**
 
 ---
 
-## 📬 Contact
+## 👩‍💻 Author
 
-| Via          | Link                                                     |
-| :----------- | :------------------------------------------------------- |
-| **GitHub**   | [carmen-buendia](https://github.com/carmen-buendia)      |
-| **LinkedIn** | [carmen-buendía](https://linkedin.com/in/carmen-buendía) |
-| **Email**    | carmenbuendiafullstack@gmail.com                         |
+**Carmen Buendía** – Senior Frontend Architect & Full Stack Engineer
+
+- [GitHub](https://github.com/carmen-buendia)
+- [LinkedIn](https://linkedin.com/in/carmen-buendia)
+- [Email](carmenbuendiafullstack@gmail.com)
+
+*This demo represents my personal work. The full private monorepo includes backend, WebSockets, and shared packages.*
 
 ---
 
 ## ⭐ About the Full Project
 
-This demo is a public version of **Sicilia Soil**. The complete codebase (including backend, WebSockets, and shared packages) is maintained in a private repository.
+*Sicilia Soil* is a complete monitoring system for syntropic permaculture. It includes:
+
+- Real-time WebSocket server
+- IoT sensor integration (Arduino)
+- Shared packages for types and utilities
+- CI/CD with GitHub Actions
+- Commercial licensing options
+
+This public demo showcases only the frontend visualization layer.
+
+---
+
+## 📬 Contact
+
+| Via | Link |
+| :--- | :--- |
+| **GitHub** | [carmen-buendia](https://github.com/carmen-buendia) |
+| **LinkedIn** | [carmen-buendía](https://linkedin.com/in/carmen-buendía) |
+| **Email** | carmenbuendiafullstack@gmail.com |
 
 ---
 
@@ -167,4 +204,3 @@ This demo is a public version of **Sicilia Soil**. The complete codebase (includ
   <strong>Made with ❤️, 🌱, 🍄 and 🌾 in Sicily</strong><br />
   <sub>Where technology and nature design the future together</sub>
 </p>
-```
