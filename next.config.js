@@ -22,6 +22,12 @@ const nextConfig = {
 
   // Packages that need to be transpiled (empty by default for performance)
   transpilePackages: [],
+
+  // SOLUCIÓN PARA ERROR DE PERMISOS EN WINDOWS
+  generateTraceMetadata: false, // Desactiva el trace que causa el error EPERM
+
+  // Alternativa: cambiar ubicación temporal de archivos
+  // distDir: '.next',
 };
 
 module.exports = nextConfig;
