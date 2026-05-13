@@ -1,4 +1,6 @@
 
+---
+
 ```markdown
 # 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
 
@@ -73,7 +75,7 @@ This demo is not just a gardening tool — it's a **portfolio piece** that refle
 
 ## 📁 Project Structure
 
-```
+```bash
 sicilia-soil-web/
 ├── app/                    # Next.js pages (App Router)
 │   ├── page.tsx            # Main dashboard
@@ -204,3 +206,4 @@ This demo is a public version of **Sicilia Soil**. The complete codebase (includ
 ```
 
 ---
+
