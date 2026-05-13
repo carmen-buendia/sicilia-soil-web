@@ -319,7 +319,10 @@ export default function DesignPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div className="flex items-center gap-4">
-            <Link href="/" className="p-2 hover:bg-oliveGreen/10 rounded-lg transition-colors">
+            <Link
+              href="/"
+              className="p-2 hover:bg-oliveGreen/10 rounded-lg transition-colors"
+            >
               <ArrowLeft className="w-5 h-5 text-oliveGreen" />
             </Link>
             <div>
@@ -327,16 +330,21 @@ export default function DesignPage() {
                 <Layers className="w-8 h-8 text-oliveGreen" />
                 Diseño Sintrópico
               </h1>
-              <p className="text-oliveGreen/70">Diseña tu espacio, crea sinergias, observa el ecosistema</p>
+              <p className="text-oliveGreen/70">
+                Diseña tu espacio, crea sinergias, observa el ecosistema
+              </p>
             </div>
           </div>
         </div>
 
         {/* Hero Concepto */}
         <div className="bg-gradient-to-r from-oliveGreen/10 to-wheatGold/10 rounded-2xl p-6 md:p-8 mb-12 border border-oliveGreen/20">
-          <h2 className="text-2xl font-bold text-charcoalGray mb-3">🌱 ¿Qué es la Permacultura Sintrópica Micológica?</h2>
+          <h2 className="text-2xl font-bold text-charcoalGray mb-3">
+            🌱 ¿Qué es la Permacultura Sintrópica Micológica?
+          </h2>
           <p className="text-charcoalGray/80 mb-4">
-            La <strong>sintropía</strong> es el principio opuesto a la entropía: sistemas que{" "}
+            La <strong>sintropía</strong> es el principio opuesto a la entropía:
+            sistemas que{" "}
             <strong>ganan complejidad y abundancia con el tiempo</strong>.
             Aplicada a la permacultura y combinada con micología, crea un
             ecosistema donde cada elemento beneficia a los demás.
@@ -353,23 +361,59 @@ export default function DesignPage() {
             <div className="flex items-center gap-2">
               <Ruler className="w-4 h-4 text-oliveGreen" />
               <span className="text-sm font-medium">Terreno real:</span>
-              <input type="range" min="20" max="100" value={terrainWidth} onChange={(e) => setTerrainWidth(parseInt(e.target.value))} className="w-28" />
+              <input
+                type="range"
+                min="20"
+                max="100"
+                value={terrainWidth}
+                onChange={(e) => setTerrainWidth(parseInt(e.target.value))}
+                className="w-28"
+              />
               <span className="text-sm">{terrainWidth} m</span>
               <span>×</span>
-              <input type="range" min="20" max="100" value={terrainHeight} onChange={(e) => setTerrainHeight(parseInt(e.target.value))} className="w-28" />
+              <input
+                type="range"
+                min="20"
+                max="100"
+                value={terrainHeight}
+                onChange={(e) => setTerrainHeight(parseInt(e.target.value))}
+                className="w-28"
+              />
               <span className="text-sm">{terrainHeight} m</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm">Escala:</span>
-              <button onClick={() => setPixelsPerMeter(Math.max(8, pixelsPerMeter - 2))} className="p-1 rounded bg-offWhite border"><Minus className="w-3 h-3" /></button>
-              <span className="text-sm w-12 text-center">{pixelsPerMeter} px/m</span>
-              <button onClick={() => setPixelsPerMeter(Math.min(20, pixelsPerMeter + 2))} className="p-1 rounded bg-offWhite border"><Plus className="w-3 h-3" /></button>
+              <button
+                onClick={() =>
+                  setPixelsPerMeter(Math.max(8, pixelsPerMeter - 2))
+                }
+                className="p-1 rounded bg-offWhite border"
+              >
+                <Minus className="w-3 h-3" />
+              </button>
+              <span className="text-sm w-12 text-center">
+                {pixelsPerMeter} px/m
+              </span>
+              <button
+                onClick={() =>
+                  setPixelsPerMeter(Math.min(20, pixelsPerMeter + 2))
+                }
+                className="p-1 rounded bg-offWhite border"
+              >
+                <Plus className="w-3 h-3" />
+              </button>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setShowGrid(!showGrid)} className={`px-2 py-1 rounded text-xs ${showGrid ? "bg-oliveGreen text-white" : "bg-white border"}`}>
+              <button
+                onClick={() => setShowGrid(!showGrid)}
+                className={`px-2 py-1 rounded text-xs ${showGrid ? "bg-oliveGreen text-white" : "bg-white border"}`}
+              >
                 <Grid3x3 className="w-3 h-3 inline mr-1" /> Cuadrícula 1m
               </button>
-              <button onClick={() => setSnapToGrid(!snapToGrid)} className={`px-2 py-1 rounded text-xs ${snapToGrid ? "bg-oliveGreen text-white" : "bg-white border"}`}>
+              <button
+                onClick={() => setSnapToGrid(!snapToGrid)}
+                className={`px-2 py-1 rounded text-xs ${snapToGrid ? "bg-oliveGreen text-white" : "bg-white border"}`}
+              >
                 Snap a cuadrícula
               </button>
             </div>
@@ -384,12 +428,43 @@ export default function DesignPage() {
               Diseña tu espacio sintrópico
             </h2>
             <div className="flex gap-2">
-              <input type="text" value={designName} onChange={(e) => setDesignName(e.target.value)} className="px-3 py-1.5 text-sm border border-oliveGreen/20 rounded-lg bg-offWhite text-charcoalGray w-40" placeholder="Nombre del diseño" />
-              <button onClick={handleSaveDesign} className="p-2 rounded-lg hover:bg-oliveGreen/10"><Save className="w-4 h-4 text-oliveGreen" /></button>
-              <button onClick={handleUndo} className="p-2 rounded-lg hover:bg-oliveGreen/10"><Undo2 className="w-4 h-4" /></button>
-              <button onClick={handleRedo} className="p-2 rounded-lg hover:bg-oliveGreen/10"><Redo2 className="w-4 h-4" /></button>
-              <button onClick={handleClear} className="p-2 rounded-lg hover:bg-red-100"><Trash2 className="w-4 h-4 text-red-500" /></button>
-              <button onClick={handleDownload} className="p-2 rounded-lg hover:bg-oliveGreen/10"><Download className="w-4 h-4" /></button>
+              <input
+                type="text"
+                value={designName}
+                onChange={(e) => setDesignName(e.target.value)}
+                className="px-3 py-1.5 text-sm border border-oliveGreen/20 rounded-lg bg-offWhite text-charcoalGray w-40"
+                placeholder="Nombre del diseño"
+              />
+              <button
+                onClick={handleSaveDesign}
+                className="p-2 rounded-lg hover:bg-oliveGreen/10"
+              >
+                <Save className="w-4 h-4 text-oliveGreen" />
+              </button>
+              <button
+                onClick={handleUndo}
+                className="p-2 rounded-lg hover:bg-oliveGreen/10"
+              >
+                <Undo2 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleRedo}
+                className="p-2 rounded-lg hover:bg-oliveGreen/10"
+              >
+                <Redo2 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleClear}
+                className="p-2 rounded-lg hover:bg-red-100"
+              >
+                <Trash2 className="w-4 h-4 text-red-500" />
+              </button>
+              <button
+                onClick={handleDownload}
+                className="p-2 rounded-lg hover:bg-oliveGreen/10"
+              >
+                <Download className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
@@ -407,13 +482,23 @@ export default function DesignPage() {
                 {/* Buscador */}
                 <div className="relative mb-3">
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-oliveGreen/50" />
-                  <input type="text" placeholder="Buscar elemento..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-7 pr-2 py-1.5 text-xs border border-oliveGreen/20 rounded-lg bg-offWhite" />
+                  <input
+                    type="text"
+                    placeholder="Buscar elemento..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-7 pr-2 py-1.5 text-xs border border-oliveGreen/20 rounded-lg bg-offWhite"
+                  />
                 </div>
 
                 {/* Categorías */}
                 <div className="flex flex-wrap gap-1 mb-3">
                   {categories.map((cat) => (
-                    <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`px-2 py-1 rounded text-xs ${selectedCategory === cat.id ? "bg-oliveGreen text-white" : "bg-white border border-oliveGreen/15"}`}>
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`px-2 py-1 rounded text-xs ${selectedCategory === cat.id ? "bg-oliveGreen text-white" : "bg-white border border-oliveGreen/15"}`}
+                    >
                       {cat.name}
                     </button>
                   ))}
@@ -422,28 +507,49 @@ export default function DesignPage() {
                 {/* Grid de elementos */}
                 <div className="grid grid-cols-4 gap-2 max-h-96 overflow-y-auto">
                   {filteredElements.map((element) => (
-                    <button key={element.id} onClick={() => setSelectedElement(element)} className={`p-2 rounded-lg flex flex-col items-center gap-1 transition-all ${selectedElement.id === element.id ? "bg-oliveGreen text-white shadow-md scale-105" : "bg-white border border-oliveGreen/15 hover:bg-oliveGreen/5"}`}>
+                    <button
+                      key={element.id}
+                      onClick={() => setSelectedElement(element)}
+                      className={`p-2 rounded-lg flex flex-col items-center gap-1 transition-all ${selectedElement.id === element.id ? "bg-oliveGreen text-white shadow-md scale-105" : "bg-white border border-oliveGreen/15 hover:bg-oliveGreen/5"}`}
+                    >
                       <span className="text-2xl">{element.icon}</span>
-                      <span className="text-[10px] text-center">{element.name}</span>
-                      <span className="text-[8px] opacity-60">{element.realSize}m}</span>
+                      <span className="text-[10px] text-center">
+                        {element.name}
+                      </span>
+                      <span className="text-[8px] opacity-60">
+                        {element.realSize}m
+                      </span>
                     </button>
                   ))}
                 </div>
 
-                <p className="text-xs text-oliveGreen/60 text-center mt-3">🖱️ Click: Colocar | Arrastrar: Mover</p>
+                <p className="text-xs text-oliveGreen/60 text-center mt-3">
+                  🖱️ Click: Colocar | Arrastrar: Mover
+                </p>
               </div>
 
               {/* Diseños guardados */}
               {savedDesigns.length > 0 && (
                 <div className="mt-4 bg-oliveGreen/5 rounded-xl p-4 border border-oliveGreen/20">
-                  <h4 className="text-xs font-bold text-oliveGreen/70 mb-2">📁 Diseños guardados</h4>
+                  <h4 className="text-xs font-bold text-oliveGreen/70 mb-2">
+                    📁 Diseños guardados
+                  </h4>
                   <div className="space-y-1 max-h-32 overflow-y-auto">
-                    {savedDesigns.slice(-5).reverse().map((design, i) => (
-                      <button key={i} onClick={() => handleLoadDesign(design)} className="w-full text-left text-xs p-1.5 rounded hover:bg-oliveGreen/10 flex justify-between">
-                        <span>{design.name}</span>
-                        <span className="text-oliveGreen/40 text-[10px]">{design.date.split(",")[0]}</span>
-                      </button>
-                    ))}
+                    {savedDesigns
+                      .slice(-5)
+                      .reverse()
+                      .map((design, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleLoadDesign(design)}
+                          className="w-full text-left text-xs p-1.5 rounded hover:bg-oliveGreen/10 flex justify-between"
+                        >
+                          <span>{design.name}</span>
+                          <span className="text-oliveGreen/40 text-[10px]">
+                            {design.date.split(",")[0]}
+                          </span>
+                        </button>
+                      ))}
                   </div>
                 </div>
               )}
@@ -451,7 +557,11 @@ export default function DesignPage() {
 
             {/* Canvas de dibujo */}
             <div className="lg:col-span-3">
-              <div ref={containerRef} className="bg-offWhite rounded-xl shadow-xl border border-oliveGreen/15 overflow-auto" style={{ maxHeight: "65vh" }}>
+              <div
+                ref={containerRef}
+                className="bg-offWhite rounded-xl shadow-xl border border-oliveGreen/15 overflow-auto"
+                style={{ maxHeight: "65vh" }}
+              >
                 <div style={{ minWidth: canvasWidth, minHeight: canvasHeight }}>
                   <canvas
                     ref={canvasRef}
@@ -468,11 +578,19 @@ export default function DesignPage() {
               </div>
               <div className="mt-2 flex justify-between text-xs text-oliveGreen/60">
                 <div className="flex gap-4">
-                  <span>📐 {terrainWidth} × {terrainHeight} m ({terrainWidth * terrainHeight} m²)</span>
+                  <span>
+                    📐 {terrainWidth} × {terrainHeight} m (
+                    {terrainWidth * terrainHeight} m²)
+                  </span>
                   <span>🌱 {elements.length} elementos colocados</span>
                 </div>
                 {selectedElementId && (
-                  <button onClick={handleDeleteElement} className="text-red-500 hover:underline">🗑 Eliminar seleccionado</button>
+                  <button
+                    onClick={handleDeleteElement}
+                    className="text-red-500 hover:underline"
+                  >
+                    🗑 Eliminar seleccionado
+                  </button>
                 )}
               </div>
             </div>
@@ -509,24 +627,37 @@ export default function DesignPage() {
             ))}
           </div>
 
-          {layers.map((layer) => activeLayer === layer.id && (
-            <div key={layer.id} className={`${layer.bg} rounded-2xl p-6 border border-oliveGreen/15`}>
-              <h3 className="text-xl font-bold text-charcoalGray mb-4 flex items-center gap-2">
-                {layer.icon} {layer.name}
-              </h3>
-              <div className="grid md:grid-cols-3 gap-4">
-                {layer.species.map((species, i) => (
-                  <div key={i} className="bg-offWhite rounded-xl p-4 shadow-sm border border-oliveGreen/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl">{species.icon}</span>
-                      <span className="font-bold text-charcoalGray">{species.name}</span>
-                    </div>
-                    <p className="text-sm text-oliveGreen/70">{species.function}</p>
+          {layers.map(
+            (layer) =>
+              activeLayer === layer.id && (
+                <div
+                  key={layer.id}
+                  className={`${layer.bg} rounded-2xl p-6 border border-oliveGreen/15`}
+                >
+                  <h3 className="text-xl font-bold text-charcoalGray mb-4 flex items-center gap-2">
+                    {layer.icon} {layer.name}
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {layer.species.map((species, i) => (
+                      <div
+                        key={i}
+                        className="bg-offWhite rounded-xl p-4 shadow-sm border border-oliveGreen/10"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl">{species.icon}</span>
+                          <span className="font-bold text-charcoalGray">
+                            {species.name}
+                          </span>
+                        </div>
+                        <p className="text-sm text-oliveGreen/70">
+                          {species.function}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
+                </div>
+              ),
+          )}
         </div>
 
         {/* Relaciones simbióticas */}
@@ -537,24 +668,45 @@ export default function DesignPage() {
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
             {symbiosis.map((rel, i) => (
-              <div key={i} className="bg-offWhite rounded-xl p-5 shadow-sm border border-oliveGreen/15 hover:shadow-md transition-all">
+              <div
+                key={i}
+                className="bg-offWhite rounded-xl p-5 shadow-sm border border-oliveGreen/15 hover:shadow-md transition-all"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">
-                      {rel.from === "Olivo" ? "🫒" : rel.from === "Esparto" ? "🌾" : rel.from === "Algarrobo" ? "🌳" : "🍄"}
+                      {rel.from === "Olivo"
+                        ? "🫒"
+                        : rel.from === "Esparto"
+                          ? "🌾"
+                          : rel.from === "Algarrobo"
+                            ? "🌳"
+                            : "🍄"}
                     </span>
-                    <span className="font-bold text-charcoalGray">{rel.from}</span>
+                    <span className="font-bold text-charcoalGray">
+                      {rel.from}
+                    </span>
                   </div>
                   <span className="text-oliveGreen">→</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-charcoalGray">{rel.to}</span>
+                    <span className="font-bold text-charcoalGray">
+                      {rel.to}
+                    </span>
                     <span className="text-xl">
-                      {rel.to.includes("Cardonchello") ? "🍄" : rel.to === "Trébol" ? "🍀" : "🌱"}
+                      {rel.to.includes("Cardonchello")
+                        ? "🍄"
+                        : rel.to === "Trébol"
+                          ? "🍀"
+                          : "🌱"}
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-oliveGreen/70 mb-2">{rel.description}</p>
-                <span className="inline-block px-2 py-1 bg-oliveGreen/10 text-oliveGreen rounded-full text-xs">{rel.type}</span>
+                <p className="text-sm text-oliveGreen/70 mb-2">
+                  {rel.description}
+                </p>
+                <span className="inline-block px-2 py-1 bg-oliveGreen/10 text-oliveGreen rounded-full text-xs">
+                  {rel.type}
+                </span>
               </div>
             ))}
           </div>
@@ -568,12 +720,22 @@ export default function DesignPage() {
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
             {succession.map((phase, i) => (
-              <div key={i} className="bg-offWhite rounded-xl p-5 shadow-sm border border-oliveGreen/15 hover:shadow-md transition-all">
-                <h3 className="text-lg font-bold text-oliveGreen mb-1">{phase.year}</h3>
-                <p className="font-medium text-charcoalGray mb-3">{phase.phase}</p>
+              <div
+                key={i}
+                className="bg-offWhite rounded-xl p-5 shadow-sm border border-oliveGreen/15 hover:shadow-md transition-all"
+              >
+                <h3 className="text-lg font-bold text-oliveGreen mb-1">
+                  {phase.year}
+                </h3>
+                <p className="font-medium text-charcoalGray mb-3">
+                  {phase.phase}
+                </p>
                 <ul className="space-y-1">
                   {phase.tasks.map((task, j) => (
-                    <li key={j} className="text-sm text-oliveGreen/70 flex items-start gap-1">
+                    <li
+                      key={j}
+                      className="text-sm text-oliveGreen/70 flex items-start gap-1"
+                    >
                       <span className="text-wheatGold">•</span>
                       {task}
                     </li>
@@ -592,20 +754,57 @@ export default function DesignPage() {
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <div className="flex justify-between mb-1"><span className="text-sm text-oliveGreen/70">Humedad</span><span className="text-sm font-medium">68%</span></div>
-              <div className="w-full h-2 bg-oliveGreen/10 rounded-full mb-4"><div className="h-full bg-oliveGreen rounded-full" style={{ width: "68%" }} /></div>
-              <div className="flex justify-between mb-1"><span className="text-sm text-oliveGreen/70">pH</span><span className="text-sm font-medium">7.2 (ligeramente alcalino)</span></div>
-              <div className="w-full h-2 bg-oliveGreen/10 rounded-full mb-4"><div className="h-full bg-wheatGold rounded-full" style={{ width: "60%" }} /></div>
-              <div className="flex justify-between mb-1"><span className="text-sm text-oliveGreen/70">Materia orgánica</span><span className="text-sm font-medium">4.5% (buena)</span></div>
-              <div className="w-full h-2 bg-oliveGreen/10 rounded-full"><div className="h-full bg-sicilian-red rounded-full" style={{ width: "75%" }} /></div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-oliveGreen/70">Humedad</span>
+                <span className="text-sm font-medium">68%</span>
+              </div>
+              <div className="w-full h-2 bg-oliveGreen/10 rounded-full mb-4">
+                <div
+                  className="h-full bg-oliveGreen rounded-full"
+                  style={{ width: "68%" }}
+                />
+              </div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-oliveGreen/70">pH</span>
+                <span className="text-sm font-medium">
+                  7.2 (ligeramente alcalino)
+                </span>
+              </div>
+              <div className="w-full h-2 bg-oliveGreen/10 rounded-full mb-4">
+                <div
+                  className="h-full bg-wheatGold rounded-full"
+                  style={{ width: "60%" }}
+                />
+              </div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm text-oliveGreen/70">
+                  Materia orgánica
+                </span>
+                <span className="text-sm font-medium">4.5% (buena)</span>
+              </div>
+              <div className="w-full h-2 bg-oliveGreen/10 rounded-full">
+                <div
+                  className="h-full bg-sicilian-red rounded-full"
+                  style={{ width: "75%" }}
+                />
+              </div>
             </div>
             <div className="bg-oliveGreen/5 rounded-xl p-4 border border-oliveGreen/10">
-              <h3 className="font-bold text-charcoalGray mb-2 flex items-center gap-2"><Info className="w-4 h-4 text-oliveGreen" /> Recomendaciones</h3>
+              <h3 className="font-bold text-charcoalGray mb-2 flex items-center gap-2">
+                <Info className="w-4 h-4 text-oliveGreen" /> Recomendaciones
+              </h3>
               <ul className="space-y-2 text-sm text-oliveGreen/70">
-                <li>✓ El suelo es arcillo-calcáreo, ideal para esparto y olivos</li>
-                <li>✓ Aumentar materia orgánica con compost de esparto y restos de setas</li>
+                <li>
+                  ✓ El suelo es arcillo-calcáreo, ideal para esparto y olivos
+                </li>
+                <li>
+                  ✓ Aumentar materia orgánica con compost de esparto y restos de
+                  setas
+                </li>
                 <li>✓ Mantener acolchado para retener humedad en verano</li>
-                <li>✓ Inocular micorrizas para mejorar absorción de nutrientes</li>
+                <li>
+                  ✓ Inocular micorrizas para mejorar absorción de nutrientes
+                </li>
               </ul>
             </div>
           </div>
@@ -613,8 +812,14 @@ export default function DesignPage() {
 
         {/* Footer */}
         <div className="text-center py-8 border-t border-oliveGreen/15">
-          <p className="text-sm text-oliveGreen/70">🌱 Diseño basado en principios de sintropía de Ernst Götsch y micología aplicada</p>
-          <p className="text-xs text-oliveGreen/50 mt-2">Diseña tu espacio, crea sinergias, observa cómo el ecosistema se regenera</p>
+          <p className="text-sm text-oliveGreen/70">
+            🌱 Diseño basado en principios de sintropía de Ernst Götsch y
+            micología aplicada
+          </p>
+          <p className="text-xs text-oliveGreen/50 mt-2">
+            Diseña tu espacio, crea sinergias, observa cómo el ecosistema se
+            regenera
+          </p>
         </div>
       </div>
     </div>

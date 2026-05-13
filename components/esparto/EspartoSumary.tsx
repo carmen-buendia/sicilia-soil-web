@@ -121,9 +121,11 @@ export const EspartoSummary = ({ data }: EspartoSummaryProps) => {
         <p className="text-sm text-gray-600">
           Stock: {data.harvest.currentStock}
         </p>
-        <Badge variant="success" size="sm" className="mt-2">
-          Quality: {data.harvest.quality}
-        </Badge>
+        <div className="ml-2">
+          <Badge variant="success" size="sm">
+            Quality: {data.harvest.quality}
+          </Badge>
+        </div>
       </div>
     </div>
   );

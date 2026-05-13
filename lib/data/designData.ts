@@ -1,3 +1,5 @@
+// lib/data/designData.ts
+
 import React from "react";
 import { TreeDeciduous, Flower2, Leaf, Sprout } from "lucide-react";
 import type {
@@ -6,6 +8,10 @@ import type {
   SuccessionType,
   ElementType,
 } from "@/lib/types/design.types";
+
+// ============================================
+// LAYERS - ESTRATOS DEL BOSQUE
+// ============================================
 
 export const layers: LayerType[] = [
   {
@@ -183,4 +189,195 @@ export const layers: LayerType[] = [
   },
 ];
 
-// ... resto del código (symbiosis, succession, drawingElements, categories) igual
+// ============================================
+// SYMBIOSIS - RELACIONES SIMBIÓTICAS
+// ============================================
+
+export const symbiosis: SymbiosisType[] = [
+  {
+    id: "olive-rosemary",
+    from: "Olivo",
+    to: "Romero",
+    description:
+      "El romero repele plagas del olivo y mejora la retención de humedad",
+    type: "Mutualismo",
+    strength: 4,
+    icon: "🤝",
+  },
+  {
+    id: "carob-clover",
+    from: "Algarrobo",
+    to: "Trébol",
+    description: "El trébol fija nitrógeno que beneficia al algarrobo",
+    type: "Ciclo de nutrientes",
+    strength: 5,
+    icon: "🔄",
+  },
+  {
+    id: "fungal-network",
+    from: "Cardonchello",
+    to: "Olivo",
+    description: "Red de micorrizas que conecta y nutre a ambos",
+    type: "Red simbiótica",
+    strength: 5,
+    icon: "🍄",
+  },
+  {
+    id: "almond-lavender",
+    from: "Almendro",
+    to: "Lavanda",
+    description: "La lavanda atrae polinizadores para el almendro",
+    type: "Sinergia",
+    strength: 3,
+    icon: "🌸",
+  },
+];
+
+// ============================================
+// SUCCESSION - SUCESIÓN ECOLÓGICA
+// ============================================
+
+export const succession: SuccessionType[] = [
+  {
+    year: "0-2",
+    phase: "Establecimiento",
+    tasks: ["Preparación suelo", "Plantación pionera", "Riego inicial"],
+    milestones: ["Supervivencia >80%", "Cobertura inicial"],
+    biodiversity: 20,
+    productivity: 10,
+  },
+  {
+    year: "3-5",
+    phase: "Desarrollo",
+    tasks: ["Manejo de cubiertas", "Poda formativa", "Incorporación de fauna"],
+    milestones: ["Dosel cerrado", "Primera cosecha"],
+    biodiversity: 50,
+    productivity: 40,
+  },
+  {
+    year: "6-10",
+    phase: "Madurez temprana",
+    tasks: ["Manejo integrado", "Expansión de cultivos", "Cosecha regular"],
+    milestones: ["Ecosistema funcional", "Producción estable"],
+    biodiversity: 75,
+    productivity: 70,
+  },
+  {
+    year: "10+",
+    phase: "Clímax",
+    tasks: [
+      "Mantenimiento mínimo",
+      "Regeneración natural",
+      "Cosecha sostenible",
+    ],
+    milestones: ["Bosque comestible", "Autosuficiencia"],
+    biodiversity: 95,
+    productivity: 90,
+  },
+];
+
+// ============================================
+// DRAWING ELEMENTS - ELEMENTOS PARA DIBUJO
+// ============================================
+
+export const drawingElements: ElementType[] = [
+  {
+    id: "olive-tree",
+    name: "Olivo",
+    icon: "🫒",
+    category: "trees",
+    size: 30,
+    color: "#5A6B47",
+    realSize: 4,
+    description: "Árbol longevo que produce aceitunas",
+    benefits: ["Aceite de oliva", "Sombra", "Fijación de carbono"],
+  },
+  {
+    id: "carob-tree",
+    name: "Algarrobo",
+    icon: "🌳",
+    category: "trees",
+    size: 35,
+    color: "#4A5B37",
+    realSize: 5,
+    description: "Árbol que fija nitrógeno y produce algarroba",
+    benefits: ["Fijación de nitrógeno", "Alimento", "Madera"],
+  },
+  {
+    id: "almond-tree",
+    name: "Almendro",
+    icon: "🌰",
+    category: "trees",
+    size: 25,
+    color: "#6B7B57",
+    realSize: 3.5,
+    description: "Árbol de floración temprana que produce almendras",
+    benefits: ["Frutos secos", "Floración ornamental", "Abejas"],
+  },
+  {
+    id: "rosemary",
+    name: "Romero",
+    icon: "🌿",
+    category: "shrubs",
+    size: 15,
+    color: "#7A8B67",
+    realSize: 1,
+    description: "Planta aromática mediterránea",
+    benefits: ["Aceites esenciales", "Repelente natural", "Culinario"],
+  },
+  {
+    id: "thyme",
+    name: "Tomillo",
+    icon: "🌱",
+    category: "shrubs",
+    size: 10,
+    color: "#8B9B77",
+    realSize: 0.5,
+    description: "Planta aromática de cobertura",
+    benefits: ["Antiséptico", "Cobertura", "Polinizadores"],
+  },
+  {
+    id: "esparto",
+    name: "Esparto",
+    icon: "🌾",
+    category: "groundcovers",
+    size: 12,
+    color: "#E6B422",
+    realSize: 0.8,
+    description: "Fibra natural para control de erosión",
+    benefits: ["Fibra textil", "Control de erosión", "Biomasa"],
+  },
+  {
+    id: "clover",
+    name: "Trébol",
+    icon: "🍀",
+    category: "groundcovers",
+    size: 8,
+    color: "#5A6B47",
+    realSize: 0.3,
+    description: "Fijador de nitrógeno y cobertura vegetal",
+    benefits: ["Fija nitrógeno", "Cobertura rápida", "Forraje"],
+  },
+];
+
+// ============================================
+// CATEGORIES - CATEGORÍAS PARA ELEMENTOS
+// ============================================
+
+export const categories = [
+  {
+    id: "trees",
+    name: "Árboles",
+    items: ["Olivo", "Algarrobo", "Almendro"],
+  },
+  {
+    id: "shrubs",
+    name: "Arbustos",
+    items: ["Romero", "Tomillo", "Lavanda"],
+  },
+  {
+    id: "groundcovers",
+    name: "Coberturas",
+    items: ["Trébol", "Alfalfa", "Esparto"],
+  },
+];
