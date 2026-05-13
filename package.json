@@ -1,15 +1,17 @@
 {
-  "name": "sintropico-monitor",
+  "name": "sicilia-soil-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Monitoreo de permacultura sintrópica en el Mediterráneo",
+  "description": "Real-time monitoring system for syntropic permaculture in Sicily",
   "author": "Carmen Buendía",
   "keywords": [
-    "permacultura",
-    "sintropica",
-    "mediterraneo",
-    "agricultura-regenerativa",
-    "monitoreo"
+    "syntropic-permaculture",
+    "mycology",
+    "esparto",
+    "sicily",
+    "iot",
+    "soil-monitoring",
+    "agricultura-regenerativa"
   ],
   "scripts": {
     "dev": "next dev",
@@ -18,32 +20,32 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "date-fns": "3.3.1",
+    "date-fns": "^3.3.1",
     "highcharts": "^12.5.0",
     "highcharts-react-official": "^3.2.3",
-    "lucide-react": "0.309.0",
+    "lucide-react": "^0.309.0",
     "next": "14.0.4",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "socket.io-client": "4.7.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
-    "@types/node": "20.11.5",
-    "@types/react": "19.2.7",
-    "@types/react-dom": "19.2.3",
-    "@typescript-eslint/eslint-plugin": "8.35.1",
-    "@typescript-eslint/parser": "8.35.1",
-    "autoprefixer": "10.4.16",
-    "postcss": "8.4.33",
-    "tailwindcss": "3.4.1",
-    "typescript": "5.8.2"
+    "@types/node": "^20.11.5",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/carmen-buendia/sintropico-monitor.git"
+    "url": "https://github.com/carmen-buendia/sicilia-soil-web.git"
   },
   "bugs": {
-    "url": "https://github.com/carmen-buendia/sintropico-monitor/issues"
+    "url": "https://github.com/carmen-buendia/sicilia-soil-web/issues"
   },
-  "homepage": "https://sintropico-monitor.vercel.app"
+  "homepage": "https://sicilia-soil-web.vercel.app"
 }

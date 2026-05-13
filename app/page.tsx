@@ -7,9 +7,6 @@ import { StatsCard } from "@/components/dashboard/components/StatsCards";
 import { ZoneCard } from "@/components/dashboard/components/ZoneCards";
 import { SavedDesigns } from "@/components/dashboard/components/SavedDesigns";
 import { ServerStatus } from "@/components/dashboard/components/ServerStatus";
-import { Badge } from "@/components/common/Badge";
-import { Button } from "@/components/common/Button";
-import { SicilianFlag } from "@/components/layout/SicilianFlag";
 
 import type { GardenZone } from "@/lib/types";
 
@@ -20,7 +17,7 @@ interface SavedDesign {
   canvasSize: { width: number; height: number };
 }
 
-// Datos simulados con lastUpdate
+// Datos simulados
 const gardenZones: GardenZone[] = [
   {
     id: "esparto",
@@ -149,9 +146,7 @@ export default function HomePage() {
 
   const handleDeleteDesign = (designName: string) => {
     if (confirm(`¿Eliminar el diseño "${designName}"?`)) {
-      const updated = savedDesigns.filter(
-        (d: { name: string }) => d.name !== designName,
-      );
+      const updated = savedDesigns.filter((d) => d.name !== designName);
       setSavedDesigns(updated);
       localStorage.setItem("sintropico-designs-v3", JSON.stringify(updated));
     }
@@ -184,7 +179,7 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Two column layout */}
+      {/* Two column layout: Zones + Saved Designs */}
       <div className="grid lg:grid-cols-3 gap-8 mb-12">
         {/* Zones Section */}
         <div className="lg:col-span-2">
@@ -199,202 +194,16 @@ export default function HomePage() {
               Ver análisis completo <span>→</span>
             </Link>
           </div>
-        </nav>
-
-        <div className="h-14 sm:h-16 lg:h-20" />
-
-        {/* Contenido principal */}
-        {isDashboard ? (
-          <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-            <div className="max-w-6xl mx-auto">
-              {/* Header */}
-              <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
-                <div>
-                  <h1 className="text-3xl font-bold text-charcoalGray">
-                    Bienvenida a tu Huerto Sintrópico
-                  </h1>
-                  <p className="text-oliveGreen flex items-center gap-2">
-                    <Trees className="w-4 h-4" /> Monitoreo en tiempo real ·
-                    Permacultura Sintrópica
-                  </p>
-                </div>
-                <div
-                  className={`px-4 py-2 rounded-full flex items-center gap-2 ${
-                    serverStatus === "online"
-                      ? "bg-oliveGreen/10 text-oliveGreen"
-                      : serverStatus === "offline"
-                        ? "bg-sicilian-red/10 text-sicilian-red"
-                        : "bg-wheatGold/10 text-wheatGold"
-                  }`}
-                >
-                  {serverStatus === "online" && (
-                    <CheckCircle className="w-4 h-4" />
-                  )}
-                  <span className="font-medium">
-                    {serverStatus === "online"
-                      ? "Sensores activos"
-                      : serverStatus === "offline"
-                        ? "Sensores desconectados"
-                        : "Conectando..."}
-                  </span>
-                </div>
-              </div>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
-                {statsData.map((stat, index) => (
-                  <StatsCard
-                    key={index}
-                    value={stat.value}
-                    label={stat.label}
-                    icon={stat.icon}
-                    subtext={stat.subtext}
-                  />
-                ))}
-              </div>
-
-              {/* Two column layout: Zones + Saved Designs */}
-              <div className="grid lg:grid-cols-3 gap-8 mb-12">
-                {/* Zones Section - 2 columnas */}
-                <div className="lg:col-span-2">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-charcoalGray">
-                      Zonas del Huerto
-                    </h2>
-                    <Link
-                      href="/analysis"
-                      className="text-sm text-oliveGreen hover:text-sicilian-red transition-colors flex items-center gap-1"
-                    >
-                      Ver análisis completo <span>→</span>
-                    </Link>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {gardenZones.map((zone) => (
-                      <ZoneCard
-                        key={zone.id}
-                        zone={zone}
-                        onViewHistory={(id: any) =>
-                          console.log(`Ver historial de ${id}`)
-                        }
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Saved Designs Section - 1 columna */}
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-charcoalGray flex items-center gap-2">
-                      <Map className="w-5 h-5 text-oliveGreen" />
-                      Mis Diseños
-                    </h2>
-                    <Link
-                      href="/design"
-                      className="text-sm text-oliveGreen hover:text-sicilian-red transition-colors flex items-center gap-1"
-                    >
-                      Nuevo diseño <span>+</span>
-                    </Link>
-                  </div>
-
-                  {savedDesigns.length === 0 ? (
-                    <div className="bg-offWhite rounded-xl p-8 text-center border border-oliveGreen/15">
-                      <div className="w-16 h-16 bg-oliveGreen/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Map className="w-8 h-8 text-oliveGreen/40" />
-                      </div>
-                      <h3 className="text-lg font-medium text-charcoalGray mb-2">
-                        No tienes diseños guardados
-                      </h3>
-                      <p className="text-oliveGreen/60 text-sm mb-4">
-                        Crea tu primer diseño sintrópico en la página de Diseño
-                      </p>
-                      <Link
-                        href="/design"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-oliveGreen text-offWhite rounded-lg hover:bg-oliveGreen/90 transition-all"
-                      >
-                        <Layers className="w-4 h-4" />
-                        Ir a Diseño Sintrópico
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {savedDesigns
-                        .slice()
-                        .reverse()
-                        .map((design: any, idx: any) => (
-                          <div
-                            key={idx}
-                            className="bg-offWhite rounded-xl p-4 border border-oliveGreen/15 hover:shadow-md transition-all hover:border-oliveGreen/30"
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <Map className="w-4 h-4 text-oliveGreen" />
-                                  <h3 className="font-bold text-charcoalGray">
-                                    {design.name}
-                                  </h3>
-                                </div>
-                                <div className="flex flex-wrap gap-3 text-xs text-oliveGreen/60 mb-3">
-                                  <span className="flex items-center gap-1">
-                                    <Calendar className="w-3 h-3" />
-                                    {design.date}
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <Map className="w-3 h-3" />
-                                    {design.canvasSize.width} ×{" "}
-                                    {design.canvasSize.height} m
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <Sprout className="w-3 h-3" />
-                                    {design.elements.length} elementos
-                                  </span>
-                                </div>
-
-                                {/* Mini preview de elementos */}
-                                <div className="flex gap-1 flex-wrap">
-                                  {design.elements
-                                    .slice(0, 6)
-                                    .map((el: any, i: number) => (
-                                      <span
-                                        key={i}
-                                        className="text-lg"
-                                        title={el.species.name}
-                                      >
-                                        {el.species.icon}
-                                      </span>
-                                    ))}
-                                  {design.elements.length > 6 && (
-                                    <span className="text-xs text-oliveGreen/50 self-center">
-                                      +{design.elements.length - 6}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-
-                              <div className="flex gap-2">
-                                <Link
-                                  href={`/design?load=${encodeURIComponent(design.name)}`}
-                                  className="p-2 rounded-lg hover:bg-oliveGreen/10 transition-colors"
-                                  title="Abrir diseño"
-                                >
-                                  <Eye className="w-4 h-4 text-oliveGreen" />
-                                </Link>
-                                <button
-                                  onClick={() =>
-                                    handleDeleteDesign(design.name)
-                                  }
-                                  className="p-2 rounded-lg hover:bg-sicilian-red/10 transition-colors"
-                                  title="Eliminar diseño"
-                                >
-                                  <Trash2 className="w-4 h-4 text-sicilian-red/70" />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {gardenZones.map((zone) => (
+              <ZoneCard
+                key={zone.id}
+                zone={zone}
+                onViewHistory={handleViewHistory}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Saved Designs Section */}
         <div>
