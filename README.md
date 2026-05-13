@@ -1,8 +1,6 @@
 
----
-
 ```markdown
-## 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
+# 🌱 Sicilia Soil (Public Demo - Work in Progress 🚧)
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-WORK%20IN%20PROGRESS-orange?style=for-the-badge&logo=githubactions&logoColor=white" alt="Work in Progress" />
@@ -28,8 +26,8 @@
 
 > **Note:** This project is under active development. Features and UI are continuously evolving.
 
-| Environment          | URL                                                                                  |
-| :------------------- | :----------------------------------------------------------------------------------- |
+| Environment | URL |
+| :--- | :--- |
 | **Alternative Demo** | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
 
 This is a public demo of **Sicilia Soil**, a real-time monitoring system for syntropic permaculture in Sicily.
@@ -62,14 +60,14 @@ This demo is not just a gardening tool — it's a **portfolio piece** that refle
 
 ## 🏗️ Technologies Used
 
-| Technology       | Purpose            |
-| :--------------- | :----------------- |
-| **Next.js 14**   | React framework    |
-| **React 18**     | UI components      |
-| **TypeScript**   | Type safety        |
+| Technology | Purpose |
+| :--- | :--- |
+| **Next.js 14** | React framework |
+| **React 18** | UI components |
+| **TypeScript** | Type safety |
 | **Tailwind CSS** | Responsive styling |
-| **HighCharts**   | Data visualization |
-| **Vercel**       | Deployment         |
+| **HighCharts** | Data visualization |
+| **Vercel** | Deployment |
 
 ---
 
@@ -114,16 +112,16 @@ sicilia-soil-web/
 
 ## 🧭 Navigation
 
-| Route            | Page             | Description                              |
-| :--------------- | :--------------- | :--------------------------------------- |
-| `/`              | Dashboard        | Garden overview                          |
-| `/design`        | Syntropic Design | Layer strategy & symbiotic relationships |
-| `/analysis`      | Analysis         | Historical charts & statistics           |
-| `/mycology`      | Mycology         | Native Sicilian mushroom tracking        |
-| `/humedad`       | Humidity         | Soil moisture by zone                    |
-| `/temperatura`   | Temperature      | Temperature by zone                      |
-| `/luz`           | Sunlight         | Light levels by zone                     |
-| `/configuration` | Configuration    | System configuration                     |
+| Route | Page | Description |
+| :--- | :--- | :--- |
+| `/` | Dashboard | Garden overview |
+| `/design` | Syntropic Design | Layer strategy & symbiotic relationships |
+| `/analysis` | Analysis | Historical charts & statistics |
+| `/mycology` | Mycology | Native Sicilian mushroom tracking |
+| `/humedad` | Humidity | Soil moisture by zone |
+| `/temperatura` | Temperature | Temperature by zone |
+| `/luz` | Sunlight | Light levels by zone |
+| `/configuration` | Configuration | System configuration |
 
 ---
 
@@ -149,12 +147,12 @@ npm run dev
 
 This project is licensed under the **NC OSL (Non-Commercial Open Source License)**.
 
-| ✅ Permitted                      | ❌ Not Permitted         |
-| :-------------------------------- | :----------------------- |
-| Educational and research purposes | Commercial products      |
-| Non-profit personal projects      | Commercial SaaS          |
-| Community initiatives             | Internal corporate tools |
-| Hackathons and workshops          | Any for-profit activity  |
+| ✅ Permitted | ❌ Not Permitted |
+| :--- | :--- |
+| Educational and research purposes | Commercial products |
+| Non-profit personal projects | Commercial SaaS |
+| Community initiatives | Internal corporate tools |
+| Hackathons and workshops | Any for-profit activity |
 
 **Conditions:**
 
@@ -185,11 +183,11 @@ If you are a company, startup, or entrepreneur wanting to use **Sicilia Soil** i
 
 ## 📬 Contact
 
-| Via          | Link                                                     |
-| :----------- | :------------------------------------------------------- |
-| **GitHub**   | [carmen-buendia](https://github.com/carmen-buendia)      |
+| Via | Link |
+| :--- | :--- |
+| **GitHub** | [carmen-buendia](https://github.com/carmen-buendia) |
 | **LinkedIn** | [carmen-buendía](https://linkedin.com/in/carmen-buendía) |
-| **Email**    | carmenbuendiafullstack@gmail.com                         |
+| **Email** | carmenbuendiafullstack@gmail.com |
 
 ---
 
@@ -206,5 +204,3 @@ This demo is a public version of **Sicilia Soil**. The complete codebase (includ
 ```
 
 ---
-
-
