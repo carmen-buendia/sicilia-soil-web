@@ -32,16 +32,16 @@ import {
   succession,
   drawingElements,
   categories,
-} from "@/lib/data/designData";
+} from "../../lib/data/designData";
 import type {
   PlacedElement,
   SavedDesign,
   ElementType,
-} from "@/lib/types/design.types";
+} from "../../lib/types/design.types";
 
 // Importar el mapa 3D
-import { FarmScene, useFarmData } from "@/components/farm3D";
-import { SicilianFlag } from "@/components/layout/SicilianFlag";
+import { FarmScene, useFarmData } from "../../components/farm3D";
+import { SicilianFlag } from "../../components/layout/SicilianFlag";
 
 export default function DesignPage() {
   // ============================================
@@ -917,8 +917,10 @@ export default function DesignPage() {
                   </span>
                   <span className="text-sm font-medium">
                     {Math.round(
-                      data.sensors.reduce((acc, s) => acc + s.humidity, 0) /
-                        data.sensors.length,
+                      data.sensors.reduce(
+                        (acc: any, s: any) => acc + s.humidity,
+                        0,
+                      ) / data.sensors.length,
                     )}
                     %
                   </span>
@@ -928,8 +930,10 @@ export default function DesignPage() {
                     className="h-full bg-oliveGreen rounded-full"
                     style={{
                       width: `${Math.round(
-                        data.sensors.reduce((acc, s) => acc + s.humidity, 0) /
-                          data.sensors.length,
+                        data.sensors.reduce(
+                          (acc: any, s: any) => acc + s.humidity,
+                          0,
+                        ) / data.sensors.length,
                       )}%`,
                     }}
                   />
@@ -938,7 +942,7 @@ export default function DesignPage() {
                   <span className="text-sm text-oliveGreen/70">pH medio</span>
                   <span className="text-sm font-medium">
                     {(
-                      data.sensors.reduce((acc, s) => acc + s.ph, 0) /
+                      data.sensors.reduce((acc: any, s: any) => acc + s.ph, 0) /
                       data.sensors.length
                     ).toFixed(1)}
                   </span>
@@ -948,7 +952,10 @@ export default function DesignPage() {
                     className="h-full bg-wheatGold rounded-full"
                     style={{
                       width: `${
-                        (data.sensors.reduce((acc, s) => acc + s.ph, 0) /
+                        (data.sensors.reduce(
+                          (acc: any, s: any) => acc + s.ph,
+                          0,
+                        ) /
                           data.sensors.length /
                           14) *
                         100
@@ -965,15 +972,17 @@ export default function DesignPage() {
                   <li>
                     ✓{" "}
                     {Math.round(
-                      data.sensors.reduce((acc, s) => acc + s.humidity, 0) /
-                        data.sensors.length,
+                      data.sensors.reduce(
+                        (acc: any, s: any) => acc + s.humidity,
+                        0,
+                      ) / data.sensors.length,
                     ) < 60
                       ? "Programar riego en parcela norte"
                       : "Humedad dentro del rango óptimo"}
                   </li>
                   <li>
                     ✓ Monitorear sensor{" "}
-                    {data.sensors.find((s) => s.ph > 7.5)?.id || "S2"} (pH
+                    {data.sensors.find((s: any) => s.ph > 7.5)?.id || "S2"} (pH
                     elevado)
                   </li>
                   <li>✓ Mantener acolchado para retener humedad en verano</li>

@@ -1,4 +1,4 @@
-import type { ElementType } from "@/lib/types/design.types";
+import type { ElementType } from "../types/design.types";
 
 // ============================================
 // ELEMENTOS DEL SISTEMA SINTRÓPICO (MUCHOS MÁS)
