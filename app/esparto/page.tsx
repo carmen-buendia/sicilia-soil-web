@@ -220,10 +220,10 @@ export default function EspartoPage() {
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-8 border-b border-oliveGreen/15 pb-2">
           {[
-            { id: "info", label: "📖 Información", icon: "📖" },
-            { id: "monitoring", label: "📊 Monitoreo", icon: "📊" },
-            { id: "harvest", label: "📅 Calendario", icon: "📅" },
-            { id: "symbiosis", label: "🔗 Simbiosis", icon: "🔗" },
+            { id: "info", label: "Información", icon: "📖" },
+            { id: "monitoring", label: "Monitoreo", icon: "📊" },
+            { id: "harvest", label: "Calendario", icon: "📅" },
+            { id: "symbiosis", label: "Simbiosis", icon: "🔗" },
           ].map((tab) => (
             <button
               key={tab.id}

@@ -1,383 +1,445 @@
-// lib/data/designData.ts
-
-import React from "react";
-import { TreeDeciduous, Flower2, Leaf, Sprout } from "lucide-react";
-import type {
-  LayerType,
-  SymbiosisType,
-  SuccessionType,
-  ElementType,
-} from "@/lib/types/design.types";
+import type { ElementType } from "@/lib/types/design.types";
 
 // ============================================
-// LAYERS - ESTRATOS DEL BOSQUE
-// ============================================
-
-export const layers: LayerType[] = [
-  {
-    id: "canopy",
-    name: "Canopy (Estrato alto)",
-    height: "8-15 m",
-    description: "El techo del bosque, donde la luz se filtra y la vida abunda",
-    symbiosis: [
-      "Sombrea el sotobosque",
-      "Protege del viento",
-      "Ciclo de nutrientes",
-    ],
-    species: [
-      {
-        name: "Olivo",
-        icon: "🫒",
-        function: "Sombra, aceite, estructura",
-        color: "#5A6B47",
-        benefits: ["Aceite de calidad", "Longevidad", "Resistente a sequía"],
-        companionPlants: ["Romero", "Lavanda", "Esparto"],
-      },
-      {
-        name: "Algarrobo",
-        icon: "🌳",
-        function: "Nitrógeno, sombra, alimento",
-        color: "#4A5B37",
-        benefits: ["Fija nitrógeno", "Alimento para ganado", "Madera noble"],
-        companionPlants: ["Trébol", "Alfalfa", "Esparto"],
-      },
-      {
-        name: "Almendro",
-        icon: "🌰",
-        function: "Frutos secos, floración temprana",
-        color: "#6B7B57",
-        benefits: [
-          "Floración ornamental",
-          "Frutos secos",
-          "Abejas polinizadoras",
-        ],
-        companionPlants: ["Lavanda", "Romero", "Tomillo"],
-      },
-    ],
-    icon: React.createElement(TreeDeciduous, { className: "w-6 h-6" }),
-    color: "from-oliveGreen to-oliveGreen/80",
-    bg: "bg-oliveGreen/5",
-  },
-  {
-    id: "understory",
-    name: "Sotobosque (Estrato medio)",
-    height: "2-6 m",
-    description:
-      "El corazón del ecosistema, donde ocurre la magia de la biodiversidad",
-    symbiosis: [
-      "Protege el suelo",
-      "Hábitat para fauna",
-      "Ciclo de nutrientes",
-    ],
-    species: [
-      {
-        name: "Esparto",
-        icon: "🌾",
-        function: "Fibra textil, biomasa",
-        color: "#E6B422",
-        benefits: ["Fibra natural", "Control de erosión", "Biomasa"],
-        companionPlants: ["Olivo", "Almendro", "Romero"],
-      },
-      {
-        name: "Romero",
-        icon: "🌿",
-        function: "Aromática, protección",
-        color: "#7A8B67",
-        benefits: ["Aceites esenciales", "Repelente natural", "Culinario"],
-        companionPlants: ["Olivo", "Lavanda", "Tomillo"],
-      },
-      {
-        name: "Tomillo",
-        icon: "🌱",
-        function: "Aromática, cobertura",
-        color: "#8B9B77",
-        benefits: [
-          "Antiséptico natural",
-          "Cobertura suelo",
-          "Atrae polinizadores",
-        ],
-        companionPlants: ["Romero", "Lavanda", "Albahaca"],
-      },
-    ],
-    icon: React.createElement(Flower2, { className: "w-6 h-6" }),
-    color: "from-wheatGold to-wheatGold/80",
-    bg: "bg-wheatGold/5",
-  },
-  {
-    id: "fungal",
-    name: "Capa fúngica (Micología)",
-    height: "0.1-0.3 m",
-    description: "El internet de la naturaleza, conectando todo bajo tierra",
-    symbiosis: [
-      "Conexión subterránea",
-      "Descomposición",
-      "Nutrientes compartidos",
-    ],
-    species: [
-      {
-        name: "Cardonchello",
-        icon: "🍄",
-        function: "Descomposición, alimento",
-        color: "#CD212A",
-        benefits: ["Gourmet", "Descompone materia", "Micorrizas"],
-        companionPlants: ["Olivo", "Algarrobo", "Encina"],
-      },
-      {
-        name: "Cardoncello di Nebrodi",
-        icon: "🍄",
-        function: "Endémica, gourmet",
-        color: "#B81820",
-        benefits: ["Endémica Sicilia", "Alto valor", "Turismo micológico"],
-        companionPlants: ["Esparto", "Olivo", "Algarrobo"],
-      },
-      {
-        name: "Prataiolo siciliano",
-        icon: "🍄",
-        function: "Humus, regeneración",
-        color: "#D42A32",
-        benefits: ["Mejora suelo", "Ciclo rápido", "Fácil cultivo"],
-        companionPlants: ["Todas las plantas"],
-      },
-      {
-        name: "Níccolo",
-        icon: "🍄",
-        function: "Micorriza con encinas",
-        color: "#A91018",
-        benefits: ["Gastronómico", "Conservación", "Micorrizas"],
-        companionPlants: ["Encina", "Pino", "Algarrobo"],
-      },
-    ],
-    icon: React.createElement(Leaf, { className: "w-6 h-6" }),
-    color: "from-sicilian-red to-sicilian-red/80",
-    bg: "bg-sicilian-red/5",
-  },
-  {
-    id: "ground",
-    name: "Cobertura vegetal",
-    height: "0-0.5 m",
-    description: "La alfombra viva que protege y nutre el suelo",
-    symbiosis: ["Fija nitrógeno", "Protege erosión", "Retiene humedad"],
-    species: [
-      {
-        name: "Trébol",
-        icon: "🍀",
-        function: "Fijador de nitrógeno",
-        color: "#5A6B47",
-        benefits: ["Fija N2", "Cobertura rápida", "Forraje"],
-        companionPlants: ["Olivo", "Algarrobo", "Almendro"],
-      },
-      {
-        name: "Habas",
-        icon: "🌱",
-        function: "Nitrógeno, biomasa",
-        color: "#4A5B37",
-        benefits: ["Abono verde", "Alimento", "Rotación"],
-        companionPlants: ["Olivo", "Tomate", "Maíz"],
-      },
-      {
-        name: "Alfalfa",
-        icon: "🌿",
-        function: "Cobertura, alimento",
-        color: "#6B7B57",
-        benefits: ["Protección suelo", "Forraje", "Raíces profundas"],
-        companionPlants: ["Olivo", "Almendro", "Higuera"],
-      },
-    ],
-    icon: React.createElement(Sprout, { className: "w-6 h-6" }),
-    color: "from-oliveGreen to-oliveGreen/70",
-    bg: "bg-oliveGreen/5",
-  },
-];
-
-// ============================================
-// SYMBIOSIS - RELACIONES SIMBIÓTICAS
-// ============================================
-
-export const symbiosis: SymbiosisType[] = [
-  {
-    id: "olive-rosemary",
-    from: "Olivo",
-    to: "Romero",
-    description:
-      "El romero repele plagas del olivo y mejora la retención de humedad",
-    type: "Mutualismo",
-    strength: 4,
-    icon: "🤝",
-  },
-  {
-    id: "carob-clover",
-    from: "Algarrobo",
-    to: "Trébol",
-    description: "El trébol fija nitrógeno que beneficia al algarrobo",
-    type: "Ciclo de nutrientes",
-    strength: 5,
-    icon: "🔄",
-  },
-  {
-    id: "fungal-network",
-    from: "Cardonchello",
-    to: "Olivo",
-    description: "Red de micorrizas que conecta y nutre a ambos",
-    type: "Red simbiótica",
-    strength: 5,
-    icon: "🍄",
-  },
-  {
-    id: "almond-lavender",
-    from: "Almendro",
-    to: "Lavanda",
-    description: "La lavanda atrae polinizadores para el almendro",
-    type: "Sinergia",
-    strength: 3,
-    icon: "🌸",
-  },
-];
-
-// ============================================
-// SUCCESSION - SUCESIÓN ECOLÓGICA
-// ============================================
-
-export const succession: SuccessionType[] = [
-  {
-    year: "0-2",
-    phase: "Establecimiento",
-    tasks: ["Preparación suelo", "Plantación pionera", "Riego inicial"],
-    milestones: ["Supervivencia >80%", "Cobertura inicial"],
-    biodiversity: 20,
-    productivity: 10,
-  },
-  {
-    year: "3-5",
-    phase: "Desarrollo",
-    tasks: ["Manejo de cubiertas", "Poda formativa", "Incorporación de fauna"],
-    milestones: ["Dosel cerrado", "Primera cosecha"],
-    biodiversity: 50,
-    productivity: 40,
-  },
-  {
-    year: "6-10",
-    phase: "Madurez temprana",
-    tasks: ["Manejo integrado", "Expansión de cultivos", "Cosecha regular"],
-    milestones: ["Ecosistema funcional", "Producción estable"],
-    biodiversity: 75,
-    productivity: 70,
-  },
-  {
-    year: "10+",
-    phase: "Clímax",
-    tasks: [
-      "Mantenimiento mínimo",
-      "Regeneración natural",
-      "Cosecha sostenible",
-    ],
-    milestones: ["Bosque comestible", "Autosuficiencia"],
-    biodiversity: 95,
-    productivity: 90,
-  },
-];
-
-// ============================================
-// DRAWING ELEMENTS - ELEMENTOS PARA DIBUJO
+// ELEMENTOS DEL SISTEMA SINTRÓPICO (MUCHOS MÁS)
 // ============================================
 
 export const drawingElements: ElementType[] = [
+  // ========== ÁRBOLES ==========
   {
-    id: "olive-tree",
+    id: "olivo",
     name: "Olivo",
     icon: "🫒",
     category: "trees",
-    size: 30,
-    color: "#5A6B47",
+    color: "#5a7a3a",
+    size: 32,
     realSize: 4,
-    description: "Árbol longevo que produce aceitunas",
-    benefits: ["Aceite de oliva", "Sombra", "Fijación de carbono"],
+    model3d: "tree",
   },
   {
-    id: "carob-tree",
+    id: "algarrobo",
     name: "Algarrobo",
     icon: "🌳",
     category: "trees",
-    size: 35,
-    color: "#4A5B37",
-    realSize: 5,
-    description: "Árbol que fija nitrógeno y produce algarroba",
-    benefits: ["Fijación de nitrógeno", "Alimento", "Madera"],
+    color: "#4a6a2a",
+    size: 36,
+    realSize: 6,
+    model3d: "tree",
   },
   {
-    id: "almond-tree",
+    id: "almendro",
     name: "Almendro",
     icon: "🌰",
     category: "trees",
-    size: 25,
-    color: "#6B7B57",
-    realSize: 3.5,
-    description: "Árbol de floración temprana que produce almendras",
-    benefits: ["Frutos secos", "Floración ornamental", "Abejas"],
+    color: "#7a8a4a",
+    size: 32,
+    realSize: 5,
+    model3d: "tree",
   },
   {
-    id: "rosemary",
-    name: "Romero",
-    icon: "🌿",
-    category: "shrubs",
-    size: 15,
-    color: "#7A8B67",
-    realSize: 1,
-    description: "Planta aromática mediterránea",
-    benefits: ["Aceites esenciales", "Repelente natural", "Culinario"],
+    id: "higuera",
+    name: "Higuera",
+    icon: "🍐",
+    category: "trees",
+    color: "#6a7a3a",
+    size: 34,
+    realSize: 5,
+    model3d: "tree",
   },
   {
-    id: "thyme",
-    name: "Tomillo",
-    icon: "🌱",
-    category: "shrubs",
-    size: 10,
-    color: "#8B9B77",
-    realSize: 0.5,
-    description: "Planta aromática de cobertura",
-    benefits: ["Antiséptico", "Cobertura", "Polinizadores"],
+    id: "cipres",
+    name: "Ciprés",
+    icon: "🌲",
+    category: "trees",
+    color: "#3a6a2a",
+    size: 28,
+    realSize: 3,
+    model3d: "tree",
   },
+  {
+    id: "pino",
+    name: "Pino",
+    icon: "🌲",
+    category: "trees",
+    color: "#4a7a3a",
+    size: 32,
+    realSize: 5,
+    model3d: "tree",
+  },
+
+  // ========== CULTIVOS ==========
   {
     id: "esparto",
     name: "Esparto",
     icon: "🌾",
-    category: "groundcovers",
-    size: 12,
-    color: "#E6B422",
-    realSize: 0.8,
-    description: "Fibra natural para control de erosión",
-    benefits: ["Fibra textil", "Control de erosión", "Biomasa"],
+    category: "crops",
+    color: "#c4a86a",
+    size: 24,
+    realSize: 1.5,
+    model3d: "crop",
   },
   {
-    id: "clover",
-    name: "Trébol",
-    icon: "🍀",
-    category: "groundcovers",
-    size: 8,
-    color: "#5A6B47",
+    id: "lavanda",
+    name: "Lavanda",
+    icon: "🌸",
+    category: "crops",
+    color: "#9b59b6",
+    size: 24,
+    realSize: 1,
+    model3d: "crop",
+  },
+  {
+    id: "romero",
+    name: "Romero",
+    icon: "🌿",
+    category: "crops",
+    color: "#6a9a3a",
+    size: 22,
+    realSize: 1,
+    model3d: "crop",
+  },
+  {
+    id: "tomillo",
+    name: "Tomillo",
+    icon: "🌱",
+    category: "crops",
+    color: "#7aaa4a",
+    size: 20,
+    realSize: 0.8,
+    model3d: "crop",
+  },
+  {
+    id: "alcaparra",
+    name: "Alcaparra",
+    icon: "🥒",
+    category: "crops",
+    color: "#8aba5a",
+    size: 22,
+    realSize: 1,
+    model3d: "crop",
+  },
+  {
+    id: "trigo",
+    name: "Trigo",
+    icon: "🌾",
+    category: "crops",
+    color: "#d4b86a",
+    size: 24,
+    realSize: 1.2,
+    model3d: "crop",
+  },
+
+  // ========== SETAS ==========
+  {
+    id: "champinon",
+    name: "Champiñón",
+    icon: "🍄",
+    category: "mushrooms",
+    color: "#e8d8c8",
+    size: 20,
+    realSize: 0.5,
+    model3d: "mushroom",
+  },
+  {
+    id: "shiitake",
+    name: "Shiitake",
+    icon: "🍄",
+    category: "mushrooms",
+    color: "#c8a878",
+    size: 22,
+    realSize: 0.6,
+    model3d: "mushroom",
+  },
+  {
+    id: "cardo",
+    name: "Cardonchello",
+    icon: "🍄",
+    category: "mushrooms",
+    color: "#d8b888",
+    size: 24,
+    realSize: 0.7,
+    model3d: "mushroom",
+  },
+  {
+    id: "ostra",
+    name: "Setas Ostra",
+    icon: "🍄",
+    category: "mushrooms",
+    color: "#e8c8a8",
+    size: 26,
+    realSize: 0.8,
+    model3d: "mushroom",
+  },
+
+  // ========== ESTRUCTURAS ==========
+  {
+    id: "casa",
+    name: "Casa",
+    icon: "🏠",
+    category: "structures",
+    color: "#c47a5a",
+    size: 48,
+    realSize: 8,
+    model3d: "house",
+  },
+  {
+    id: "entrada",
+    name: "Entrada",
+    icon: "🚪",
+    category: "structures",
+    color: "#8a6a4a",
+    size: 28,
+    realSize: 3,
+    model3d: "house",
+  },
+  {
+    id: "invernadero",
+    name: "Invernadero",
+    icon: "🏗️",
+    category: "structures",
+    color: "#7aba7a",
+    size: 44,
+    realSize: 6,
+    model3d: "greenhouse",
+  },
+  {
+    id: "almacen",
+    name: "Almacén",
+    icon: "🏚️",
+    category: "structures",
+    color: "#9a7a5a",
+    size: 40,
+    realSize: 5,
+    model3d: "house",
+  },
+  {
+    id: "estanque",
+    name: "Estanque",
+    icon: "💧",
+    category: "structures",
+    color: "#4a9aba",
+    size: 36,
+    realSize: 4,
+    model3d: "default",
+  },
+  {
+    id: "compostera",
+    name: "Compostera",
+    icon: "🗑️",
+    category: "structures",
+    color: "#6a5a3a",
+    size: 24,
+    realSize: 1.5,
+    model3d: "default",
+  },
+
+  // ========== INFRAESTRUCTURA ==========
+  {
+    id: "sensor",
+    name: "Sensor IoT",
+    icon: "📡",
+    category: "infrastructure",
+    color: "#e8e8e8",
+    size: 20,
+    realSize: 0.5,
+    model3d: "sensor",
+  },
+  {
+    id: "camino",
+    name: "Camino",
+    icon: "🛤️",
+    category: "infrastructure",
+    color: "#d4c4a4",
+    size: 16,
+    realSize: 1.5,
+    model3d: "default",
+  },
+  {
+    id: "valla",
+    name: "Valla",
+    icon: "🚧",
+    category: "infrastructure",
+    color: "#8a7a5a",
+    size: 18,
     realSize: 0.3,
-    description: "Fijador de nitrógeno y cobertura vegetal",
-    benefits: ["Fija nitrógeno", "Cobertura rápida", "Forraje"],
+    model3d: "default",
+  },
+  {
+    id: "riego",
+    name: "Sistema riego",
+    icon: "💦",
+    category: "infrastructure",
+    color: "#6aba9a",
+    size: 22,
+    realSize: 1,
+    model3d: "default",
   },
 ];
 
 // ============================================
-// CATEGORIES - CATEGORÍAS PARA ELEMENTOS
+// CATEGORÍAS PARA EL FILTRO
 // ============================================
-
 export const categories = [
+  { id: "todos", name: "Todos" },
+  { id: "trees", name: "🌳 Árboles" },
+  { id: "crops", name: "🌾 Cultivos" },
+  { id: "mushrooms", name: "🍄 Setas" },
+  { id: "structures", name: "🏠 Estructuras" },
+  { id: "infrastructure", name: "🔧 Infraestructura" },
+];
+
+// ============================================
+// ESTRATOS SINTRÓPICOS (CAPAS)
+// ============================================
+export const layers = [
   {
-    id: "trees",
-    name: "Árboles",
-    items: ["Olivo", "Algarrobo", "Almendro"],
+    id: "canopy",
+    name: "Canopea",
+    height: "8-15 m",
+    icon: "🌳",
+    color: "from-emerald-700 to-emerald-600",
+    bg: "bg-emerald-50",
+    species: [
+      {
+        name: "Olivo",
+        icon: "🫒",
+        function: "Producción de aceite, sombra moderada",
+      },
+      {
+        name: "Algarrobo",
+        icon: "🌳",
+        function: "Sombra densa, fijación de nitrógeno",
+      },
+      {
+        name: "Almendro",
+        icon: "🌰",
+        function: "Producción de frutos, floración temprana",
+      },
+    ],
   },
   {
-    id: "shrubs",
-    name: "Arbustos",
-    items: ["Romero", "Tomillo", "Lavanda"],
+    id: "understory",
+    name: "Sotobosque",
+    height: "2-6 m",
+    icon: "🌿",
+    color: "from-emerald-600 to-emerald-500",
+    bg: "bg-emerald-100",
+    species: [
+      { name: "Higuera", icon: "🍐", function: "Frutos dulces, refugio fauna" },
+      { name: "Granado", icon: "🍎", function: "Frutos, floración ornamental" },
+    ],
   },
   {
-    id: "groundcovers",
-    name: "Coberturas",
-    items: ["Trébol", "Alfalfa", "Esparto"],
+    id: "shrub",
+    name: "Arbustivo",
+    height: "0.5-2 m",
+    icon: "🌱",
+    color: "from-emerald-500 to-emerald-400",
+    bg: "bg-emerald-100/70",
+    species: [
+      {
+        name: "Romero",
+        icon: "🌿",
+        function: "Aromático, atrae polinizadores",
+      },
+      {
+        name: "Lavanda",
+        icon: "🌸",
+        function: "Floración, control de erosión",
+      },
+    ],
+  },
+  {
+    id: "ground",
+    name: "Cobertura",
+    height: "0-0.5 m",
+    icon: "🍀",
+    color: "from-emerald-400 to-emerald-300",
+    bg: "bg-emerald-50/50",
+    species: [
+      {
+        name: "Trébol",
+        icon: "🍀",
+        function: "Fijación de nitrógeno, cobertura",
+      },
+      { name: "Tomillo", icon: "🌱", function: "Aromático, cubresuelos" },
+    ],
+  },
+];
+
+// ============================================
+// RELACIONES SIMBIÓTICAS
+// ============================================
+export const symbiosis = [
+  {
+    from: "Olivo",
+    to: "Esparto",
+    type: "Complementaria",
+    description:
+      "El esparto actúa como acolchado natural, manteniendo la humedad del suelo para el olivo",
+  },
+  {
+    from: "Algarrobo",
+    to: "Trébol",
+    type: "Fijación de nitrógeno",
+    description: "El trébol fija nitrógeno que beneficia al algarrobo",
+  },
+  {
+    from: "Pino",
+    to: "Cardonchello",
+    type: "Micorriza",
+    description: "Micorrización natural que mejora la absorción de nutrientes",
+  },
+  {
+    from: "Higuera",
+    to: "Romero",
+    type: "Protección",
+    description: "El romero repele plagas que afectan a la higuera",
+  },
+];
+
+// ============================================
+// SUCESIÓN TEMPORAL
+// ============================================
+export const succession = [
+  {
+    year: "Año 0-1",
+    phase: "Preparación",
+    tasks: [
+      "Análisis de suelo",
+      "Diseño de parcelas",
+      "Instalación de riego",
+      "Planta pionera",
+    ],
+  },
+  {
+    year: "Año 1-3",
+    phase: "Establecimiento",
+    tasks: [
+      "Plantación de árboles",
+      "Siembra de coberturas",
+      "Instalación de sensores",
+      "Compostaje",
+    ],
+  },
+  {
+    year: "Año 3-5",
+    phase: "Consolidación",
+    tasks: [
+      "Primeras cosechas",
+      "Poda de formación",
+      "Expansión de setas",
+      "Mejora de riego",
+    ],
+  },
+  {
+    year: "Año 5-10",
+    phase: "Madurez",
+    tasks: [
+      "Sistema autosuficiente",
+      "Cosechas regulares",
+      "Biodiversidad consolidada",
+      "Turismo educativo",
+    ],
   },
 ];

@@ -2,20 +2,24 @@ export interface ElementType {
   id: string;
   name: string;
   icon: string;
-  category: string;
-  size: number;
+  category: "trees" | "crops" | "mushrooms" | "structures" | "infrastructure";
   color: string;
-  realSize: number;
-  description?: string;
-  benefits?: string[];
+  size: number; // tamaño en píxeles para el canvas 2D
+  realSize: number; // tamaño real en metros
+  model3d?:
+    | "tree"
+    | "house"
+    | "greenhouse"
+    | "sensor"
+    | "mushroom"
+    | "crop"
+    | "default";
 }
 
 export interface PlacedElement {
   x: number;
   y: number;
   element: ElementType;
-  rotation?: number;
-  scale?: number;
 }
 
 export interface SavedDesign {
@@ -25,7 +29,6 @@ export interface SavedDesign {
   terrainWidth: number;
   terrainHeight: number;
   pixelsPerMeter: number;
-  style?: "organic" | "geometric" | "dreamscape";
 }
 
 export interface LayerType {
