@@ -238,20 +238,30 @@ export default function HomePage() {
       try {
         setLoading(true);
 
-        // Intentar conectar al backend
-        const health = await healthCheck();
-        if (health.status === "ok") {
+        // Mostrar en pantalla que estamos intentando conectar
+        console.log("🔍 Intentando conectar al backend...");
+
+        // Intentar conectar al backend con fetch directo
+        const backendUrl = "https://sicilia-soil-backend.onrender.com";
+        const healthRes = await fetch(`${backendUrl}/api/health`);
+        const healthData = await healthRes.json();
+
+        console.log("✅ Backend respondió:", healthData);
+
+        if (healthData.status === "ok") {
           setServerStatus("online");
 
           // Cargar datos reales
-          const zonesData = await fetchZones();
+          const zonesRes = await fetch(`${backendUrl}/api/zones`);
+          const zonesData = await zonesRes.json();
+
+          console.log("📊 Datos de zonas:", zonesData);
+
           if (zonesData && zonesData.length > 0) {
             const convertedZones = zonesData.map(convertToGardenZone);
             setGardenZones(convertedZones);
             setStatsData(calculateStatsFromZones(convertedZones));
           } else {
-            // Backend responde pero sin datos, usar fallback
-            setServerStatus("offline");
             setGardenZones(fallbackZones);
             setStatsData(fallbackStats);
           }
@@ -260,11 +270,14 @@ export default function HomePage() {
           setGardenZones(fallbackZones);
           setStatsData(fallbackStats);
         }
-      } catch (error) {
-        console.error("Error conectando al backend:", error);
+      } catch (error: any) {
+        console.error("❌ Error conectando al backend:", error);
         setServerStatus("offline");
         setGardenZones(fallbackZones);
         setStatsData(fallbackStats);
+
+        // Mostrar error en la página
+        alert(`Error conectando al backend: ${error.message}`);
       } finally {
         setLoading(false);
       }

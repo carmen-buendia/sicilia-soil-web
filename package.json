@@ -20,6 +20,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@types/three": "^0.184.1",
     "date-fns": "^3.3.1",
     "highcharts": "^12.5.0",
     "highcharts-react-official": "^3.2.3",
@@ -27,7 +30,8 @@
     "next": "14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.2",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",

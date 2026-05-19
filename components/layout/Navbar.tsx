@@ -28,7 +28,7 @@ const navItems = [
   { id: "/light", label: "Luz", icon: Sun },
   { id: "/analysis", label: "Análisis", icon: LineChart },
   { id: "/mycology", label: "Micología", icon: Leaf },
-  { id: "/esparto", label: "Esparto", icon: Sprout }, // ← Añadir esta línea
+  { id: "/esparto", label: "Esparto", icon: Sprout },
   { id: "/design", label: "Diseño", icon: Layers },
   { id: "/configuration", label: "Configuración", icon: Settings },
 ];
@@ -71,13 +71,15 @@ export function Navbar() {
             </div>
             <div className="flex flex-col">
               <h1 className="text-base sm:text-xl font-bold">
-                <span className="text-charcoalGray">Sintrópico</span>
-                <span className="text-sicilian-red ml-1">Monitor</span>
+                <span className="text-charcoalGray">Sicilia</span>
+                <span className="text-sicilian-red ml-1">Soil</span>
               </h1>
-              <div className="flex items-center gap-1 text-xs text-oliveGreen/70">
-                <SicilianFlag size="small" />
-                <span>Permacultura Sintrópica</span>
-                <Flower2 className="w-3 h-3" />
+              <div className="flex items-center gap-1 text-xs text-oliveGreen/70 whitespace-nowrap">
+                <SicilianFlag size="small" className="flex-shrink-0" />
+                <span className="whitespace-nowrap">
+                  Permacultura Sintrópica
+                </span>
+                <Flower2 className="w-3 h-3 flex-shrink-0" />
               </div>
             </div>
           </Link>
@@ -104,7 +106,7 @@ export function Navbar() {
             })}
           </div>
 
-          {/* User Menu */}
+          {/* User Menu - Versión corregida */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button className="relative p-1.5 sm:p-2 rounded-full text-oliveGreen/60 hover:text-sicilian-red transition-all duration-300 hover:bg-oliveGreen/10">
               <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -112,10 +114,10 @@ export function Navbar() {
             </button>
 
             <div className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-oliveGreen/10 to-wheatGold/10 rounded-full pl-2 pr-4 py-1 border border-oliveGreen/20">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-oliveGreen to-wheatGold rounded-full flex items-center justify-center">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-oliveGreen to-wheatGold rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-offWhite" />
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-charcoalGray">
+              <p className="text-xs sm:text-sm font-semibold text-charcoalGray whitespace-nowrap">
                 Carmen Buendía
               </p>
             </div>
