@@ -23,6 +23,7 @@ import {
   Search,
   Sprout,
   Flower2,
+  Box,
 } from "lucide-react";
 
 // Importar datos desde lib
@@ -371,7 +372,7 @@ export default function DesignPage() {
               </button>
             )}
 
-            {/* Botones de cambio de vista */}
+            {/* Botones de cambio de vista - CORREGIDO el icono 3D */}
             <div className="flex gap-2 bg-white rounded-xl border border-oliveGreen/20 p-1 shadow-sm">
               <button
                 onClick={() => setViewMode("2d")}
@@ -392,7 +393,7 @@ export default function DesignPage() {
                     : "text-oliveGreen/70 hover:bg-oliveGreen/10"
                 }`}
               >
-                <div className="w-4 h-4" />
+                <Box className="w-4 h-4" />
                 Visualización 3D
               </button>
             </div>
@@ -755,41 +756,56 @@ export default function DesignPage() {
             <Layers className="w-6 h-6 text-oliveGreen" />
             Estratos del Sistema Sintrópico
           </h2>
+
+          {/* Botones de capas - CORREGIDO con oliveGreen */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-            {layers.map((layer) => (
-              <button
-                key={layer.id}
-                onClick={() => setActiveLayer(layer.id)}
-                className={`p-4 rounded-xl transition-all text-left ${
-                  activeLayer === layer.id
-                    ? `bg-gradient-to-r ${layer.color} text-white shadow-lg`
-                    : `bg-white ${layer.bg} text-charcoalGray hover:shadow-md border border-oliveGreen/10`
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  {layer.icon}
-                  <span className="font-bold">{layer.name}</span>
-                </div>
-                <p className="text-sm opacity-80">{layer.height}</p>
-              </button>
-            ))}
+            {layers.map((layer) => {
+              const isActive = activeLayer === layer.id;
+              return (
+                <button
+                  key={layer.id}
+                  onClick={() => setActiveLayer(layer.id)}
+                  className={`p-4 rounded-xl transition-all text-left ${
+                    isActive
+                      ? "bg-oliveGreen text-white shadow-lg ring-2 ring-oliveGreen ring-offset-2"
+                      : "bg-white text-charcoalGray hover:shadow-md border border-oliveGreen/20 hover:border-oliveGreen/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xl">{layer.icon}</span>
+                    <span
+                      className={`font-bold ${isActive ? "text-white" : "text-charcoalGray"}`}
+                    >
+                      {layer.name}
+                    </span>
+                  </div>
+                  <p
+                    className={`text-sm ${isActive ? "text-white/80" : "text-charcoalGray/60"}`}
+                  >
+                    {layer.height}
+                  </p>
+                </button>
+              );
+            })}
           </div>
 
+          {/* Contenido de la capa seleccionada */}
           {layers.map(
             (layer) =>
               activeLayer === layer.id && (
                 <div
                   key={layer.id}
-                  className={`bg-white rounded-2xl p-6 border border-oliveGreen/15 shadow-sm`}
+                  className="bg-white rounded-2xl p-6 border border-oliveGreen/15 shadow-sm"
                 >
                   <h3 className="text-xl font-bold text-charcoalGray mb-4 flex items-center gap-2">
-                    {layer.icon} {layer.name}
+                    <span className="text-2xl">{layer.icon}</span>
+                    <span>{layer.name}</span>
                   </h3>
                   <div className="grid md:grid-cols-3 gap-4">
                     {layer.species.map((species, i) => (
                       <div
                         key={i}
-                        className="bg-offWhite rounded-xl p-4 shadow-sm border border-oliveGreen/10"
+                        className="bg-offWhite rounded-xl p-4 shadow-sm border border-oliveGreen/10 hover:shadow-md hover:-translate-y-1 transition-all"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-2xl">{species.icon}</span>
