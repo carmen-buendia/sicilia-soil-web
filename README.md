@@ -23,9 +23,9 @@
 
 > **Note:** This is a public demo of a larger private monorepo. Features are limited to frontend visualization.
 
-| Environment | URL |
-| :--- | :--- |
-| **Demo** | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
+| Environment | URL                                                                                  |
+| :---------- | :----------------------------------------------------------------------------------- |
+| **Demo**    | [https://sicilia-soil-web-xg8w.vercel.app](https://sicilia-soil-web-xg8w.vercel.app) |
 
 This is a public demonstration of **Sicilia Soil**, a real-time monitoring system for syntropic permaculture in Sicily.
 
@@ -57,14 +57,14 @@ This demo is a **portfolio piece** that reflects how I structure, test, and depl
 
 ## 🏗️ Technologies Used
 
-| Technology | Purpose |
-| :--- | :--- |
-| **Next.js 14** | React framework |
-| **React 18** | UI components |
-| **TypeScript** | Type safety |
+| Technology       | Purpose            |
+| :--------------- | :----------------- |
+| **Next.js 14**   | React framework    |
+| **React 18**     | UI components      |
+| **TypeScript**   | Type safety        |
 | **Tailwind CSS** | Responsive styling |
-| **HighCharts** | Data visualization |
-| **Vercel** | Deployment |
+| **HighCharts**   | Data visualization |
+| **Vercel**       | Deployment         |
 
 ---
 
@@ -75,7 +75,7 @@ sicilia-soil-web/
 ├── app/                    # Next.js pages (App Router)
 │   ├── page.tsx            # Main dashboard
 │   ├── layout.tsx          # Root layout with navbar & footer
-│   ├── design/             # Syntropic design page
+│   ├── ambiental/          # Environmental Monitoring page
 │   ├── analysis/           # Analysis page with charts
 │   ├── mycology/           # Mycology page
 │   ├── humedad/            # Humidity page
@@ -107,16 +107,16 @@ sicilia-soil-web/
 
 ## 🧭 Navigation
 
-| Route | Page | Description |
-| :--- | :--- | :--- |
-| `/` | Dashboard | Garden overview |
-| `/design` | Syntropic Design | Layer strategy & symbiotic relationships |
-| `/analysis` | Analysis | Historical charts & statistics |
-| `/mycology` | Mycology | Native Sicilian mushroom tracking |
-| `/humedad` | Humidity | Soil moisture by zone |
-| `/temperatura` | Temperature | Temperature by zone |
-| `/luz` | Sunlight | Light levels by zone |
-| `/configuration` | Configuration | System configuration |
+| Route            | Page                     | Description                                               |
+| :--------------- | :----------------------- | :-------------------------------------------------------- |
+| `/`              | Dashboard                | Garden overview with environmental metrics                |
+| `/ambiental`     | Environmental Monitoring | Heavy metals, air quality, water quality, soil pollutants |
+| `/analysis`      | Analysis                 | Historical charts & statistics                            |
+| `/mycology`      | Mycology                 | Native Sicilian mushroom tracking                         |
+| `/humedad`       | Humidity                 | Soil moisture by zone                                     |
+| `/temperatura`   | Temperature              | Temperature by zone                                       |
+| `/luz`           | Sunlight                 | Light levels by zone                                      |
+| `/configuration` | Configuration            | System configuration                                      |
 
 ---
 
@@ -142,12 +142,12 @@ npm run dev
 
 This demo is licensed under the **NC OSL (Non-Commercial Open Source License)**.
 
-| ✅ Permitted | ❌ Not Permitted |
-| :--- | :--- |
-| Educational and research purposes | Commercial products |
-| Non-profit personal projects | Commercial SaaS |
-| Community initiatives | Internal corporate tools |
-| Hackathons and workshops | Any for-profit activity |
+| ✅ Permitted                      | ❌ Not Permitted         |
+| :-------------------------------- | :----------------------- |
+| Educational and research purposes | Commercial products      |
+| Non-profit personal projects      | Commercial SaaS          |
+| Community initiatives             | Internal corporate tools |
+| Hackathons and workshops          | Any for-profit activity  |
 
 **Conditions:**
 
@@ -172,13 +172,13 @@ If you are a company, startup, or entrepreneur wanting to use **Sicilia Soil** i
 - [LinkedIn](https://linkedin.com/in/carmen-buendia)
 - [Email](carmenbuendiafullstack@gmail.com)
 
-*This demo represents my personal work. The full private monorepo includes backend, WebSockets, and shared packages.*
+_This demo represents my personal work. The full private monorepo includes backend, WebSockets, and shared packages._
 
 ---
 
 ## ⭐ About the Full Project
 
-*Sicilia Soil* is a complete monitoring system for syntropic permaculture. It includes:
+_Sicilia Soil_ is a complete monitoring system for syntropic permaculture. It includes:
 
 - Real-time WebSocket server
 - IoT sensor integration (Arduino)
@@ -192,11 +192,11 @@ This public demo showcases only the frontend visualization layer.
 
 ## 📬 Contact
 
-| Via | Link |
-| :--- | :--- |
-| **GitHub** | [carmen-buendia](https://github.com/carmen-buendia) |
+| Via          | Link                                                     |
+| :----------- | :------------------------------------------------------- |
+| **GitHub**   | [carmen-buendia](https://github.com/carmen-buendia)      |
 | **LinkedIn** | [carmen-buendía](https://linkedin.com/in/carmen-buendía) |
-| **Email** | carmenbuendiafullstack@gmail.com |
+| **Email**    | carmenbuendiafullstack@gmail.com                         |
 
 ---
 

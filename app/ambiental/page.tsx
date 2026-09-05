@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { HelpCircle } from "lucide-react";
-import EnvironmentalDashboard from "@/components/environmental/EnvironmentalDashboard";
+import EnvironmentalDashboard from "@/components/ambiental/EnvironmentalDashboard";
 
 // Onboarding (simplificado)
 const Onboarding = ({ onClose }: { onClose: () => void }) => {

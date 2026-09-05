@@ -2,20 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Trees, Droplet, ThermometerSun, Sun, Sprout } from "lucide-react";
+import {
+  Trees,
+  Droplet,
+  ThermometerSun,
+  Sun,
+  Sprout,
+  Activity,
+  Wind,
+  Leaf,
+  AlertTriangle,
+} from "lucide-react";
 import { StatsCard } from "@/components/dashboard/components/StatsCards";
 import { ZoneCard } from "@/components/dashboard/components/ZoneCards";
-import { SavedDesigns } from "@/components/dashboard/components/SavedDesigns";
 import { ServerStatus } from "@/components/dashboard/components/ServerStatus";
 
 import type { GardenZone } from "@/lib/types";
-
-interface SavedDesign {
-  name: string;
-  elements: any[];
-  date: string;
-  canvasSize: { width: number; height: number };
-}
 
 // ========== DATOS MOCK (FALLBACK) ==========
 const mockZones: GardenZone[] = [
@@ -99,7 +101,33 @@ const mockZones: GardenZone[] = [
   },
 ];
 
-// Estadísticas mock (se calculan desde los datos reales)
+// Datos ambientales simulados (para el resumen)
+const ambientSummary = {
+  heavyMetals: [
+    { name: "Plomo (Pb)", value: 12.5, unit: "mg/kg", healthy: true },
+    { name: "Cadmio (Cd)", value: 0.8, unit: "mg/kg", healthy: true },
+    { name: "Mercurio (Hg)", value: 0.05, unit: "mg/kg", healthy: true },
+    { name: "Arsénico (As)", value: 1.2, unit: "mg/kg", healthy: true },
+    { name: "Cromo (Cr)", value: 15.3, unit: "mg/kg", healthy: true },
+  ],
+  airQuality: [
+    { name: "PM2.5", value: 12, unit: "µg/m³", healthy: true },
+    { name: "PM10", value: 25, unit: "µg/m³", healthy: true },
+    { name: "NO₂", value: 18, unit: "µg/m³", healthy: true },
+    { name: "O₃", value: 35, unit: "µg/m³", healthy: true },
+  ],
+  waterQuality: [
+    { name: "Turbidez", value: 2.5, unit: "NTU", healthy: true },
+    { name: "Conductividad", value: 450, unit: "µS/cm", healthy: true },
+    { name: "Oxígeno disuelto", value: 7.8, unit: "mg/L", healthy: true },
+  ],
+  soilPollutants: [
+    { name: "Hidrocarburos", value: 25, unit: "mg/kg", healthy: true },
+    { name: "Pesticidas", value: 0.3, unit: "mg/kg", healthy: true },
+    { name: "Fertilizantes", value: 120, unit: "mg/kg", healthy: true },
+  ],
+};
+
 function calculateStatsFromZones(zones: GardenZone[]) {
   if (zones.length === 0) {
     return [
@@ -184,30 +212,18 @@ export default function HomePage() {
   const [serverStatus, setServerStatus] = useState<
     "checking" | "online" | "offline"
   >("checking");
-  const [gardenZones, setGardenZones] = useState<GardenZone[]>(mockZones); // <-- ARRANCA CON MOCK
+  const [gardenZones, setGardenZones] = useState<GardenZone[]>(mockZones);
   const [statsData, setStatsData] = useState(
     calculateStatsFromZones(mockZones),
-  ); // <-- ARRANCA CON MOCK
-  const [loading, setLoading] = useState(false); // <-- NUNCA SE QUEDA EN "cargando"
-  const [savedDesigns, setSavedDesigns] = useState<SavedDesign[]>([]);
+  );
 
   useEffect(() => {
-    // 1. Cargar diseños guardados (localStorage, inmediato)
-    const saved = localStorage.getItem("sintropico-designs-v3");
-    if (saved) {
-      try {
-        setSavedDesigns(JSON.parse(saved));
-      } catch (e) {
-        console.error("Error loading saved designs:", e);
-      }
-    }
-
-    // 2. Intentar conectar al backend en SEGUNDO PLANO (sin bloquear la UI)
+    // Intentar conectar al backend en segundo plano
     async function fetchRealData() {
       try {
         console.log("🔍 Intentando conectar al backend...");
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundos máximo
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
 
         const response = await fetch(
           "https://sicilia-soil-backend.onrender.com/api/zones",
@@ -223,7 +239,6 @@ export default function HomePage() {
           console.log("✅ Datos reales recibidos:", zonesData);
 
           if (zonesData && zonesData.length > 0) {
-            // Convertir los datos del backend al formato GardenZone
             const convertedZones: GardenZone[] = zonesData.map((data: any) => ({
               id: data.zone,
               name: getZoneName(data.zone),
@@ -260,17 +275,8 @@ export default function HomePage() {
       }
     }
 
-    // Ejecutar la carga en segundo plano (no bloquea)
     fetchRealData();
   }, []);
-
-  const handleDeleteDesign = (designName: string) => {
-    if (confirm(`¿Eliminar el diseño "${designName}"?`)) {
-      const updated = savedDesigns.filter((d) => d.name !== designName);
-      setSavedDesigns(updated);
-      localStorage.setItem("sintropico-designs-v3", JSON.stringify(updated));
-    }
-  };
 
   const handleViewHistory = (zoneId: string) => {
     console.log(`Ver historial de zona: ${zoneId}`);
@@ -317,7 +323,6 @@ export default function HomePage() {
     return icons[zone] || "🌱";
   }
 
-  // No hay pantalla de carga → la UI se ve inmediatamente
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
@@ -341,7 +346,7 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Two column layout: Zones + Saved Designs */}
+      {/* Two column layout: Zones + Ambiental Summary */}
       <div className="grid lg:grid-cols-3 gap-8 mb-12">
         {/* Zones Section */}
         <div className="lg:col-span-2">
@@ -367,20 +372,106 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Saved Designs Section */}
+        {/* Ambiental Summary Section */}
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-charcoalGray flex items-center gap-2">
-              Mis Diseños
+              <Activity className="w-6 h-6 text-oliveGreen" />
+              Monitoreo Ambiental
             </h2>
             <Link
-              href="/design"
+              href="/ambiental"
               className="text-sm text-oliveGreen hover:text-sicilian-red transition-colors flex items-center gap-1"
             >
-              Nuevo diseño <span>+</span>
+              Panel completo <span>→</span>
             </Link>
           </div>
-          <SavedDesigns designs={savedDesigns} onDelete={handleDeleteDesign} />
+          <div className="space-y-4">
+            {/* Metales pesados */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
+              <h4 className="text-xs font-semibold text-oliveGreen/70 uppercase tracking-wider flex items-center gap-1 mb-2">
+                <AlertTriangle className="w-3 h-3" /> Metales pesados
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                {ambientSummary.heavyMetals.map((item) => (
+                  <div key={item.name} className="flex justify-between text-xs">
+                    <span className="text-charcoalGray/70">{item.name}</span>
+                    <span className="font-medium">
+                      {item.value} {item.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Calidad del aire */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
+              <h4 className="text-xs font-semibold text-oliveGreen/70 uppercase tracking-wider flex items-center gap-1 mb-2">
+                <Wind className="w-3 h-3" /> Calidad del aire
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                {ambientSummary.airQuality.map((item) => (
+                  <div key={item.name} className="flex justify-between text-xs">
+                    <span className="text-charcoalGray/70">{item.name}</span>
+                    <span className="font-medium">
+                      {item.value} {item.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Calidad del agua */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
+              <h4 className="text-xs font-semibold text-oliveGreen/70 uppercase tracking-wider flex items-center gap-1 mb-2">
+                <Droplet className="w-3 h-3" /> Calidad del agua
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                {ambientSummary.waterQuality.map((item) => (
+                  <div key={item.name} className="flex justify-between text-xs">
+                    <span className="text-charcoalGray/70">{item.name}</span>
+                    <span className="font-medium">
+                      {item.value} {item.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Contaminación del suelo */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
+              <h4 className="text-xs font-semibold text-oliveGreen/70 uppercase tracking-wider flex items-center gap-1 mb-2">
+                <Leaf className="w-3 h-3" /> Contaminación del suelo
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                {ambientSummary.soilPollutants.map((item) => (
+                  <div key={item.name} className="flex justify-between text-xs">
+                    <span className="text-charcoalGray/70">{item.name}</span>
+                    <span className="font-medium">
+                      {item.value} {item.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Resumen de riesgos */}
+            <div className="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-xl p-3 border border-oliveGreen/10 flex items-center justify-between text-xs">
+              <span className="font-medium text-charcoalGray">
+                Riesgo global:
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+                <span>Bajo</span>
+                <span className="text-oliveGreen/30">|</span>
+                <span className="inline-block w-2 h-2 rounded-full bg-yellow-500"></span>
+                <span>Moderado</span>
+                <span className="text-oliveGreen/30">|</span>
+                <span className="inline-block w-2 h-2 rounded-full bg-red-500"></span>
+                <span>Alto</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
