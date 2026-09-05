@@ -1,13 +1,13 @@
-// Datos simulados para el dashboard ambiental
+// lib/data/environmentalData.ts
 
 export interface HeavyMetal {
   id: string;
   name: string;
   symbol: string;
-  value: number; // µg/L o mg/kg
+  value: number;
   unit: string;
   threshold: number;
-  trend: number[]; // últimos 7 valores
+  trend: number[];
   status: "good" | "warning" | "danger";
 }
 

@@ -12,6 +12,7 @@ import {
   Wind,
   Leaf,
   AlertTriangle,
+  Gauge, // <-- NUEVO para carbono
 } from "lucide-react";
 import { StatsCard } from "@/components/dashboard/components/StatsCards";
 import { ZoneCard } from "@/components/dashboard/components/ZoneCards";
@@ -100,6 +101,25 @@ const mockZones: GardenZone[] = [
     lastUpdate: new Date().toISOString(),
   },
 ];
+
+// ===== NUEVOS DATOS DE CARBONO (simulados) =====
+const carbonSummary = {
+  organicCarbonPercent: 2.5, // COS (%)
+  bulkDensity: 1.2, // g/cm³
+  depth: 30, // cm
+  co2Sequestration: 33.0, // t CO₂/ha (calculado con la fórmula)
+  co2Flux: 3.2, // µmol/m²/s
+};
+
+// Función para calcular CO₂ secuestrado
+const calculateCO2Sequestration = (
+  cosPercent: number,
+  bulkDensity: number,
+  depth: number,
+): number => {
+  const carbonStored = (cosPercent * bulkDensity * depth) / 10;
+  return carbonStored * 3.67;
+};
 
 // Datos ambientales simulados (para el resumen)
 const ambientSummary = {
@@ -452,6 +472,43 @@ export default function HomePage() {
                     </span>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* ===== NUEVA SECCIÓN: CAPTURA DE CARBONO ===== */}
+            <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50/30 rounded-xl p-4 border border-emerald-200/30">
+              <h4 className="text-xs font-semibold text-emerald-700/70 uppercase tracking-wider flex items-center gap-1 mb-2">
+                <Trees className="w-3 h-3" /> Captura de Carbono
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex justify-between text-xs">
+                  <span className="text-charcoalGray/70">COS</span>
+                  <span className="font-medium text-emerald-700">
+                    {carbonSummary.organicCarbonPercent}%
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-charcoalGray/70">Densidad</span>
+                  <span className="font-medium text-emerald-700">
+                    {carbonSummary.bulkDensity} g/cm³
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-charcoalGray/70">Profundidad</span>
+                  <span className="font-medium text-emerald-700">
+                    {carbonSummary.depth} cm
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-charcoalGray/70">CO₂ secuestrado</span>
+                  <span className="font-medium text-emerald-700">
+                    {carbonSummary.co2Sequestration} t/ha
+                  </span>
+                </div>
+              </div>
+              <div className="mt-2 text-[10px] text-emerald-600/50">
+                * Fórmula: CO₂ (t/ha) = (COS% × Densidad × Profundidad) / 10 ×
+                3.67
               </div>
             </div>
 
