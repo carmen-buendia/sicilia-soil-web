@@ -63,7 +63,7 @@ const Onboarding = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default function AmbientalPage() {
+export default function AmbientPage() {
   const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
