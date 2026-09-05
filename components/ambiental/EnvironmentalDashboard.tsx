@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import {
@@ -12,10 +11,17 @@ import {
   Wind,
   Leaf,
   Waves,
-  Trees, // <-- NUEVO para carbono
+  Trees,
 } from "lucide-react";
 
-// Datos simulados (igual que en useFarmData)
+// Desactivar warning de accesibilidad de Highcharts
+Highcharts.setOptions({
+  accessibility: {
+    enabled: false,
+  },
+});
+
+// Datos simulados (incluyendo soilCarbon)
 const mockData = {
   sensors: [
     {
@@ -33,7 +39,6 @@ const mockData = {
       airQuality: { pm25: 12, pm10: 25, no2: 18, o3: 35 },
       waterQuality: { turbidity: 2.5, conductivity: 450, dissolvedOxygen: 7.8 },
       soilPollutants: { hydrocarbons: 25, pesticides: 0.3, fertilizers: 120 },
-      // ===== NUEVO: Carbono en el suelo =====
       soilCarbon: {
         organicCarbonPercent: 2.5,
         bulkDensity: 1.2,
@@ -89,10 +94,10 @@ const mockData = {
 };
 
 export default function EnvironmentalDashboard() {
-  const [data, setData] = useState(mockData);
-  const [loading, setLoading] = useState(false);
+  // No usamos estado de hora, todo estático
+  const data = mockData;
 
-  // Calcular promedios para las tarjetas
+  // ===== FUNCIONES DE CÁLCULO =====
   const avg = (key: string, subKey?: string) => {
     const values = data.sensors.map((s: any) => {
       if (subKey) return s[key]?.[subKey] || 0;
@@ -103,19 +108,16 @@ export default function EnvironmentalDashboard() {
     return valid.reduce((a: number, b: number) => a + b, 0) / valid.length;
   };
 
-  // ===== NUEVA FUNCIÓN: Calcular CO₂ secuestrado =====
   const calculateCO2Sequestration = (
     cosPercent: number,
     bulkDensity: number,
     depth: number,
   ): number => {
-    // Carbono almacenado (t C/ha) = (COS% * densidad * profundidad) / 10
     const carbonStored = (cosPercent * bulkDensity * depth) / 10;
-    // CO₂ equivalente = carbono * 3.67
     return carbonStored * 3.67;
   };
 
-  // Configuración de gráficos con Highcharts
+  // ===== CONFIGURACIÓN DE GRÁFICOS =====
   const createChartOptions = (
     title: string,
     categories: string[],
@@ -166,7 +168,7 @@ export default function EnvironmentalDashboard() {
     },
   });
 
-  // Gráfico: Metales pesados
+  // ===== DATOS DE GRÁFICOS =====
   const heavyMetalsChart = createChartOptions(
     "Metales pesados en suelo",
     ["Pb", "Cd", "Hg", "As", "Cr"],
@@ -193,7 +195,6 @@ export default function EnvironmentalDashboard() {
     "Concentración (mg/kg)",
   );
 
-  // Gráfico: Calidad del aire
   const airQualityChart = createChartOptions(
     "Calidad del aire",
     ["PM2.5", "PM10", "NO₂", "O₃"],
@@ -216,7 +217,6 @@ export default function EnvironmentalDashboard() {
     "Concentración (µg/m³)",
   );
 
-  // Gráfico: Calidad del agua
   const waterQualityChart = createChartOptions(
     "Calidad del agua",
     ["Turbidez", "Conductividad", "Oxígeno disuelto"],
@@ -226,7 +226,7 @@ export default function EnvironmentalDashboard() {
         data: data.sensors
           .map((s) => [
             s.waterQuality.turbidity,
-            s.waterQuality.conductivity / 100, // Escalar para visualización
+            s.waterQuality.conductivity / 100,
             s.waterQuality.dissolvedOxygen,
           ])
           .reduce((acc, curr) => acc.map((v, i) => v + curr[i]), [0, 0, 0])
@@ -238,7 +238,6 @@ export default function EnvironmentalDashboard() {
     "Valor",
   );
 
-  // Gráfico: Contaminación del suelo
   const soilPollutantsChart = createChartOptions(
     "Contaminación del suelo",
     ["Hidrocarburos", "Pesticidas", "Fertilizantes"],
@@ -248,7 +247,7 @@ export default function EnvironmentalDashboard() {
         data: data.sensors
           .map((s) => [
             s.soilPollutants.hydrocarbons,
-            s.soilPollutants.pesticides * 10, // Escalar para visualización
+            s.soilPollutants.pesticides * 10,
             s.soilPollutants.fertilizers,
           ])
           .reduce((acc, curr) => acc.map((v, i) => v + curr[i]), [0, 0, 0])
@@ -260,20 +259,21 @@ export default function EnvironmentalDashboard() {
     "Concentración (mg/kg)",
   );
 
-  // ===== NUEVO GRÁFICO: CO₂ secuestrado por sensor =====
   const carbonSequestrationChart = createChartOptions(
     "CO₂ secuestrado por sensor",
     data.sensors.map((s) => s.id),
     [
       {
         name: "CO₂ secuestrado",
-        data: data.sensors.map((s) =>
-          calculateCO2Sequestration(
-            s.soilCarbon.organicCarbonPercent,
-            s.soilCarbon.bulkDensity,
-            s.soilCarbon.depth,
-          ),
-        ),
+        data: data.sensors.map((s) => {
+          const sc = s.soilCarbon;
+          if (!sc) return 0;
+          return calculateCO2Sequestration(
+            sc.organicCarbonPercent,
+            sc.bulkDensity,
+            sc.depth,
+          );
+        }),
         color: "#2ecc71",
       },
     ],
@@ -281,7 +281,7 @@ export default function EnvironmentalDashboard() {
     "t CO₂/ha",
   );
 
-  // Tarjeta de métrica rápida
+  // ===== TARJETAS =====
   const MetricCard = ({
     icon: Icon,
     title,
@@ -317,7 +317,6 @@ export default function EnvironmentalDashboard() {
     </div>
   );
 
-  // ===== NUEVA TARJETA DE MÉTRICA DE CARBONO (reutiliza MetricCard pero con diferentes props) =====
   const CarbonMetricCard = ({
     icon: Icon,
     title,
@@ -361,7 +360,9 @@ export default function EnvironmentalDashboard() {
           </h1>
           <p className="text-oliveGreen/70 text-sm mt-1">
             Datos en tiempo real de sensores IoT · Última actualización:{" "}
-            {new Date().toLocaleTimeString()}
+            <span suppressHydrationWarning>
+              {new Date().toLocaleTimeString()}
+            </span>
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-oliveGreen/60">
@@ -402,7 +403,7 @@ export default function EnvironmentalDashboard() {
         />
       </div>
 
-      {/* Gráficos en grid */}
+      {/* Gráficos */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
           <HighchartsReact highcharts={Highcharts} options={heavyMetalsChart} />
@@ -424,7 +425,7 @@ export default function EnvironmentalDashboard() {
         </div>
       </div>
 
-      {/* ===== NUEVA SECCIÓN: CAPTURA DE CARBONO EN EL SUELO ===== */}
+      {/* Sección: Captura de Carbono */}
       <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50/30 rounded-2xl p-6 border border-emerald-200/30">
         <div className="flex items-center gap-2 mb-6">
           <Trees className="w-6 h-6 text-emerald-600" />
@@ -436,7 +437,6 @@ export default function EnvironmentalDashboard() {
           </span>
         </div>
 
-        {/* Tarjetas de carbono */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <CarbonMetricCard
             icon={Leaf}
@@ -460,22 +460,23 @@ export default function EnvironmentalDashboard() {
             icon={Trees}
             title="CO₂ secuestrado"
             value={
-              data.sensors.reduce(
-                (acc, s) =>
+              data.sensors.reduce((acc, s) => {
+                const sc = s.soilCarbon;
+                if (!sc) return acc;
+                return (
                   acc +
                   calculateCO2Sequestration(
-                    s.soilCarbon.organicCarbonPercent,
-                    s.soilCarbon.bulkDensity,
-                    s.soilCarbon.depth,
-                  ),
-                0,
-              ) / data.sensors.length
+                    sc.organicCarbonPercent,
+                    sc.bulkDensity,
+                    sc.depth,
+                  )
+                );
+              }, 0) / data.sensors.length
             }
             unit="t/ha"
           />
         </div>
 
-        {/* Gráfico de CO₂ secuestrado */}
         <div className="bg-white rounded-xl p-4 shadow-sm border border-emerald-100/50 mb-6">
           <HighchartsReact
             highcharts={Highcharts}
@@ -483,7 +484,6 @@ export default function EnvironmentalDashboard() {
           />
         </div>
 
-        {/* Tabla de carbono */}
         <div className="bg-white rounded-xl p-4 shadow-sm border border-emerald-100/50 overflow-x-auto">
           <h4 className="font-bold text-charcoalGray mb-3 flex items-center gap-2">
             <Leaf className="w-4 h-4 text-emerald-600" />
@@ -513,25 +513,30 @@ export default function EnvironmentalDashboard() {
               </tr>
             </thead>
             <tbody>
-              {data.sensors.map((s) => (
-                <tr
-                  key={s.id}
-                  className="border-b border-emerald-50 hover:bg-emerald-50/50"
-                >
-                  <td className="py-2 font-medium">{s.id}</td>
-                  <td>{s.soilCarbon.organicCarbonPercent}%</td>
-                  <td>{s.soilCarbon.bulkDensity}</td>
-                  <td>{s.soilCarbon.depth}</td>
-                  <td>{s.soilCarbon.co2Flux}</td>
-                  <td className="font-semibold text-emerald-700">
-                    {calculateCO2Sequestration(
-                      s.soilCarbon.organicCarbonPercent,
-                      s.soilCarbon.bulkDensity,
-                      s.soilCarbon.depth,
-                    ).toFixed(1)}
-                  </td>
-                </tr>
-              ))}
+              {data.sensors.map((s) => {
+                const sc = s.soilCarbon;
+                return (
+                  <tr
+                    key={s.id}
+                    className="border-b border-emerald-50 hover:bg-emerald-50/50"
+                  >
+                    <td className="py-2 font-medium">{s.id}</td>
+                    <td>{sc ? sc.organicCarbonPercent : "--"}%</td>
+                    <td>{sc ? sc.bulkDensity : "--"}</td>
+                    <td>{sc ? sc.depth : "--"}</td>
+                    <td>{sc ? sc.co2Flux : "--"}</td>
+                    <td className="font-semibold text-emerald-700">
+                      {sc
+                        ? calculateCO2Sequestration(
+                            sc.organicCarbonPercent,
+                            sc.bulkDensity,
+                            sc.depth,
+                          ).toFixed(1)
+                        : "--"}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -541,7 +546,7 @@ export default function EnvironmentalDashboard() {
         </p>
       </div>
 
-      {/* Detalle de sensores (se mantiene igual) */}
+      {/* Tabla de sensores */}
       <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
         <h3 className="font-bold text-charcoalGray mb-3 flex items-center gap-2">
           <Activity className="w-4 h-4 text-oliveGreen" />
@@ -590,7 +595,7 @@ export default function EnvironmentalDashboard() {
         </div>
       </div>
 
-      {/* Leyenda de riesgos (se mantiene igual) */}
+      {/* Leyenda */}
       <div className="bg-gradient-to-r from-red-50 via-yellow-50 to-green-50 rounded-xl p-4 border border-oliveGreen/10 flex flex-wrap items-center gap-4 text-xs">
         <span className="font-medium text-charcoalGray">
           Niveles de riesgo:

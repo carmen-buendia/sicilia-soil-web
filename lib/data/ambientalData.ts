@@ -1,13 +1,13 @@
-// Datos simulados para el dashboard ambiental
+// lib/data/environmentalData.ts
 
 export interface HeavyMetal {
   id: string;
   name: string;
   symbol: string;
-  value: number; // µg/L o mg/kg
+  value: number;
   unit: string;
   threshold: number;
-  trend: number[]; // últimos 7 valores
+  trend: number[];
   status: "good" | "warning" | "danger";
 }
 
@@ -243,92 +243,5 @@ export function updateEnvironmentalData() {
           : "good";
     s.trend.push(s.value);
     if (s.trend.length > 7) s.trend.shift();
-  });
-}
-
-// lib/data/environmentalData.ts
-
-export interface SoilCarbon {
-  id: string;
-  name: string;
-  value: number; // COS (%) - Carbono Orgánico del Suelo
-  unit: string;
-  threshold: number;
-  trend: number[];
-  status: "good" | "warning" | "danger";
-  // Campos adicionales para cálculos
-  bulkDensity: number; // Densidad aparente (g/cm³)
-  depth: number; // Profundidad (cm)
-  co2Flux: number; // Flujo de CO₂ (µmol/m²/s)
-}
-
-// Datos simulados de carbono en el suelo
-export const soilCarbon: SoilCarbon[] = [
-  {
-    id: "cos_norte",
-    name: "COS Norte",
-    value: 2.5,
-    unit: "%",
-    threshold: 3.5,
-    trend: generateTrend(2.5, 0.8),
-    status: "good",
-    bulkDensity: 1.2,
-    depth: 30,
-    co2Flux: 3.2,
-  },
-  {
-    id: "cos_sur",
-    name: "COS Sur",
-    value: 1.8,
-    unit: "%",
-    threshold: 3.5,
-    trend: generateTrend(1.8, 0.6),
-    status: "warning",
-    bulkDensity: 1.3,
-    depth: 25,
-    co2Flux: 4.1,
-  },
-  {
-    id: "cos_este",
-    name: "COS Este",
-    value: 3.1,
-    unit: "%",
-    threshold: 3.5,
-    trend: generateTrend(3.1, 0.7),
-    status: "good",
-    bulkDensity: 1.1,
-    depth: 35,
-    co2Flux: 2.8,
-  },
-  {
-    id: "cos_oeste",
-    name: "COS Oeste",
-    value: 2.0,
-    unit: "%",
-    threshold: 3.5,
-    trend: generateTrend(2.0, 0.5),
-    status: "warning",
-    bulkDensity: 1.25,
-    depth: 28,
-    co2Flux: 3.5,
-  },
-];
-
-// Función para actualizar datos de carbono
-export function updateCarbonData() {
-  soilCarbon.forEach((c) => {
-    // Actualizar COS
-    c.value = Math.max(0, c.value + (Math.random() - 0.5) * 0.3);
-    c.status =
-      c.value > c.threshold * 0.85
-        ? "good"
-        : c.value > c.threshold * 0.7
-          ? "warning"
-          : "danger";
-    c.trend.push(c.value);
-    if (c.trend.length > 7) c.trend.shift();
-
-    // Actualizar flujo de CO₂ (aleatorio)
-    c.co2Flux = Math.max(0.5, c.co2Flux + (Math.random() - 0.5) * 0.5);
   });
 }

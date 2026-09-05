@@ -1,13 +1,53 @@
-// components/dashboard/components/CarbonSection.tsx
-
 "use client";
 
-import { useState, useEffect } from "react";
-import { Trees, Gauge, Droplet, Activity, AlertTriangle } from "lucide-react";
+import { useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { Trees, Gauge, Droplet, Activity, AlertTriangle } from "lucide-react";
 
-import { soilCarbon, type SoilCarbon } from "@/lib/data/ambientalData";
+// Datos mock de carbono en el suelo
+const mockCarbonData = [
+  {
+    id: "zona1",
+    name: "Parcela Norte",
+    value: 2.5,
+    bulkDensity: 1.2,
+    depth: 30,
+    co2Flux: 3.2,
+    status: "good" as const,
+    trend: [3.0, 2.8, 2.7, 2.6, 2.5, 2.4, 2.5],
+  },
+  {
+    id: "zona2",
+    name: "Parcela Sur",
+    value: 1.8,
+    bulkDensity: 1.3,
+    depth: 25,
+    co2Flux: 2.8,
+    status: "warning" as const,
+    trend: [2.0, 1.9, 1.8, 1.7, 1.6, 1.7, 1.8],
+  },
+  {
+    id: "zona3",
+    name: "Olivar",
+    value: 3.0,
+    bulkDensity: 1.1,
+    depth: 35,
+    co2Flux: 4.0,
+    status: "good" as const,
+    trend: [3.5, 3.3, 3.2, 3.1, 3.0, 3.0, 3.0],
+  },
+  {
+    id: "zona4",
+    name: "Jardín de Hierbas",
+    value: 2.2,
+    bulkDensity: 1.25,
+    depth: 28,
+    co2Flux: 2.5,
+    status: "good" as const,
+    trend: [2.5, 2.4, 2.3, 2.2, 2.2, 2.1, 2.2],
+  },
+];
 
 const MetricCard = ({
   icon: Icon,
@@ -16,7 +56,6 @@ const MetricCard = ({
   unit,
   status,
   subtext,
-  color,
 }: {
   icon: any;
   title: string;
@@ -24,7 +63,6 @@ const MetricCard = ({
   unit: string;
   status: "good" | "warning" | "danger";
   subtext?: string;
-  color?: string;
 }) => {
   const statusColor =
     status === "good"
@@ -53,35 +91,24 @@ const MetricCard = ({
 };
 
 export default function CarbonSection() {
-  const [carbonData, setCarbonData] = useState<SoilCarbon[]>(soilCarbon);
+  const [carbonData] = useState(mockCarbonData);
 
-  // Actualizar cada 5 segundos
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // La actualización se hace desde el padre, pero aquí podemos forzar refresh
-      setCarbonData([...soilCarbon]);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Calcular CO₂ secuestrado para cada punto
   const calculateCO2 = (cos: number, density: number, depth: number) => {
     const carbonStored = (cos * density * depth) / 10;
     return carbonStored * 3.67;
   };
-
-  const co2Sequestration = carbonData.map((c) =>
-    calculateCO2(c.value, c.bulkDensity, c.depth),
-  );
 
   const avgCos =
     carbonData.reduce((acc, c) => acc + c.value, 0) / carbonData.length;
   const avgCo2Flux =
     carbonData.reduce((acc, c) => acc + c.co2Flux, 0) / carbonData.length;
   const avgCo2Sequestration =
-    co2Sequestration.reduce((acc, v) => acc + v, 0) / co2Sequestration.length;
+    carbonData.reduce(
+      (acc, c) => acc + calculateCO2(c.value, c.bulkDensity, c.depth),
+      0,
+    ) / carbonData.length;
 
-  // Gráfico de COS por zona
+  // Gráficos (estáticos)
   const cosChartOptions = {
     chart: {
       type: "column",
@@ -109,7 +136,6 @@ export default function CarbonSection() {
     credits: { enabled: false },
   };
 
-  // Gráfico de CO₂ secuestrado
   const co2ChartOptions = {
     chart: {
       type: "column",
@@ -129,7 +155,9 @@ export default function CarbonSection() {
     series: [
       {
         name: "CO₂ secuestrado",
-        data: co2Sequestration,
+        data: carbonData.map((c) =>
+          calculateCO2(c.value, c.bulkDensity, c.depth),
+        ),
         color: "#22c55e",
         dataLabels: { enabled: true, format: "{y} t/ha" },
       },
@@ -137,7 +165,6 @@ export default function CarbonSection() {
     credits: { enabled: false },
   };
 
-  // Gráfico de flujo de CO₂
   const fluxChartOptions = {
     chart: {
       type: "line",
@@ -173,7 +200,6 @@ export default function CarbonSection() {
 
   return (
     <div className="space-y-6">
-      {/* Cabecera */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-charcoalGray flex items-center gap-2">
           <Trees className="w-6 h-6 text-emerald-600" />
@@ -184,7 +210,6 @@ export default function CarbonSection() {
         </span>
       </div>
 
-      {/* Tarjetas resumen */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
           icon={Trees}
@@ -232,7 +257,6 @@ export default function CarbonSection() {
         />
       </div>
 
-      {/* Gráficos */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
           <HighchartsReact highcharts={Highcharts} options={cosChartOptions} />
@@ -242,12 +266,10 @@ export default function CarbonSection() {
         </div>
       </div>
 
-      {/* Gráfico de flujo (ocupa todo el ancho) */}
       <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10">
         <HighchartsReact highcharts={Highcharts} options={fluxChartOptions} />
       </div>
 
-      {/* Tabla de detalles */}
       <div className="bg-white rounded-xl p-4 shadow-sm border border-oliveGreen/10 overflow-x-auto">
         <h4 className="font-bold text-charcoalGray mb-3 flex items-center gap-2">
           <Droplet className="w-4 h-4 text-oliveGreen" />
@@ -280,7 +302,7 @@ export default function CarbonSection() {
             </tr>
           </thead>
           <tbody>
-            {carbonData.map((c, idx) => {
+            {carbonData.map((c) => {
               const co2 = calculateCO2(c.value, c.bulkDensity, c.depth);
               const statusColors = {
                 good: "text-green-600",
@@ -301,9 +323,7 @@ export default function CarbonSection() {
                     {co2.toFixed(1)}
                   </td>
                   <td
-                    className={`font-semibold ${
-                      statusColors[c.status as keyof typeof statusColors]
-                    }`}
+                    className={`font-semibold ${statusColors[c.status as keyof typeof statusColors]}`}
                   >
                     {c.status === "good"
                       ? "✅ Saludable"
