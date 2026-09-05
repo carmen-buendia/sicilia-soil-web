@@ -63,7 +63,7 @@ const Onboarding = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default function DesignPage() {
+export default function AmbientalPage() {
   const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
