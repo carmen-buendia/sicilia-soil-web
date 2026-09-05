@@ -6,6 +6,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Flower2, Sprout } from "lucide-react";
 import { SicilianFlag } from "@/components/layout/SicilianFlag";
+// @ts-ignore
 
 export default function RootLayout({
   children,
@@ -21,6 +22,12 @@ export default function RootLayout({
           content="Monitoreo de huerto de permacultura sintrópica en la región del Mediterráneo"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossOrigin=""
+        />
       </head>
       <body className="min-h-screen bg-offWhite text-charcoalGray">
         {/* Navbar importado */}

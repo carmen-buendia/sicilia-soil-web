@@ -16,8 +16,8 @@ import {
   User,
   Sprout,
   Leaf,
-  Layers,
   Flower2,
+  Activity,
 } from "lucide-react";
 import { SicilianFlag } from "./SicilianFlag";
 
@@ -29,7 +29,7 @@ const navItems = [
   { id: "/analysis", label: "Análisis", icon: LineChart },
   { id: "/mycology", label: "Micología", icon: Leaf },
   { id: "/esparto", label: "Esparto", icon: Sprout },
-  { id: "/design", label: "Diseño", icon: Layers },
+  { id: "/ambiental", label: "Ambiental", icon: Activity },
   { id: "/configuration", label: "Configuración", icon: Settings },
 ];
 
